@@ -1,0 +1,29 @@
+
+
+ @media print {
+    body {
+        -webkit-print-color-adjust: exact !important;
+        background-color: #ffffff;
+    }
+    #heading{
+        display:none;
+    }
+    #heading_options{
+        display:none;
+    }
+    #listing{
+        display:none;
+    }
+
+    #printable_graph{
+        width:100%;
+    }
+    #as_of{
+        display: block;
+    }
+    /* .light-blue-50{
+        background-color: #e1f5fe;
+        color: rgba(0, 0, 0, 0.87);
+    } */
+    
+ }
