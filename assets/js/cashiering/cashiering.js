@@ -622,7 +622,27 @@ function item_options(row) {
                 text: 'Delete',
                 btnClass: 'btn-danger',
                 action: function () {
-                    $(row).remove();
+                    $.confirm({
+                        title: 'Confirm Deletion',
+                        icon: 'fa fa-exclamation-circle',
+                        buttons: {
+                            Confirm: {
+                                text: 'Confirm',
+                                btnClass: 'btn-danger',
+                                action: function () {
+                                    $(row).remove();
+                                    display_sales_sub_totals_delete(quantity,price,discount);
+                                },
+                            },
+                            Cancel: {
+                                text: 'Cancel',
+                                btnClass: 'btn-secondary',
+                                action: function () {
+                                    // Do nothing
+                                },
+                            },
+                        }
+                    })
                 },
             },
             Cancel: {
@@ -750,6 +770,26 @@ function display_sales_sub_totals() {
     $('#total_amount_due').text(totalPriceDiscounted);
 
     update_main_total_amount_due(totalPriceDiscounted);
+}
+
+function display_sales_sub_totals_delete(qty, price, discount) {
+    alert();
+    let totalQuantity = parseInt($('#total_quantity').text()) - qty;
+    let totalDiscount = parseFloat($('#total_discounts').text()) - discount;
+    let totalPriceDiscounted = parseFloat($('#total_amount_due').text()) - (qty * price) + discount;
+    console.log(totalQuantity, totalDiscount, totalPriceDiscounted);
+    $('#amount_due').text((parseFloat(totalPriceDiscounted) + parseFloat(totalDiscount)).toFixed(2));
+    $('#total_quantity').text(totalQuantity);
+    $('#total_discounts').text(totalDiscount.toFixed(2));
+    $('#total_amount_due').text(totalPriceDiscounted.toFixed(2));
+    $('#last_item_total').text(0);
+    $('#last_item_discount').text(0);
+    $('#last_item_quantity').text(0);
+    $('#last_item_price').text(0);
+    $('#last_item_name').text("- -");
+
+    update_main_total_amount_due(totalPriceDiscounted.toFixed(2));
+
 }
 
 function low_stock_warning(itemCode) {
