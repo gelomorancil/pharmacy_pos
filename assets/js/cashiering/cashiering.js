@@ -125,7 +125,12 @@ $('#submit_item_code').click(function () {
 });
 
 $('#add_item').click(function () {
-
+    let current_qty =  parseInt($('#quantity').val());
+    let qty_left = parseInt($(this).attr('data-qty-left'));
+    if (current_qty > qty_left) {
+        toastr.error("NOT ENOUGH STOCK AVAILABLE!!");
+        return;
+    }
     add_item(
         $('#item_profile_id').val(),
         $('#code').val(),
@@ -659,9 +664,10 @@ function select_item(row) {
 
     let cells = row.getElementsByTagName('td');
     let item_code = cells[0].textContent.trim();
+    let item_qty = (cells[3].textContent.trim())
 
     $('#modal-search-item').modal('hide');
-
+    $('#add_item').attr('data-qty-left', 0);
     $.post({
         url: 'cashiering/check_item_code',
         data: {
@@ -680,9 +686,8 @@ function select_item(row) {
                 $('#price').val(e.query[0].unit_price);
                 $('#short_name').val(e.query[0].short_name);
                 $('#item_description').val(e.query[0].description);
-
                 $('#modal-enter-item').modal('show');
-
+                $('#add_item').attr('data-qty-left', item_qty);
 
                 $('#item_code').val("");
 
@@ -773,7 +778,7 @@ function display_sales_sub_totals() {
 }
 
 function display_sales_sub_totals_delete(qty, price, discount) {
-    alert();
+    // alert();
     let totalQuantity = parseInt($('#total_quantity').text()) - qty;
     let totalDiscount = parseFloat($('#total_discounts').text()) - discount;
     let totalPriceDiscounted = parseFloat($('#total_amount_due').text()) - (qty * price) + discount;
