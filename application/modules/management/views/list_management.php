@@ -138,6 +138,13 @@ main_header(['list_management']);
                                 </div>
 
                             </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <label for="">Expiration Date:</label>
+                                    <input type="date" id="item_expiry_date" class="form-control inpt">
+                                </div>
+
+                            </div>
                         </div>
                         <div class="card-footer">
                             <button type="button" class="btn btn-primary" id="save_item">Submit</button>

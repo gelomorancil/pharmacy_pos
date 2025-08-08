@@ -27,6 +27,7 @@ class Management_service extends MY_Controller
 		$this->msModel->short_name = $this->input->post("short_name");
 		$this->msModel->description = $this->input->post("description");
 		$this->msModel->status = $this->input->post("status");
+		$this->msModel->item_expiry_date = $this->input->post("item_expiry_date");
 
 		$response = $this->msModel->save_list();
 		echo json_encode($response);
