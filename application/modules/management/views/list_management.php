@@ -179,6 +179,7 @@ main_header(['list_management']);
                                                 <th>Item Name</th>
                                                 <th>Item Code</th>
                                                 <th>Status</th>
+                                                <th>Expiration Date</th>
                                             </tr>
                                         </thead>
                                         <tbody id="load_items">
