@@ -26,6 +26,7 @@ class Inventory_service extends MY_Controller
 		$this->isModel->supplier = $this->input->post("supplier");
 		$this->isModel->quantity = $this->input->post("quantity");
 		$this->isModel->date_in = $this->input->post("date_in");
+		$this->isModel->po_number = $this->input->post("po_number");
 		$this->isModel->recieved_by = $this->input->post("recieved_by");
 
 		$response = $this->isModel->save_stock_in();

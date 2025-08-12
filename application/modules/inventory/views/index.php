@@ -90,11 +90,15 @@ $session = (object) get_userdata(USER);
                 </div>
 
                 <div class="row">
-                    <div class="col-sm-6">
+                    <div class="col-sm-4">
+                        <label for="">PO number:</label>
+                        <input type="text" id="po_number" class="form-control inpt" placeholder="Enter Purchas Order Number">
+                    </div>
+                    <div class="col-sm-4">
                         <label for="">Date Received:</label>
                         <input type="date" id="date_in" class="form-control inpt">
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-4">
                         <label for="">Recieved By:</label>
                         <input type="text" id="recieved_by" class="form-control inpt" placeholder="User Full Name Here"
                             disabled value="<?=$session->LName . ", " .  $session->FName?>">
