@@ -379,6 +379,7 @@ function process_payment() {
                 $.post({
                     url: 'cashiering/Cashiering/load_receipt',
                     data: {
+                        remarks: remarks,
                         control_number: e.control_number,
                         sub_total: sub_total,
                         discount_amount: discount_amount,

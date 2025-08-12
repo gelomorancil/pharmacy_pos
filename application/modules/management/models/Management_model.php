@@ -78,5 +78,11 @@ class Management_model extends CI_Model
         $query = $this->db->get()->result();
         return $query;
     }
+    
+    public function check_nearly_expired_stocks() {
+        $this->db->where("item_expiry_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 14 DAY)");
+        $query = $this->db->get($this->Table->items);
+        return $query->num_rows() > 0;
+    }
 
 }
