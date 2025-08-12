@@ -110,8 +110,9 @@ class Management_services_model extends CI_Model
             $data = array(
                 'item_name' => $this->item_name,
                 'item_code' => $this->item_code,
-                'short_name' => $this->short_name,
                 'description' => $this->description,
+                'short_name' => $this->short_name,
+                'item_expiry_date' => $this->item_expiry_date,
                 'active' => $this->status,
             );
 
