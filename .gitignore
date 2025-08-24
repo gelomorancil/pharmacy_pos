@@ -1,0 +1,3 @@
+.htaccess
+application/config/*
+application/config/config.php

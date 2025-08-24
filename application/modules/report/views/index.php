@@ -153,6 +153,43 @@ $session = (object) get_userdata(USER);
     </div>
 </div> -->
 
+<div class="modal fade" id="verify-void" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-sm" style="max-width: 380px;">
+        <div class="modal-content" style="border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.15);">
+            
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #f8f9fa; border-bottom: 1px solid #dee2e6;">
+                <h5 class="modal-title" style="margin: 0; font-weight: bold;">User Verification</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                    style="font-size: 1.2rem; padding: 0 10px; border: none; background: transparent;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body" style="padding: 20px;">
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <input type="text" class="form-control" id="void_username" placeholder="Enter Username"
+                        style="border-radius: 4px; height: 40px;">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <input type="password" class="form-control" id="void_password" placeholder="Enter Password"
+                        style="border-radius: 4px; height: 40px;">
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer" style="justify-content: space-between; padding: 10px 20px;">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"
+                    style="padding: 5px 15px;">Close</button>
+                <button type="button" class="btn btn-primary btn-sm" id="verify_void"
+                    style="padding: 5px 20px;">Verify</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- Hidden Receipt Modal -->
 <div class="modal fade" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg">

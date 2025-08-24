@@ -83,6 +83,7 @@ $('#save_item').click(function () {
               short_name: $('#short_name').val(),
               description: $('#item_description').val(),
               status: $('#item_status').val(),
+              w: $('#item_expiry_date').val(),
             },
             success: function (e) {
               var e = JSON.parse(e);

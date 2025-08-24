@@ -22,7 +22,7 @@ class Inventory_services_model extends CI_Model
             $data = array(
                 'item_profile_id' => $this->item,
                 'supplier_id' => $this->supplier,
-
+                'po_number' => $this->po_number,
                 'quantity' => $this->quantity,
                 'date_in' => $this->date_in,
                 'recieved_by' => $this->recieved_by,

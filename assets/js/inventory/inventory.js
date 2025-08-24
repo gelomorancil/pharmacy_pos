@@ -66,6 +66,7 @@ $('#add_stock').click(function () {
                         data: {
                             item: $('#item').val(),
                             supplier: $('#supplier').val(),
+                            po_number: $('#po_number').val(),
                             quantity: $('#quantity').val(),
                             date_in: $('#date_in').val(),
                             recieved_by: $('#recieved_by').val(),

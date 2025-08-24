@@ -125,7 +125,12 @@ $('#submit_item_code').click(function () {
 });
 
 $('#add_item').click(function () {
-
+    let current_qty =  parseInt($('#quantity').val());
+    let qty_left = parseInt($(this).attr('data-qty-left'));
+    if (current_qty > qty_left) {
+        toastr.error("NOT ENOUGH STOCK AVAILABLE!!");
+        return;
+    }
     add_item(
         $('#item_profile_id').val(),
         $('#code').val(),
@@ -374,6 +379,7 @@ function process_payment() {
                 $.post({
                     url: 'cashiering/Cashiering/load_receipt',
                     data: {
+                        remarks: remarks,
                         control_number: e.control_number,
                         sub_total: sub_total,
                         discount_amount: discount_amount,
@@ -622,7 +628,27 @@ function item_options(row) {
                 text: 'Delete',
                 btnClass: 'btn-danger',
                 action: function () {
-                    $(row).remove();
+                    $.confirm({
+                        title: 'Confirm Deletion',
+                        icon: 'fa fa-exclamation-circle',
+                        buttons: {
+                            Confirm: {
+                                text: 'Confirm',
+                                btnClass: 'btn-danger',
+                                action: function () {
+                                    $(row).remove();
+                                    display_sales_sub_totals_delete(quantity,price,discount);
+                                },
+                            },
+                            Cancel: {
+                                text: 'Cancel',
+                                btnClass: 'btn-secondary',
+                                action: function () {
+                                    // Do nothing
+                                },
+                            },
+                        }
+                    })
                 },
             },
             Cancel: {
@@ -639,9 +665,10 @@ function select_item(row) {
 
     let cells = row.getElementsByTagName('td');
     let item_code = cells[0].textContent.trim();
+    let item_qty = (cells[3].textContent.trim())
 
     $('#modal-search-item').modal('hide');
-
+    $('#add_item').attr('data-qty-left', 0);
     $.post({
         url: 'cashiering/check_item_code',
         data: {
@@ -660,9 +687,8 @@ function select_item(row) {
                 $('#price').val(e.query[0].unit_price);
                 $('#short_name').val(e.query[0].short_name);
                 $('#item_description').val(e.query[0].description);
-
                 $('#modal-enter-item').modal('show');
-
+                $('#add_item').attr('data-qty-left', item_qty);
 
                 $('#item_code').val("");
 
@@ -750,6 +776,26 @@ function display_sales_sub_totals() {
     $('#total_amount_due').text(totalPriceDiscounted);
 
     update_main_total_amount_due(totalPriceDiscounted);
+}
+
+function display_sales_sub_totals_delete(qty, price, discount) {
+    // alert();
+    let totalQuantity = parseInt($('#total_quantity').text()) - qty;
+    let totalDiscount = parseFloat($('#total_discounts').text()) - discount;
+    let totalPriceDiscounted = parseFloat($('#total_amount_due').text()) - (qty * price) + discount;
+    console.log(totalQuantity, totalDiscount, totalPriceDiscounted);
+    $('#amount_due').text((parseFloat(totalPriceDiscounted) + parseFloat(totalDiscount)).toFixed(2));
+    $('#total_quantity').text(totalQuantity);
+    $('#total_discounts').text(totalDiscount.toFixed(2));
+    $('#total_amount_due').text(totalPriceDiscounted.toFixed(2));
+    $('#last_item_total').text(0);
+    $('#last_item_discount').text(0);
+    $('#last_item_quantity').text(0);
+    $('#last_item_price').text(0);
+    $('#last_item_name').text("- -");
+
+    update_main_total_amount_due(totalPriceDiscounted.toFixed(2));
+
 }
 
 function low_stock_warning(itemCode) {
