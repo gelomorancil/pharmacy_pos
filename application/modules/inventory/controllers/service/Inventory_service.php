@@ -32,4 +32,28 @@ class Inventory_service extends MY_Controller
 		$response = $this->isModel->save_stock_in();
 		echo json_encode($response);
 	}
+
+	public function save_stock_in_po()
+	{
+		$supplier = $this->input->post("supplier");
+		$date_in = $this->input->post("date_in");
+		$recieved_by = $this->input->post("recieved_by");
+		$po_number = $this->input->post("po_number");
+		$items = $this->input->post("items"); // this is the array we passed via AJAX
+
+		$data = [
+			"po_number"   => $po_number,
+			"supplier_id" => $supplier,
+			"date_in"     => $date_in,
+			"recieved_by" => $recieved_by,
+			"items"       => $items // still raw array; let the model handle iterating
+		];
+	
+		// Hand off to model
+		$response = $this->isModel->save_stock_in_po($data);	
+
+		// add threshold update method here yes
+		
+		echo json_encode($response);
+	}
 }

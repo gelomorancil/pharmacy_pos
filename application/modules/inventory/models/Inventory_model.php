@@ -101,7 +101,23 @@ class Inventory_model extends CI_Model
         return $query;
     }
 
+    public function get_last_po()
+    {
+        $this->db->select('po_number');
+        $this->db->from($this->Table->inventory);
+        $this->db->where('po_number!=', null);
+        $this->db->order_by('id', 'DESC');
+        $this->db->limit(1);
+        $query = $this->db->get()->row();
 
+        if ($query) {
+            $last_po = $query->po_number;
+            $new_po = intval($last_po) + 1;
+            return str_pad($new_po, 6, '0', STR_PAD_LEFT);
+        } else {
+            return '000000';
+        }
+    }
 
 
 

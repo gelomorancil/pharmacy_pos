@@ -16,12 +16,15 @@ class Inventory extends MY_Controller
 
 		$model_list = [
 			'inventory/Inventory_model' => 'iModel',
+			'Item_profiling/Item_profiling_model' => 'ipModel',
 		];
 		$this->load->model($model_list);
 	}
 
 	/** load main page */
 	public function index(){
+		$this->data['PO_num'] = $this->iModel->get_last_po();
+		$this->data['units'] = $this->ipModel->get_units();
 		$this->data['items_profiles'] = $this->iModel->get_item_profiles();
 		$this->data['supplier'] = $this->iModel->get_suppliers();
 		$this->data['content'] = 'index';
