@@ -103,6 +103,18 @@ function main_header($menubar = [])
     <!-- Added Confirmation Jquery Modal Type -->
     <link rel="stylesheet" href="<?= base_url() ?>assets/theme/jquery-confirm/dist/jquery-confirm.min.css">
 
+    <style>
+      .nav-link.active {
+        background: #023C43 !important;
+        color: #fff;
+      }
+      .nav-link {
+        color: #fff !important;
+      }
+      .nav-link:hover {
+        background: #023C43 !important;
+      }
+    </style>
   </head>
 
   <body class="hold-transition light-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
@@ -138,12 +150,13 @@ function main_header($menubar = [])
       <!-- /.navbar -->
 
       <!-- Main Sidebar Container -->
-      <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <aside class="main-sidebar elevation-4" style="background: #035863;">
+      <!-- <aside class="main-sidebar sidebar-dark-primary elevation-4"> -->
         <!-- Brand Logo -->
         <a href="index3.html" class="brand-link">
           <img src="<?= base_url() ?>assets/images/Logo/payment.png" alt="AdminLTE Logo"
             class="brand-image img-circle" style="opacity: .8">
-          <span class="brand-text font-weight-light"><?= SYSTEM_MODULE ?></span>
+          <span class="brand-text font-weight-light" style="color: #fff"><?= SYSTEM_MODULE ?></span>
         </a>
 
         <!-- Sidebar -->
@@ -155,12 +168,12 @@ function main_header($menubar = [])
         </div> -->
             <div class="info text-wrap">
               <a href="<?= base_url() ?>/user_profile/index/<?= $session->U_ID ?>"
-                class="d-block"><?= '<b>' . ucfirst($session->Role) . ":</b> " . ucfirst($session->FName) . " " . ucfirst($session->LName) ?></a>
+                style="color: #fff" class="d-block"><?= '<b>' . ucfirst($session->Role) . ":</b> " . ucfirst($session->FName) . " " . ucfirst($session->LName) ?></a>
             </div>
           </div>
           <!-- <button class="btn btn-sm btn-flat btn-primary" id="change" value="Cebu">Change</button> -->
           <!-- SidebarSearch Form -->
-          <div class="form-inline">
+          <!-- <div class="form-inline">
             <div class="input-group" data-widget="sidebar-search">
               <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
               <div class="input-group-append">
@@ -169,7 +182,7 @@ function main_header($menubar = [])
                 </button>
               </div>
             </div>
-          </div>
+          </div> -->
 
           <!-- Sidebar Menu -->
           <nav class="mt-2">
