@@ -56,7 +56,7 @@
 
 
                 <td>
-                    <button type="button" class="btn btn-sm btn-primary" data-itemID="<?= $value->item_profile_id ?>"
+                    <button type="button" class="btn btn-sm btn-primary" data-itemID="<?= $value->item_ID ?>"
                         onclick="view_history(this)">View Stock History</button>
                 </td>
 

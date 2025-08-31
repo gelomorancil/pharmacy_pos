@@ -28,38 +28,67 @@ class Inventory_model extends CI_Model
         return $query;
     }
 
-    public function get_inventory()
-    {
+    // public function get_inventory()
+    // {
+    //     $this->db->select('
+    //         inv.item_profile_id,
+    //         (SUM(inv.quantity) - IFNULL(sold_quantities.sold_quantity, 0)) AS current_stock,
+    //         ip.threshold,
+    //         unit.unit_of_measure,
+    //         items.item_name,
+    //         items.short_name,
+    //         items.item_code,
+    //         items.description
+    //     ');
+
+    //     $this->db->from($this->Table->inventory . ' AS inv');
+    //     $this->db->join($this->Table->item_profile . ' AS ip', 'inv.item_profile_id = ip.id', 'left');
+    //     $this->db->join($this->Table->items . ' AS items', 'ip.item_id = items.id', 'left');
+    //     $this->db->join($this->Table->unit . ' AS unit', 'ip.unit_id = unit.id', 'left');
+
+    //     // Custom Join to tbl_payment_child
+    //     $this->db->join(
+    //         "(SELECT item_profile_id, SUM(quantity) AS sold_quantity 
+    //         FROM {$this->Table->payment_child} 
+    //         GROUP BY item_profile_id) AS sold_quantities",
+    //         'sold_quantities.item_profile_id = inv.item_profile_id',
+    //         'left'
+    //     );
+
+    //     $this->db->group_by('inv.item_profile_id, unit.unit_of_measure, items.item_name, items.short_name, items.item_code, items.description');
+
+    //     return $this->db->get()->result();
+    // }
+
+    public function get_inventory(){
         $this->db->select('
-            inv.item_profile_id,
-            (SUM(inv.quantity) - IFNULL(sold_quantities.sold_quantity, 0)) AS current_stock,
-            ip.threshold,
+            inv.item_ID,
+            (SUM(inv.qty) - IFNULL(sold_quantities.sold_quantity, 0)) AS current_stock,
+            inv.threshold,
             unit.unit_of_measure,
             items.item_name,
             items.short_name,
             items.item_code,
             items.description
         ');
-
-        $this->db->from($this->Table->inventory . ' AS inv');
-        $this->db->join($this->Table->item_profile . ' AS ip', 'inv.item_profile_id = ip.id', 'left');
-        $this->db->join($this->Table->items . ' AS items', 'ip.item_id = items.id', 'left');
-        $this->db->join($this->Table->unit . ' AS unit', 'ip.unit_id = unit.id', 'left');
-
+        $this->db->from($this->Table->purchase_order_items. ' AS inv');
+        $this->db->join($this->Table->purchase_order. ' AS po', 'inv.po_ID = po.ID', 'left');
+        // $this->db->join($this->Table->item_profile . ' AS ip', 'inv.item_profile_id = ip.id', 'left');
+        $this->db->join($this->Table->items . ' AS items', 'inv.item_ID = items.id', 'left');
+        $this->db->join($this->Table->unit . ' AS unit', 'inv.unit_ID = unit.id', 'left');
         // Custom Join to tbl_payment_child
         $this->db->join(
             "(SELECT item_profile_id, SUM(quantity) AS sold_quantity 
             FROM {$this->Table->payment_child} 
             GROUP BY item_profile_id) AS sold_quantities",
-            'sold_quantities.item_profile_id = inv.item_profile_id',
+            'sold_quantities.item_profile_id = inv.item_ID',
             'left'
         );
-
-        $this->db->group_by('inv.item_profile_id, unit.unit_of_measure, items.item_name, items.short_name, items.item_code, items.description');
-
+        $this->db->where('po.approved', 1);
+        $this->db->group_by('inv.item_ID, inv.threshold, unit.unit_of_measure, items.item_name, items.short_name, items.item_code, items.description');
+    
         return $this->db->get()->result();
     }
-
 
     public function get_history()
     {

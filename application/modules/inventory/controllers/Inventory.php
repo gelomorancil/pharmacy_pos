@@ -31,11 +31,11 @@ class Inventory extends MY_Controller
 		$this->load->view('layout', $this->data);
 	}
 
-	// public function load_inventory(){
-	// 	$this->data['inventory'] = $this->iModel->get_inventory();
-	// 	$this->data['content'] = 'grid/load_inventory';
-	// 	$this->load->view('layout', $this->data);
-	// }
+	public function load_inventory(){
+		$this->data['inventory'] = $this->iModel->get_inventory();
+		$this->data['content'] = 'grid/load_inventory';
+		$this->load->view('layout', $this->data);
+	}
 
 	public function load_history(){
 		$this->iModel->id = $this->input->post("id");

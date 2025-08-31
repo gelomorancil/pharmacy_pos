@@ -29,7 +29,7 @@ function load_po_list() {
 }
 
 $(document).ready(function () {
-    // load_inventory();
+    load_inventory();
     load_po_list();
 });
 
