@@ -164,6 +164,12 @@ var view_history = (value) => {
     });
 }
 
+var view_po = (btn) => {
+    let po_num = $(btn).data("po");
+    console.log("Viewing PO:", po_num);
+    window.location = base_url + "inventory/Inventory/load_po/?pon=" + po_num;
+}
+
 var removeRow = (btn) => {
     let rowIndex = $(btn).closest("tr").index();
     let poItemId = $(btn).data("id");

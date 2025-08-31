@@ -166,6 +166,7 @@ class Inventory_model extends CI_Model
             po.po_num,
             po.date_ordered,
             po.approved,
+            po.date_added,
             po.supplier_ID,
             s.supplier_name,
             po.received_by
@@ -202,4 +203,14 @@ class Inventory_model extends CI_Model
         $query = $this->db->get()->result();
         return $query;
     }
+
+    public function get_supplier_data($supplier_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->Table->supplier);
+        $this->db->where('id', $supplier_id);
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
 }

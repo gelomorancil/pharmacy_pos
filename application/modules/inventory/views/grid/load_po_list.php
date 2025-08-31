@@ -16,6 +16,13 @@
                 <td class="text-center" style="color: red; font-weight: bolder;">PO-<?= $value->po_num ?></td>
                 <td class="text-center"><?= @$value->description ?></td>
                 <td class="text-center">
+                    <!-- view Button -->
+                    <button type="button" 
+                            class="btn btn-sm btn-primary" 
+                            data-PO="<?= $value->po_num ?>" 
+                            onclick="view_po(this)">
+                        <i class="fa fa-eye"></i>
+                    </button>
                     <!-- Edit Button -->
                     <button type="button" 
                             class="btn btn-sm btn-primary" 

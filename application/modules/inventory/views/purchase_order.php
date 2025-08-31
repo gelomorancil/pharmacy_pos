@@ -2,6 +2,9 @@
 <?php
 main_header(['inventory']);
 $session = (object) get_userdata(USER);
+// var_dump($po);
+// var_dump($po_items);
+$subtotal = floatval(0);
 ?>
 <style>
     .body-po {
@@ -37,7 +40,29 @@ $session = (object) get_userdata(USER);
   .to-block { display: -ms-flexbox; display: flex; }
   .to-block .label { width: 40px; min-width: 40px; font-weight: 600; }
   .to-block .value { padding-left: .5rem; }
+
+  @media print {
+  body * {
+    visibility: hidden;
+  }
+  .body-po, .body-po * {
+    visibility: visible;
+  }
+  .body-po {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+  button {
+    display: none !important;
+  }
+}
 </style>
+
+<div class="text-center mt-4 mb-3">
+  <button class="btn btn-primary" onclick="printPO()">🖨 Print PO</button>
+</div>
 
 <div class="container my-4 body-po">
 
@@ -59,8 +84,8 @@ $session = (object) get_userdata(USER);
   <div class="po-header mb-2">
     <h5 class="text-center mb-1">PURCHASE ORDER</h5>
     <div class="po-meta">
-      <div><strong>PO No.:</strong> <span class="text-danger">001006</span></div>
-      <div><strong>Date:</strong> 01/06/2025</div>
+      <div><strong>PO No.:</strong> <span class="text-danger">PO-<?=$po->po_num?></span></div>
+      <div><strong>Date:</strong> <?=date("m/d/Y", strtotime($po->date_added))?></div>
     </div>
   </div>
 
@@ -68,10 +93,14 @@ $session = (object) get_userdata(USER);
   <div class="to-block mb-3">
     <div class="label">To:</div>
     <div class="value">
-      <div><strong>MEED PHARMAπ</strong></div>
+      <!-- <div><strong>MEED PHARMAπ</strong></div>
       <div>Generic and Branded Drug Distributor</div>
       <div>1549 TCS III BLDG. Bambang, South, Santa Cruz Manila, 1003 Metro Manila</div>
-      <div>Tel. Nos.: (02) 8711-5945 / 8712-2906 / 3495-1250 / 3495-1526</div>
+      <div>Tel. Nos.: (02) 8711-5945 / 8712-2906 / 3495-1250 / 3495-1526</div> -->
+       <div><strong><?=$supplier_deets->supplier_name?></strong></div>
+      <div><?=$supplier_deets->contact_person?></div>
+      <div><?=$supplier_deets->address?></div>
+      <div>Contact Details.: <?=$supplier_deets->contact_number_1?> / <?=$supplier_deets->contact_number_2?> / <?=$supplier_deets->email?> </div>
     </div>
   </div>
 
@@ -94,18 +123,23 @@ $session = (object) get_userdata(USER);
         </tr>
       </thead>
       <tbody>
-        <tr><td>5</td><td>bx/s</td><td>Astorvastatin 20MG TABLET</td><td>BRELVASTIN</td><td>10-2027</td><td>95.00</td><td>475.00</td></tr>
-        <tr><td>50</td><td>bx/s</td><td>Loperamide 2mg TABLET</td><td>HARVEMIDE</td><td>09-2028</td><td>46.50</td><td>2,325.00</td></tr>
-        <tr><td>20</td><td>bx/s</td><td>Loperamide 2mg TABLET</td><td>DIACURE</td><td>08-2027</td><td>36.50</td><td>730.00</td></tr>
-        <tr><td>150</td><td>bx/s</td><td>Cetirizine 10mg TABLET</td><td>CETICIT</td><td>07-2027</td><td>24.00</td><td>3,600.00</td></tr>
-        <tr><td>10</td><td>bx/s</td><td>Mefenamic 500mg TABLET</td><td>MEFEIN</td><td>06-2027</td><td>137.00</td><td>1,370.00</td></tr>
-        <tr><td>150</td><td>bx/s</td><td>Mefenamic 500mg CAPSULE</td><td>MYREFEN</td><td>11-2027</td><td>66.25</td><td>6,625.00</td></tr>
-        <tr><td>200</td><td>btl/s</td><td>Paracetamol 250mg/60ml SUSPENSION</td><td>HYFER-250</td><td>08-2027</td><td>11.00</td><td>2,200.00</td></tr>
-        <tr><td>20</td><td>bx/s</td><td>Metronidazole 500mg TABLET</td><td>METROZOLE</td><td>10-2026</td><td>87.00</td><td>1,740.00</td></tr>
-        <tr><td>20</td><td>bx/s</td><td>Sodium Ascorbate + Zinc CAPSULE</td><td>PROTEC ZINC</td><td>12-2026</td><td>85.00</td><td>1,700.00</td></tr>
-        <tr><td>5</td><td>bx/s</td><td>Trimetazidine 35mg TABLET</td><td>WESTAR</td><td>06-2027</td><td>39.00</td><td>195.00</td></tr>
-        <tr><td>5</td><td>bx/s</td><td>Vitamin B Complex TABLET</td><td>REVITAPLEX</td><td>08-2026</td><td>86.00</td><td>430.00</td></tr>
-        <tr><td>10</td><td>bx/s</td><td>Vitamin B Complex TABLET</td><td>AMCOVIT-B</td><td>06-2027</td><td>62.25</td><td>622.50</td></tr>
+        <?php foreach($po_items as $items) {
+
+          $row_amount = floatval($items->qty * $items->unit_price);
+          $subtotal += $row_amount;
+          ?>
+        <tr>
+          <td><?=$items->qty?></td>
+          <td><?=$items->unit_of_measure?></td>
+          <td class="text-start"><?=$items->description?></td>
+          <td><?=$items->item_name?></td>
+          <td><?=($items->date_expiry != '0000-00-00') ? date("m/Y", strtotime($items->date_expiry)) : ''?></td>
+          <td class="text-end"><?=number_format($items->unit_price, 2)?></td>
+          <td class="text-end"><?=number_format($row_amount, 2)?></td>
+        <?php }
+        $freight = 0;
+        $total = $subtotal + $freight;
+        ?>
       </tbody>
     </table>
   </div>
@@ -114,17 +148,17 @@ $session = (object) get_userdata(USER);
   <div class="row justify-content-end">
     <div class="col-md-4">
       <table class="table table-borderless">
-        <tr>
+      <tr>
           <th class="text-end">SUBTOTAL</th>
-          <td class="text-end">22,012.50</td>
+          <td class="text-end"><?= number_format($subtotal, 2) ?></td>
         </tr>
         <tr>
           <th class="text-end">FREIGHT</th>
-          <td class="text-end">—</td>
+          <td class="text-end"><?= ($freight > 0) ? number_format($freight, 2) : '—' ?></td>
         </tr>
         <tr class="border-top">
           <th class="text-end">TOTAL</th>
-          <td class="text-end fw-bold">22,012.50</td>
+          <td class="text-end fw-bold"><?= number_format($total, 2) ?></td>
         </tr>
       </table>
     </div>
@@ -155,4 +189,24 @@ $session = (object) get_userdata(USER);
 <?php
 main_footer();
 ?>
+
+<script>
+function printPO() {
+  let printContents = document.querySelector('.body-po').innerHTML;
+  let originalContents = document.body.innerHTML;
+
+  document.body.innerHTML = `
+    <div class="container my-4">
+      ${printContents}
+    </div>
+  `;
+
+  window.print();
+
+  document.body.innerHTML = originalContents;
+  location.reload(); // reload to restore events
+}
+</script>
+
+
 <script src="<?php echo base_url() ?>/assets/js/inventory/inventory.js"></script>

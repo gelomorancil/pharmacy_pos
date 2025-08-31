@@ -46,7 +46,12 @@ class Inventory extends MY_Controller
 	}
 
 	public function load_po(){
-		// $this->data['po'] = $this->iModel->get_po();
+		$po_num = $this->input->get("pon");
+		$this->iModel->po = $po_num;
+		// $po_num = "000000";
+		$this->data['po'] = $this->iModel->get_po_header($po_num);
+		$this->data['supplier_deets'] = $this->iModel->get_supplier_data($this->data['po']->supplier_ID);
+		$this->data['po_items'] = $this->iModel->get_po_items($po_num);
 		$this->data['content'] = 'purchase_order';
 		$this->load->view('layout', $this->data);
 	}
