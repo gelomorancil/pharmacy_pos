@@ -103,15 +103,15 @@ class Inventory_model extends CI_Model
 
     public function get_last_po()
     {
-        $this->db->select('po_number');
-        $this->db->from($this->Table->inventory);
-        $this->db->where('po_number!=', null);
+        $this->db->select('po_num');
+        $this->db->from($this->Table->purchase_order);
+        $this->db->where('po_num!=', null);
         $this->db->order_by('id', 'DESC');
         $this->db->limit(1);
         $query = $this->db->get()->row();
 
         if ($query) {
-            $last_po = $query->po_number;
+            $last_po = $query->po_num;
             $new_po = intval($last_po) + 1;
             return str_pad($new_po, 6, '0', STR_PAD_LEFT);
         } else {
@@ -119,7 +119,58 @@ class Inventory_model extends CI_Model
         }
     }
 
+    public function get_po_list()
+    {
+        $this->db->select('ID,po_num');
+        $this->db->from($this->Table->purchase_order);
+        $this->db->where('approved', 0);
+        $this->db->order_by('ID', 'DESC');
+        $query = $this->db->get()->result();
+     
+        return $query;
+    }
 
-
-
+    public function get_po_header($po_number)
+    {
+        $this->db->select('
+            po.ID,
+            po.po_num,
+            po.date_ordered,
+            po.approved,
+            po.supplier_ID,
+            s.supplier_name,
+            po.received_by
+        ');
+        $this->db->from($this->Table->purchase_order . ' AS po');
+        $this->db->join($this->Table->supplier . ' AS s', 'po.supplier_id = s.id', 'left');
+        $this->db->where('po.po_num', $po_number);
+        $query = $this->db->get()->row();
+        return $query;
+    }
+    public function get_po_items($po_number)
+    {
+        $this->db->select('ID');
+        $this->db->from($this->Table->purchase_order);
+        $this->db->where('po_num', $po_number);
+        $pID = $this->db->get()->row()->ID;
+       
+        $this->db->select('
+            poi.id AS po_item_id,
+            poi.date_expiry,
+            poi.unit_price,
+            poi.threshold,
+            poi.unit_ID,
+            poi.qty,
+            poi.item_ID,
+            u.unit_of_measure,
+            i.item_name,
+            i.item_code,
+            i.description');
+        $this->db->from($this->Table->purchase_order_items . ' AS poi');
+        $this->db->join($this->Table->items . ' AS i', 'poi.item_id = i.id', 'left');
+        $this->db->join($this->Table->unit . ' AS u', 'poi.unit_id = u.id', 'left');
+        $this->db->where('poi.po_ID', $pID);
+        $query = $this->db->get()->result();
+        return $query;
+    }
 }

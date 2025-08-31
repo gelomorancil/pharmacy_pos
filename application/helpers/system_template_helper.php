@@ -37,22 +37,22 @@ function main_header($menubar = [])
 
   $userRoleId = $session->Role_ID;
 
-  if (isset($allowedUrls[$userRoleId])) {
-    $currentUrl = current_url();
+  // if (isset($allowedUrls[$userRoleId])) {
+  //   $currentUrl = current_url();
 
-    if (!in_array($currentUrl, $allowedUrls[$userRoleId])) {
-      $redirectUrl = $allowedUrls[$userRoleId][array_rand($allowedUrls[$userRoleId])];
+  //   if (!in_array($currentUrl, $allowedUrls[$userRoleId])) {
+  //     $redirectUrl = $allowedUrls[$userRoleId][array_rand($allowedUrls[$userRoleId])];
 
-      redirect($redirectUrl);
-      exit;
-    }
-  }
+  //     redirect($redirectUrl);
+  //     exit;
+  //   }
+  // }
 
-  function expiry_flag_status() {
-    $CI =& get_instance();
-    $CI->load->model('management/Management_model');
-    return $CI->Management_model->check_nearly_expired_stocks();
-}
+//   function expiry_flag_status() {
+//     $CI =& get_instance();
+//     $CI->load->model('management/Management_model');
+//     return $CI->Management_model->check_nearly_expired_stocks();
+// }
 
   ?>
   <!DOCTYPE html>
@@ -234,9 +234,6 @@ function main_header($menubar = [])
                       class="nav-link <?= (sidebar($menubar, ['list_management'])) ? 'active' : '' ?>">
                       <i class="fas fa-list nav-icon"></i>
                       <p>List Management</p>
-                      <?php if (expiry_flag_status()): ?>
-                        <span style="display:inline-block; width:8px; height:8px; background:red; border-radius:50%; margin-left:5px;"></span>
-                      <?php endif; ?>
                     </a>
                   </li>
                   <li class="nav-item">

@@ -1,4 +1,11 @@
-<table id="example1" class="table table-bordered table-striped">
+<style>
+    .inventory-div thead tbody tr {
+        display: block;
+      width: 100%;
+      table-layout: fixed;
+    }
+</style>
+<table id="example1" class="table table-bordered table-striped inventory-div">
     <thead>
         <tr>
             <th style="width:10%;">Item Code</th>
@@ -8,7 +15,7 @@
             <th style="width:10%;">Actions</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody clas>
         <?php
         $prevCat = '';
         foreach ($inventory as $key => $value) {
@@ -64,7 +71,7 @@
     $("#example1").DataTable({
         "responsive": false,
         "lengthChange": false,
-        "autoWidth": false,
+        // "autoWidth": false,
         "buttons": ["copy", "csv", "excel", "pdf", "print"],
         "pageLength": 15,
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');

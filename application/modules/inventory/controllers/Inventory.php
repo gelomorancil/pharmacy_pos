@@ -31,11 +31,11 @@ class Inventory extends MY_Controller
 		$this->load->view('layout', $this->data);
 	}
 
-	public function load_inventory(){
-		$this->data['inventory'] = $this->iModel->get_inventory();
-		$this->data['content'] = 'grid/load_inventory';
-		$this->load->view('layout', $this->data);
-	}
+	// public function load_inventory(){
+	// 	$this->data['inventory'] = $this->iModel->get_inventory();
+	// 	$this->data['content'] = 'grid/load_inventory';
+	// 	$this->load->view('layout', $this->data);
+	// }
 
 	public function load_history(){
 		$this->iModel->id = $this->input->post("id");
@@ -44,5 +44,42 @@ class Inventory extends MY_Controller
 		$this->data['content'] = 'grid/load_inventory_history';
 		$this->load->view('layout', $this->data);
 	}
+
+	public function load_po(){
+		// $this->data['po'] = $this->iModel->get_po();
+		$this->data['content'] = 'purchase_order';
+		$this->load->view('layout', $this->data);
+	}
+
+	public function load_po_list(){
+		$this->data['purchase_order'] = $this->iModel->get_po_list();
+		$this->data['content'] = 'grid/load_po_list';
+		$this->load->view('layout', $this->data);
+	}
+
+	public function get_po_details()
+    {
+		$po_number = $this->input->get('pon');
+        if (!$po_number) {
+            show_error('PO number is required', 400);
+        }
+		$header = $this->iModel->get_po_header($po_number);
+		$items  = $this->iModel->get_po_items($po_number);
+	
+		$result = [
+			'header' => $header,
+			'items'  => $items
+		];
+
+        if ($result) {
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($result));
+        } else {
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode([]));
+        }
+    }
 
 }
