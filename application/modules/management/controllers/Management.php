@@ -24,7 +24,7 @@ class Management extends MY_Controller
 	public function index()
 	{
 		$this->data['session'] =  $this->session;
-		$this->data['content'] = 'list_management';
+		$this->data['content'] = 'new_management';
 		$this->load->view('layout', $this->data);
 	}
 
