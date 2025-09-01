@@ -62,6 +62,8 @@ $array = array(
     'payment_parent' => 'tbl_payment_parent',
     'payment_child' => 'tbl_payment_child',
     'proof' => 'tbl_proof',
+    'purchase_order' => 'tbl_purchase_order',
+    'purchase_order_items' => 'tbl_purchase_order_items',
 
 
 
