@@ -13,6 +13,57 @@ class Cashiering_model extends CI_Model
         $this->Table = json_decode(TABLE);
     }
 
+    public function get_items()
+    {
+        $this->db->select('
+            i.*, 
+            ip.unit_price,
+            ip.id AS item_profile_id,
+            u.unit_of_measure
+        ');
+        $this->db->from($this->Table->item_profile . ' ip');
+        $this->db->join($this->Table->items . ' i', 'i.id = ip.item_id', 'left');
+        $this->db->join($this->Table->unit . ' u', 'ip.unit_id = u.id', 'left');
+        $this->db->where('i.active', '1');
+        $this->db->order_by('i.item_name', 'asc');
+        $query = $this->db->get()->result();
+
+        foreach ($query as $row) {
+            // attach stock result directly into each row object
+            $row->current_stock = $this->get_current_stock($row->item_code);
+        }
+
+        return $query;
+    }
+
+    public function get_current_stock($code)
+    {
+        $this->db->select('
+            inv.item_profile_id,
+            (SUM(inv.quantity) - IFNULL(sold_quantities.sold_quantity, 0)) AS current_stock
+        ');
+        $this->db->from($this->Table->inventory . ' AS inv');
+        $this->db->join($this->Table->item_profile . ' AS ip', 'inv.item_profile_id = ip.id', 'left');
+        $this->db->join($this->Table->items . ' AS items', 'ip.item_id = items.id', 'left');
+
+        // Subquery for sold quantities
+        $this->db->join(
+            "(SELECT item_profile_id, SUM(quantity) AS sold_quantity 
+            FROM {$this->Table->payment_child} 
+            GROUP BY item_profile_id) AS sold_quantities",
+            'sold_quantities.item_profile_id = inv.item_profile_id',
+            'left'
+        );
+
+        $this->db->where('items.item_code', $code);
+        $this->db->group_by('inv.item_profile_id');
+
+        $query = $this->db->get()->row();
+
+        return $query ? $query->current_stock : 0; // return 0 if no stock found
+    }
+
+
     // public function get_items()
     // {
     //     $this->db->select('*');

@@ -198,7 +198,7 @@ $('#search_item').click(function () {
 });
 
 $('#tend_customer').click(function () {
-    $('#tender_total_amount').text($('#total').text());
+    $('#tender_total_amount').text($('#total_amount_due').text());
     $('#modal-tender-customer').modal('show');
 });
 
@@ -209,11 +209,7 @@ document.getElementById('amount_recieved').addEventListener('blur', function () 
 });
 
 $('#amount_recieved').on('input', function () {
-    // let total_amount_due = parseFloat($('#tender_total_amount').text()).toFixed(2);
-    let raw = $('#tender_total_amount').text();  
-    let cleaned = raw.replace(/[^0-9.-]/g, "");     
-    let total_amount_due = parseFloat(cleaned).toFixed(2);
-
+    let total_amount_due = parseFloat($('#tender_total_amount').text()).toFixed(2);
     let amount_rendered = parseFloat($('#amount_recieved').val()).toFixed(2);
     let change = parseFloat(amount_rendered - total_amount_due).toFixed(2);
 
@@ -225,7 +221,6 @@ $('#amount_recieved').on('input', function () {
     else {
         $('#change').css('background-color', 'lightgreen');
     }
-
 });
 
 $('#save_print').click(function () {
@@ -252,19 +247,9 @@ $('#new_transaction').click(function () {
 function process_payment() {
 
     // Data for Parent Table
-    // let sub_total = $('#amount_due').text();
-    let raw = $('#tender_total_amount').text();
-    let cleaned = raw.replace(/[^0-9.-]/g, "");
-    let sub_total = parseFloat(cleaned) || 0;
-
-    // let discount_amount = parseFloat($('#total_discounts').text()).toFixed(2);
-  
-    let discount_raw = $('#total_discounts').val() || $('#total_discounts').text();
-    let discount_cleaned = discount_raw.replace(/[^0-9.-]/g, "");
-    let discount_amount = parseFloat(discount_cleaned) || 0;
-
-    let total_amount = (sub_total - discount_amount).toFixed(2);    
-    // let total_amount = $('#total_amount_due').text();
+    let sub_total = $('#amount_due').text();
+    let discount_amount = parseFloat($('#total_discounts').text()).toFixed(2);
+    let total_amount = $('#total_amount_due').text();
     let discount_type = $('#discount_type').val();
     let payment_type = $('#payment_type').val();
     let amount_rendered = $('#amount_recieved').val();
@@ -279,49 +264,27 @@ function process_payment() {
 
     let itemsArray = [];
 
-    // const rows = tableBody.querySelectorAll('tr');
+    const rows = tableBody.querySelectorAll('tr');
 
-    // rows.forEach(row => {
-    //     const cells = row.querySelectorAll('td');
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
 
-    //     if (cells.length === 8) {
+        if (cells.length === 8) {
 
-    //         const item = {
-    //             item_profile_id: cells[0].innerText.trim(),
-    //             // item_code: cells[1].innerText.trim(),
-    //             item_name: cells[2].innerText.trim(),
-    //             // description: cells[3].innerText.trim(),
-    //             unit_price: parseFloat(cells[4].innerText.trim()),
-    //             quantity: parseInt(cells[5].innerText.trim(), 10),
-    //             discount: parseFloat(cells[6].innerText.trim()),
-    //             total: parseFloat(cells[7].innerText.trim())
-    //         };
+            const item = {
+                item_profile_id: cells[0].innerText.trim(),
+                // item_code: cells[1].innerText.trim(),
+                item_name: cells[2].innerText.trim(),
+                // description: cells[3].innerText.trim(),
+                unit_price: parseFloat(cells[4].innerText.trim()),
+                quantity: parseInt(cells[5].innerText.trim(), 10),
+                discount: parseFloat(cells[6].innerText.trim()),
+                total: parseFloat(cells[7].innerText.trim())
+            };
 
-    //         itemsArray.push(item);
-    //     }
-    // });
-
-    document.querySelectorAll(".cart-item").forEach(cartItem => {
-        const item = {
-            // You can store the index if needed
-            index: cartItem.dataset.index,  
-            item_profile_id: cartItem.dataset.item_profile_id,
-
-
-            item_name: cartItem.querySelector("strong").innerText.trim(),
-            unit_price: parseFloat(
-                cartItem.querySelector(".d-flex div").innerText.replace(/[^\d.-]/g, "")
-            ),
-            quantity: parseInt(cartItem.querySelector(".qty").value, 10),
-            discount: 0, // set later if you add discount input
-            total: parseFloat(
-                cartItem.querySelector(".text-right").innerText.replace(/[^\d.-]/g, "")
-            )
-        };
-
-        itemsArray.push(item);
+            itemsArray.push(item);
+        }
     });
-
     // console.log(itemsArray);
     if (parseFloat(amount_rendered) == 0 || parseFloat(amount_rendered) < parseFloat(total_amount)) {
         toastr.error("Not Enough Money Rendered!");

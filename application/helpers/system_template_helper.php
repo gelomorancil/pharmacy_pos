@@ -18,13 +18,15 @@ function main_header($menubar = [])
       base_url() . 'cashiering',
       base_url() . 'dashboard',
       base_url() . 'inventory',
-      base_url() . 'report'
+      base_url() . 'report',
+      base_url() . 'expense',
     ],
     2 => [
       base_url() . 'cashiering',
       base_url() . 'inventory'
     ],
     1 => [
+      base_url() . 'expense',
       base_url() . 'cashiering',
       base_url() . 'inventory',
       base_url() . 'dashboard',
@@ -103,6 +105,22 @@ function main_header($menubar = [])
     <!-- Added Confirmation Jquery Modal Type -->
     <link rel="stylesheet" href="<?= base_url() ?>assets/theme/jquery-confirm/dist/jquery-confirm.min.css">
 
+    <style>
+      .nav-link.active {
+        background: #023C43 !important;
+        color: #fff;
+      }
+      .nav-link {
+        color: #fff !important;
+      }
+      .nav-link:hover {
+        background: #023C43 !important;
+      }
+      .new-color{
+        background: #035863;
+        color: white;
+      }
+    </style>
   </head>
 
   <body class="hold-transition light-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
@@ -115,7 +133,7 @@ function main_header($menubar = [])
       </div> -->
 
       <!-- Navbar -->
-      <nav class="main-header navbar navbar-expand navbar-dark">
+      <nav class="main-header navbar navbar-expand ">
         <!-- Left navbar links -->
         <ul class="navbar-nav">
           <li class="nav-item">
@@ -138,12 +156,13 @@ function main_header($menubar = [])
       <!-- /.navbar -->
 
       <!-- Main Sidebar Container -->
-      <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <aside class="main-sidebar elevation-4 new-color">
+      <!-- <aside class="main-sidebar sidebar-dark-primary elevation-4"> -->
         <!-- Brand Logo -->
         <a href="index3.html" class="brand-link">
           <img src="<?= base_url() ?>assets/images/Logo/payment.png" alt="AdminLTE Logo"
             class="brand-image img-circle" style="opacity: .8">
-          <span class="brand-text font-weight-light"><?= SYSTEM_MODULE ?></span>
+          <span class="brand-text font-weight-light" style="color: #fff"><?= SYSTEM_MODULE ?></span>
         </a>
 
         <!-- Sidebar -->
@@ -155,12 +174,12 @@ function main_header($menubar = [])
         </div> -->
             <div class="info text-wrap">
               <a href="<?= base_url() ?>/user_profile/index/<?= $session->U_ID ?>"
-                class="d-block"><?= '<b>' . ucfirst($session->Role) . ":</b> " . ucfirst($session->FName) . " " . ucfirst($session->LName) ?></a>
+                style="color: #fff" class="d-block"><?= '<b>' . ucfirst($session->Role) . ":</b> " . ucfirst($session->FName) . " " . ucfirst($session->LName) ?></a>
             </div>
           </div>
           <!-- <button class="btn btn-sm btn-flat btn-primary" id="change" value="Cebu">Change</button> -->
           <!-- SidebarSearch Form -->
-          <div class="form-inline">
+          <!-- <div class="form-inline">
             <div class="input-group" data-widget="sidebar-search">
               <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
               <div class="input-group-append">
@@ -169,7 +188,7 @@ function main_header($menubar = [])
                 </button>
               </div>
             </div>
-          </div>
+          </div> -->
 
           <!-- Sidebar Menu -->
           <nav class="mt-2">
@@ -211,11 +230,30 @@ function main_header($menubar = [])
                     </a>
                   </li>
                 </ul>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="<?= base_url() ?>expense"
+                      class="nav-link <?= (sidebar($menubar, ['expense'])) ? 'active' : '' ?>">
+                      <i class="fa fa-box nav-icon"></i>
+                      <p>Expense</p>
+                    </a>
+                  </li>
+                </ul>
+                 <ul class="nav nav-treeview">
+                   <li class="nav-item">
+                    <a href="<?= base_url() ?>management"
+                      class="nav-link <?= (sidebar($menubar, ['list_management'])) ? 'active' : '' ?>">
+                      <i class="fas fa-list nav-icon"></i>
+                      <p>Management</p>
+                      <?php if (expiry_flag_status()): ?>
+                        <span style="display:inline-block; width:8px; height:8px; background:red; border-radius:50%; margin-left:5px;"></span>
+                      <?php endif; ?>
+                    </a>
+                  </li>
+                </ul>
               </li>
-              <li class="nav-item menu-open" style="display: <?= $userRoleId == 1 ? '' : 'none' ?>">
+              <!-- <li class="nav-item menu-open" style="display: <?= $userRoleId == 1 ? '' : 'none' ?>">
                 <a href="#" class="nav-link">
-                  <!-- <i class="nav-icon fas fa-cog"></i> -->
-
                   <p>
                     Management
                     <i class="right fas fa-angle-left"></i>
@@ -244,7 +282,7 @@ function main_header($menubar = [])
                     </a>
                   </li>
                 </ul>
-              </li>
+              </li> -->
               <li class="nav-item menu-open" style="display: <?= $userRoleId == 1 || $userRoleId == 3 ? '' : 'none' ?>">
                 <a href="#" class="nav-link">
                   <!-- <i class="nav-icon fas fa-file"></i> -->
