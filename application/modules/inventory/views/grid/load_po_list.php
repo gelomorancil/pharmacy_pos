@@ -1,8 +1,9 @@
 <table id="example10" class="table table-bordered table-striped">
     <thead>
         <tr>
-            <th style="width:10%;">Purchase Order</th>
-            <!-- <th style="width:75%;">Items Listed</th> -->
+            <th style="width:15%;">Purchase Order</th>
+            <th style="width:25%;">Supplier</th>
+            <th style="width:25%;">Date Purchased</th>
             <th style="width:15%;">Actions</th>
         </tr>
     </thead>
@@ -14,7 +15,8 @@
             <tr>
 
                 <td class="text-center" style="color: red; font-weight: bolder;">PO-<?= $value->po_num ?></td>
-                <!-- <td class="text-center"><?= @$value->description ?></td> -->
+                <td class="text-center"><?=  date('Y-m-d',strtotime(@$value->date_ordered ))?></td>
+                <td class="text-center"><?= @$value->supplier_name ?></td>
                 <td class="text-center">
                     <!-- view Button -->
                     <button type="button" 
