@@ -176,6 +176,15 @@ $session = (object) get_userdata(USER);
                 </div>
 
                 <div class="row">
+                    <div class="col-sm-4">
+                        <label for="">Select Item:</label>
+                        <select id="e-item" class="form-control inpt">
+                            <option selected disabled value="">Select Item</option>
+                            <?php foreach ($items_profiles as $value): ?>
+                                <option value="<?= $value->id ?>"><?= $value->item_name ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
                     <div class="col-sm-2">
                         <div class="form-group w-100">
                             <label for="">Unit of Measure:</label>
@@ -186,18 +195,13 @@ $session = (object) get_userdata(USER);
                             </select>
                         </div>
                     </div>
+                    <div class="col-sm-2">
+                        <label for="">Pcs:</label>
+                        <input type="number" id="e-po-pcs" class="form-control inpt" placeholder="Enter pcs" disabled>
+                    </div>
                     <div class="col-sm-3">
                         <label for="">Quantity:</label>
                         <input type="number" id="e-quantity_po" class="form-control inpt" placeholder="Enter quantity">
-                    </div>
-                    <div class="col-sm-4">
-                        <label for="">Select Item:</label>
-                        <select id="e-item" class="form-control inpt">
-                            <option selected disabled value="">Select Item</option>
-                            <?php foreach ($items_profiles as $value): ?>
-                                <option value="<?= $value->id ?>"><?= $value->item_name ?></option>
-                            <?php endforeach; ?>
-                        </select>
                     </div>
                     <div class="col-sm-3">
                         <label for="">Unit Price:</label>
@@ -210,10 +214,10 @@ $session = (object) get_userdata(USER);
                         <label for="">Item Description:</label>
                         <input type="text" id="e-item_desc" class="form-control inpt" placeholder="Item Description">
                     </div>
-                    <div class="col-sm-3">
+                    <!-- <div class="col-sm-3">
                         <label for="">Threshold:</label>
                         <input type="number" id="e-threshold" class="form-control inpt" placeholder="Enter Threshold">
-                    </div>
+                    </div> -->
                     <div class="col-sm-4">
                         <label for="">Recieved By:</label>
                         <input type="text" id="e-recieved_by" class="form-control inpt"
@@ -233,11 +237,12 @@ $session = (object) get_userdata(USER);
                         <tr>
                             <th>Unit</th>
                             <th>Qty</th>
+                            <th>Pcs</th>
                             <th>Brand</th>
                             <th>Unit Price</th>
                             <th>Description</th>
                             <th>Date Expiry</th>
-                            <th>Threshold</th>
+                            <!-- <th>Threshold</th> -->
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -291,27 +296,9 @@ $session = (object) get_userdata(USER);
                 </div>
 
                 <div class="row">
-                    <div class="col-sm-2">
-                        <div class="form-group w-100">
-                            <label for="">Unit of Measure:</label>
-                            <select class="form-control" style="width: 100%;" id="unit_id">
-                                <?php
-                                foreach ($units as $value) {
-                                    ?>
-                                    <option value="<?= $value->id ?>"><?= $value->unit_of_measure ?></option>
-                                    <?php
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <label for="">Quantity:</label>
-                        <input type="number" id="quantity_po" class="form-control inpt" placeholder="Enter quantity">
-                    </div>
                     <div class="col-sm-4">
                         <label for="">Select Item:</label>
-                        <select name="" id="item" class="form-control inpt">
+                        <select name="" id="item" class="form-control inpt" onchange="fill_in_item(this)">
                             <option selected disabled value="">Select Item</option>
                             <?php
                             foreach ($items_profiles as $value) {
@@ -322,7 +309,29 @@ $session = (object) get_userdata(USER);
                             ?>
                         </select>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
+                        <div class="form-group w-100">
+                            <label for="">Unit of Measure:</label>
+                            <select class="form-control" style="width: 100%;" id="unit_id" disabled>
+                                <?php
+                                foreach ($units as $value) {
+                                    ?>
+                                    <option value="<?= $value->id ?>"><?= $value->unit_of_measure ?></option>
+                                    <?php
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <label for="">Quantity:</label>
+                        <input type="number" id="quantity_po" class="form-control inpt" placeholder="Enter quantity">
+                    </div>
+                    <div class="col-sm-2">
+                        <label for="">Pcs:</label>
+                        <input type="number" id="po-pcs" class="form-control inpt" placeholder="Enter pcs" disabled>
+                    </div>
+                    <div class="col-sm-2">
                         <label for="">Unit Price:</label>
                         <input type="number" id="unit_price" class="form-control inpt" placeholder="Enter Unit Price">
                     </div>
@@ -333,10 +342,10 @@ $session = (object) get_userdata(USER);
                         <label for="">Item Description:</label>
                         <input type="text" id="item_desc" class="form-control inpt" placeholder="Item Description">
                     </div>
-                    <div class="col-sm-3">
+                    <!-- <div class="col-sm-3">
                         <label for="">Threshold:</label>
                         <input type="number" id="threshold" class="form-control inpt" placeholder="Enter Threshold">
-                    </div>
+                    </div> -->
                     <div class="col-sm-4">
                         <label for="">Date Expiry:</label>
                         <input type="date" id="date_expiry" class="form-control inpt">
@@ -360,11 +369,11 @@ $session = (object) get_userdata(USER);
                         <tr>
                             <th>Unit</th>
                             <th>Qty</th>
+                            <th>Pcs</th>
                             <th>Item</th>
                             <th>Unit Price</th>
                             <th>Description</th>
                             <th>Date Expiry</th>
-                            <th>Threshold</th>
                             <th>Action</th>
                         </tr>
                     </thead>

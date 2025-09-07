@@ -2,7 +2,7 @@
     <thead>
         <tr>
             <th style="width:10%;">Purchase Order</th>
-            <th style="width:75%;">Items Listed</th>
+            <!-- <th style="width:75%;">Items Listed</th> -->
             <th style="width:15%;">Actions</th>
         </tr>
     </thead>
@@ -14,7 +14,7 @@
             <tr>
 
                 <td class="text-center" style="color: red; font-weight: bolder;">PO-<?= $value->po_num ?></td>
-                <td class="text-center"><?= @$value->description ?></td>
+                <!-- <td class="text-center"><?= @$value->description ?></td> -->
                 <td class="text-center">
                     <!-- view Button -->
                     <button type="button" 
