@@ -135,7 +135,7 @@ class Management_service extends MY_Controller
 {
     $this->msModel->client_name       = $this->input->post("client_name");
     $this->msModel->client_company_aff = $this->input->post("client_company_aff");
-    $this->msModel->client_cn         = $this->input->post("client_cn");
+    $this->msModel->client_cn         = $this->input->post("contact_number");
     $this->msModel->client_email      = $this->input->post("client_email");
     $this->msModel->client_status     = $this->input->post("client_status");
 
@@ -148,7 +148,7 @@ public function update_client()
     $this->msModel->client_id         = $this->input->post("id");
     $this->msModel->client_name       = $this->input->post("client_name");
     $this->msModel->client_company_aff = $this->input->post("client_company_aff");
-    $this->msModel->client_cn         = $this->input->post("client_cn");
+    $this->msModel->client_cn         = $this->input->post("contact_number");
     $this->msModel->client_email      = $this->input->post("client_email");
     $this->msModel->client_status     = $this->input->post("client_status");
 

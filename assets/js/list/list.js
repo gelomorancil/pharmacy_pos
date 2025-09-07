@@ -713,9 +713,9 @@ $('#update_client').click(function () {
                 $('#save_client').show();
 
                 // refresh the page shortly to ensure table state (matches your previous behavior)
-                setTimeout(function () {
-                  window.location.reload();
-                }, 500);
+                // setTimeout(function () {
+                //   window.location.reload();
+                // }, 500);
               } else {
                 $('#client-name').addClass('is-invalid');
                 toastr.error(e.message);
