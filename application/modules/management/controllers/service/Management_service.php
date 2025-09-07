@@ -80,7 +80,7 @@ class Management_service extends MY_Controller
 		$this->msModel->short_name = $this->input->post("short_name");
 		$this->msModel->description = $this->input->post("description");
 		$this->msModel->status = $this->input->post("status");
-		$this->msModel->item_expiry_date = $this->input->post("item_expiry_date");
+		// $this->msModel->item_expiry_date = $this->input->post("item_expiry_date");
 
 		$response = $this->msModel->update_item();
 		echo json_encode($response);
@@ -130,5 +130,31 @@ class Management_service extends MY_Controller
 		$response = $this->msModel->delete_unit();
 		echo json_encode($response);
 	}
+
+	public function save_client()
+{
+    $this->msModel->client_name       = $this->input->post("client_name");
+    $this->msModel->client_company_aff = $this->input->post("client_company_aff");
+    $this->msModel->client_cn         = $this->input->post("client_cn");
+    $this->msModel->client_email      = $this->input->post("client_email");
+    $this->msModel->client_status     = $this->input->post("client_status");
+
+    $response = $this->msModel->save_client();
+    echo json_encode($response);
+}
+
+public function update_client()
+{
+    $this->msModel->client_id         = $this->input->post("id");
+    $this->msModel->client_name       = $this->input->post("client_name");
+    $this->msModel->client_company_aff = $this->input->post("client_company_aff");
+    $this->msModel->client_cn         = $this->input->post("client_cn");
+    $this->msModel->client_email      = $this->input->post("client_email");
+    $this->msModel->client_status     = $this->input->post("client_status");
+
+    $response = $this->msModel->update_client();
+    echo json_encode($response);
+}
+
 
 }

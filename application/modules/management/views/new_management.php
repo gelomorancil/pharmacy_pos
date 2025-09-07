@@ -6,6 +6,7 @@ main_header(['list_management']);
 <input hidden value="" id="item_id">
 <input hidden value="" id="supplier_id">
 <input hidden value="" id="unit_id">
+<input hidden value="" id="client_id">
 
 <style>
   /* Scoped only to Management page */
@@ -75,6 +76,9 @@ main_header(['list_management']);
                 </li>
                 <li class="nav-item">
                 <a class="nav-link" id="supp-sub-tab" data-toggle="tab" href="#supp-sub" role="tab">Supplier</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="client-sub-tab" data-toggle="tab" href="#client-sub" role="tab">Clients</a>
                 </li>
             </ul>
 
@@ -329,7 +333,7 @@ main_header(['list_management']);
                                                             <th>Item Name</th>
                                                             <th>Item Code</th>
                                                             <th>Status</th>
-                                                            <th>Expiration Date</th>
+                                                            <!-- <th>Expiration Date</th> -->
                                                         </tr>
                                                     </thead>
                                                     <tbody id="load_items">
@@ -453,6 +457,100 @@ main_header(['list_management']);
                                                     </thead>
                                                     <tbody id="load_suppliers">
 
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="client-sub" role="tabpanel">
+                     <div class="row">
+                        <div class="col-lg-4 col-md-6 col-sm-12">
+                            <div class="card">
+                                <div class="card-header new-color">
+                                    <h3 class="card-title">Client Management:</h3>
+                                </div>
+                                <form>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-group w-100">
+                                                    <label for="">Client Name:</label>
+                                                    <input type="text" id="client-name" class="form-control inpt"
+                                                        placeholder="Enter Client Name">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-group w-100">
+                                                    <label for="">Company Affliated:</label>
+                                                    <textarea id="client-company-aff" class="form-control"
+                                                        placeholder="Enter Client Affliate"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <div class="form-group w-100">
+                                                    <label for="">Contact Number</label>
+                                                    <input type="text" id="client-cn" class="form-control inpt"
+                                                        placeholder="Enter Contact Number">
+                                                </div>
+                                            </div>
+                                            <div class="col-8">
+                                                <div class="form-group w-100">
+                                                    <label for="">Email:</label>
+                                                    <input type="email" id="client-email" class="form-control inpt"
+                                                        placeholder="Enter Client Email">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <div class="form-group w-100">
+                                                    <label for="">Status:</label>
+                                                    <select class="form-control" style="width: 100%;" id="client_status">
+                                                        <option value="1" selected>Active</option>
+                                                        <option value="0">In-active</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <button type="button" class="btn btn-primary" id="save_client">Submit</button>
+                                        <button type="button" class="btn btn-success" style="display: none"
+                                            id="update_client">Update</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-md-6 col-sm-12">
+                            <div class="card">
+                                <div class="card-header new-color">
+                                    <h3 class="card-title">Current Suppliers:</h3>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="card m-3">
+                                            <div class="card-body table-responsive p-0" style="height: 34.3rem;">
+                                                <table class="table table-hover text-nowrap">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Client Name</th>
+                                                            <th>Contact Number</th>
+                                                            <th>Email Address</th>
+                                                            <th>Company Affiliate</th>
+                                                            <th>Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="load_clients">
                                                     </tbody>
                                                 </table>
                                             </div>
