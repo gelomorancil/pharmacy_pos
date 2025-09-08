@@ -3,10 +3,10 @@ main_header(['list_management']);
 ?>
 <!-- ############ PAGE START-->
 <!-- HIDDEN ID's USED AS UPDATE FLAGS -->
-<input hidden value="" id="item_id">
+<!-- <input hidden value="" id="item_id">
 <input hidden value="" id="supplier_id">
-<input hidden value="" id="unit_id">
-
+<input hidden value="" id="unit_id"> -->
+<input hidden id="item_profile_id" value="">
 <style>
   /* Scoped only to Management page */
   .management-page .nav-tabs .nav-link,
@@ -94,6 +94,7 @@ main_header(['list_management']);
                                                 <div class="form-group w-100">
                                                     <label for="">Select Item:</label>
                                                     <select class="form-control" style="width: 100%;" id="item_id">
+                                                        <option value=""disabled selected>-- Select Item --</option>
                                                         <?php
                                                         foreach ($items as $value) {
                                                             ?>
@@ -108,6 +109,7 @@ main_header(['list_management']);
                                                 <div class="form-group w-100">
                                                     <label for="">Select Unit of Measure:</label>
                                                     <select class="form-control" style="width: 100%;" id="unit_id">
+                                                        <option value=""disabled selected>-- Select Unit --</option>
                                                         <?php
                                                         foreach ($units as $value) {
                                                             ?>
@@ -120,13 +122,13 @@ main_header(['list_management']);
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-6">
+                                            <!-- <div class="col-6">
                                                 <div class="form-group w-100">
                                                     <label for="">Unit Price:</label>
                                                     <input type="number" id="unit_price" class="form-control inpt"
                                                         placeholder="Enter Unit Price">
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <div class="col-6">
                                                 <div class="form-group w-100">
                                                     <label for="">Threshold:</label>
@@ -157,9 +159,9 @@ main_header(['list_management']);
                                                 <table class="table table-hover text-nowrap">
                                                     <thead>
                                                         <tr>
-                                                            <th>Item Name</th>
+                                                            <th>Brand Name</th>
                                                             <th>Unit</th>
-                                                            <th>Unit Price</th>
+                                                            <!-- <th>Unit Price</th> -->
                                                             <th>Threshold</th>
                                                         </tr>
                                                     </thead>
@@ -208,7 +210,7 @@ main_header(['list_management']);
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-4">
+                                    <!-- <div class="col-4">
                                         <div class="card m-3">
                                             <div class="card-header">
                                                 <h3 class="card-title">
@@ -216,7 +218,7 @@ main_header(['list_management']);
                                                 </h3>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div class="col-6">
                                         <div class="card m-3">
                                             <div class="card-body table-responsive p-0" style="height: 12rem;">
@@ -250,7 +252,7 @@ main_header(['list_management']);
                                         <div class="row">
                                             <div class="col-8">
                                                 <div class="form-group w-100">
-                                                    <label for="">Item Name:</label>
+                                                    <label for="">Brand Name:</label>
                                                     <input type="text" id="item_name" class="form-control inpt"
                                                         placeholder="Item Name">
                                                 </div>
@@ -288,13 +290,24 @@ main_header(['list_management']);
                                             </div>
 
                                         </div>
-                                        <div class="row">
+                                        <div class="row mt-2">
+                                            <div class="col-12">
+                                                <label for="">Category:</label>
+                                                <select name="" id="Category" class="form-control">
+                                                    <option value="" disabled selected>-- Select Category --</option>
+                                                    <option value="Generic">Generic</option>
+                                                    <option value="Branded">Branded</option>
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                        <!-- <div class="row">
                                             <div class="col-12">
                                                 <label for="">Expiration Date:</label>
                                                 <input type="date" id="item_expiry_date" class="form-control inpt">
                                             </div>
 
-                                        </div>
+                                        </div> -->
                                     </div>
                                     <div class="card-footer">
                                         <button type="button" class="btn btn-primary" id="save_item">Submit</button>
@@ -311,7 +324,7 @@ main_header(['list_management']);
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-4">
+                                    <!-- <div class="col-4">
                                         <div class="card m-3">
                                             <div class="card-header">
                                                 <h3 class="card-title">
@@ -319,17 +332,18 @@ main_header(['list_management']);
                                                 </h3>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-8">
+                                    </div> -->
+                                    <div class="col-12">
                                         <div class="card m-3">
                                             <div class="card-body table-responsive p-0" style="height: 22.6rem;">
                                                 <table class="table table-hover text-nowrap">
                                                     <thead>
                                                         <tr>
-                                                            <th>Item Name</th>
-                                                            <th>Item Code</th>
+                                                            <th>Brand Name</th>
+                                                            <th>Description</th>
+                                                            <th>Category</th>
                                                             <th>Status</th>
-                                                            <th>Expiration Date</th>
+                                                            <!-- <th>Expiration Date</th> -->
                                                         </tr>
                                                     </thead>
                                                     <tbody id="load_items">
@@ -430,7 +444,7 @@ main_header(['list_management']);
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-4">
+                                    <!-- <div class="col-4">
                                         <div class="card m-3">
                                             <div class="card-header">
                                                 <h3 class="card-title">
@@ -438,8 +452,8 @@ main_header(['list_management']);
                                                 </h3>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-8">
+                                    </div> -->
+                                    <div class="col-12">
                                         <div class="card m-3">
                                             <div class="card-body table-responsive p-0" style="height: 34.3rem;">
                                                 <table class="table table-hover text-nowrap">
@@ -474,6 +488,9 @@ main_header(['list_management']);
                 <a class="nav-link active" id="accounts-sub-tab" data-toggle="tab" href="#accounts-sub" role="tab">User Accounts</a>
                 </li>
                 <li class="nav-item">
+                <a class="nav-link" id="buyers" data-toggle="tab" href="#buyers-sub" role="tab">Buyers</a>
+                </li>
+                <li class="nav-item">
                 <a class="nav-link" id="items-sub-tab" data-toggle="tab" href="#items-sub" role="tab">Role Based Access Control</a>
                 </li>
             </ul>
@@ -481,7 +498,7 @@ main_header(['list_management']);
             <!-- Sub Tab Content -->
             <div class="tab-content" id="accountsubTabsContent">
                 <div class="tab-pane fade show active" id="accounts-sub" role="tabpanel">
-                <!-- your table + search + button here -->
+                    <!-- your table + search + button here -->
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12">
                             <!-- NEW CUSTOMER -->
@@ -597,6 +614,68 @@ main_header(['list_management']);
                 </div>
                 <div class="tab-pane fade" id="items-sub" role="tabpanel">
                 <!-- categories content -->
+                </div>
+                 <div class="tab-pane fade" id="buyers-sub" role="tabpanel">
+                            <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <!-- NEW CUSTOMER -->
+                            <div class="card">
+                                <div class="card-header new-color">
+                                    <h3 class="card-title">New Buyer</h3>
+                                </div>
+                                <form>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="form-group w-100">
+                                                    <label for="">First Name</label>
+                                                    <input type="text" id="B_FName" class="form-control inpt"
+                                                        placeholder="First Name">
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-group w-100">
+                                                    <label for="">Contact Number</label>
+                                                    <input type="number" id="B_CNum" class="form-control inpt" placeholder="Contact Number">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card-footer">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                            data-target="#modal-default" id="save_buyer">Submit</button>
+                                        <button type="button" class="btn btn-warning" id="update_buyer" value=""
+                                            style="display:none">Update</button>
+                                        <button type="button" class="btn btn-danger" data-toggle="modal"
+                                            data-target="#d_modal-default" id="delete_buyer" value="" style="display:none">Delete
+                                            User</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="card">
+                                <div class="card-header new-color">
+                                    <h3 class="card-title">User lists</h3>
+                                </div>
+
+                                <div class="card-body table-responsive p-0" style="height: 280px;">
+                                    <table class="table table-hover text-nowrap">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Username</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="load_buyers">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                              
                 </div>
             </div>
         </div>

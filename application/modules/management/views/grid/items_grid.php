@@ -8,16 +8,21 @@ foreach ($items as $key => $value) {
     data-item_code="<?=$value->item_code?>" 
     data-short_name="<?=$value->short_name?>" 
     data-description="<?=$value->description?>" 
+    data-category="<?=$value->Category?>" 
     data-status="<?=$value->active?>" 
     >
 
 
-        <td><?= $value->item_name ?></td>
-        <td><?= $value->item_code ?></td>
+         <td>
+            <?= $value->item_name ?><br>
+            <small class="text-muted"><?= $value->item_code ?></small>
+        </td>
+        <td><?= $value->description ?></td>
+        <td><?= $value->Category ?></td>
         <td style="color: <?= $value->active == "1" ? 'green' : 'red' ?>">
             <b><?= $value->active == "1" ? 'Active' : 'In-active' ?></b>
         </td>
-        <td><?=date("M d, Y", strtotime( @$value->item_expiry_date)) ?></td>
+        <!-- <td><?=date("M d, Y", strtotime( @$value->item_expiry_date)) ?></td> -->
     </tr>
 <?php
 }

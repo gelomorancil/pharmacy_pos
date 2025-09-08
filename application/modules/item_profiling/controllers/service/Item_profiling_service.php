@@ -23,7 +23,7 @@ class Item_profiling_service extends MY_Controller
 	public function save_item_profile(){
 		$this->ipsModel->item_id = $this->input->post('item_id');
 		$this->ipsModel->unit_id = $this->input->post('unit_id');
-		$this->ipsModel->unit_price = $this->input->post('unit_price');
+		// $this->ipsModel->unit_price = $this->input->post('unit_price');
 		$this->ipsModel->threshold = $this->input->post('threshold');
 
 		$response = $this->ipsModel->save_item_profile();
@@ -36,7 +36,7 @@ class Item_profiling_service extends MY_Controller
 
 		$this->ipsModel->item_id = $this->input->post('item_id');
 		$this->ipsModel->unit_id = $this->input->post('unit_id');
-		$this->ipsModel->unit_price = $this->input->post('unit_price');
+		// $this->ipsModel->unit_price = $this->input->post('unit_price');
 		$this->ipsModel->threshold = $this->input->post('threshold');
 
 		$response = $this->ipsModel->update_item_profile();

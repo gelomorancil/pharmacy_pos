@@ -64,6 +64,7 @@ $array = array(
     'proof' => 'tbl_proof',
     'purchase_order' => 'tbl_purchase_order',
     'purchase_order_items' => 'tbl_purchase_order_items',
+    'buyers' => 'tbl_buyers',
 
 
 

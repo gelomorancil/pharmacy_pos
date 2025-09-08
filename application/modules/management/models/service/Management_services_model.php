@@ -33,7 +33,8 @@ class Management_services_model extends CI_Model
                 'item_code' => $this->item_code,
                 'short_name' => $this->short_name,
                 'description' => $this->description,
-                'item_expiry_date' => $this->item_expiry_date,
+                'Category' => $this->category,
+                // 'item_expiry_date' => $this->item_expiry_date,
                 'active' => $this->status,
             );
 
@@ -112,8 +113,9 @@ class Management_services_model extends CI_Model
                 'item_code' => $this->item_code,
                 'description' => $this->description,
                 'short_name' => $this->short_name,
-                'item_expiry_date' => $this->item_expiry_date,
+                // 'item_expiry_date' => $this->item_expiry_date,
                 'active' => $this->status,
+                'Category' => $this->category,
             );
 
             $this->db->trans_start();
@@ -404,6 +406,42 @@ class Management_services_model extends CI_Model
 
             $this->db->where('id', $this->unit_id);
             $this->db->delete($this->Table->unit);
+
+            $this->db->trans_complete();
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                throw new Exception(ERROR_PROCESSING, true);
+            } else {
+                $this->db->trans_commit();
+                return array('message' => SAVED_SUCCESSFUL, 'has_error' => false);
+            }
+        } catch (Exception $msg) {
+            return (array('message' => $msg->getMessage(), 'has_error' => true));
+        }
+    }
+
+    public function save_buyer()
+    {
+        try {
+
+            $data = array(
+                'FName' => $this->FName,
+                'CNum' => $this->CNum,
+            );
+
+            $emptyFields = array_filter($data, function ($value) {
+                // Only check for null or empty string, not other falsy values like '0' or 0
+                return $value === null || $value === '';
+            });
+
+            if (!empty($emptyFields)) {
+                throw new Exception(MISSING_DETAILS, true);
+            }
+
+
+            $this->db->trans_start();
+
+            $this->db->insert($this->Table->buyers, $data);
 
             $this->db->trans_complete();
             if ($this->db->trans_status() === FALSE) {

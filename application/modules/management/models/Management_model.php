@@ -95,4 +95,21 @@ class Management_model extends CI_Model
         return $query->result();
     }
 
+    public function get_buyers(){
+        $this->db->select('*');
+        $this->db->from($this->Table->buyers);
+        $this->db->where('ID !=', 1);
+        $this->db->order_by('FName','asc');
+        $query = $this->db->get()->result();
+        return $query;
+    }
+
+    public function get_buyers_details(){
+        $this->db->select('*');
+        $this->db->from($this->Table->buyers);
+        $this->db->where('ID', $this->buyer_id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
 }

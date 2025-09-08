@@ -7,7 +7,7 @@ var load_items = () => {
   });
 }
 
-var load_suppliers = () => {
+var load_supplier = () => {
   $(document).gmLoadPage({
     url: 'management/load_suppliers',
     load_on: '#load_suppliers'
@@ -50,16 +50,22 @@ var load_user = () => {
   });
 }
 
+var load_buyers = () => {
+  $(document).gmLoadPage({
+    url: 'management/load_buyers',
+    load_on: '#load_buyers'
+  });
+}
 
 $(document).ready(function () {
   load_items();
   load_user();
-  load_suppliers();
+  load_supplier();
   load_units();
-
-  load_items_drop_down();
-  load_supplier_drop_down();
-  load_unit_drop_down();
+  load_buyers();
+  // load_items_drop_down();
+  // load_supplier_drop_down();
+  // load_unit_drop_down();
 });
 
 
@@ -82,8 +88,9 @@ $('#save_item').click(function () {
               item_code: $('#code').val(),
               short_name: $('#short_name').val(),
               description: $('#item_description').val(),
+              category: $('#Category').val(),
               status: $('#item_status').val(),
-              w: $('#item_expiry_date').val(),
+              // w: $('#item_expiry_date').val(),
             },
             success: function (e) {
               var e = JSON.parse(e);
@@ -97,6 +104,7 @@ $('#save_item').click(function () {
                 $('#short_name').val("");
                 $('#item_status').val("1");
                 $('#item_description').val("");
+                $('#Category').val("");
                 // setTimeout(function () {
                 //   window.location.reload();
                 // }, 2000);
@@ -138,6 +146,7 @@ $('#update_item').click(function () {
               short_name: $('#short_name').val(),
               description: $('#item_description').val(),
               status: $('#item_status').val(),
+              category: $('#Category').val(),
             },
             success: function (e) {
               var e = JSON.parse(e);
@@ -151,6 +160,7 @@ $('#update_item').click(function () {
                 $('#short_name').val("");
                 $('#item_status').val("1");
                 $('#item_description').val("");
+                $('#Category').val("");
                 setTimeout(function () {
                   window.location.reload();
                 }, 500);
@@ -181,6 +191,7 @@ var editItem = (data) => {
   $('#short_name').val(data.getAttribute('data-short_name'));
   $('#item_status').val(data.getAttribute('data-status'));
   $('#item_description').val(data.getAttribute('data-description'));
+  $('#Category').val(data.getAttribute('data-category'));
 
 
   $('#save_item').hide();
@@ -333,7 +344,7 @@ $('#save_supplier').click(function () {
               var e = JSON.parse(e);
               if (!e.has_error) {
                 toastr.success(e.message);
-                load_suppliers();
+                load_supplier();
                 load_supplier_drop_down();
 
                 $('#supplier_name').val("");
@@ -392,7 +403,7 @@ $('#update_supplier').click(function () {
               var e = JSON.parse(e);
               if (!e.has_error) {
                 toastr.success(e.message);
-                load_suppliers();
+                load_supplier();
                 load_supplier_drop_down();
 
                 $('#supplier_name').val("");
@@ -576,3 +587,73 @@ $('#reset_pass').click(function () {
   })
 });
 
+$('#save_buyer').click(function () {
+  $.confirm({
+    title: 'Confirmation',
+    icon: 'fa fa-question-circle',
+    content: 'Are you sure you want to save this buyer?',
+    buttons: {
+      confirm: {
+        text: 'Confirm',
+        btnClass: 'btn-success',
+        action: function () {
+          $.post({
+            url: 'management/service/Management_service/save_buyer',
+            data: {
+              FName: $('#B_FName').val(),
+              LName: $('#B_LName').val(),
+              CNum: $('#B_CNum').val()
+            },
+            success: function (e) {
+              var e = JSON.parse(e);
+              if (!e.has_error) {
+                toastr.success(e.message);
+                // load_units();
+                // load_unit_drop_down();
+
+                $('#B_FName').val("");
+                $('#B_CNum').val("");
+                // setTimeout(function () {
+                //   window.location.reload();
+                // }, 2000);
+              } else {
+                $('#List').attr('class', 'form-control inpt is-invalid');
+                toastr.error(e.message);
+              }
+            },
+          });
+        },
+      },
+      cancel: {
+        text: 'Cancel',
+        btnClass: 'btn-danger',
+        action: function () {
+        },
+      },
+    },
+  });
+});
+
+var editFunctionBuyers = (x) => {
+  global_user_id = x;
+
+  $.post({
+    url: 'management/get_buyer_details',
+    // selector: '.form-control',
+    data: {
+      buyer_id: x,
+    },
+    success: function (e) {
+      var e = JSON.parse(e);
+      $('#B_FName').val(e.FName);
+      $('#B_CNum').val(e.CNum);
+
+      $('#Update').val(e.ID);
+      $('#delete_user').val(e.ID);
+
+      $('#save_buyer').css('display', 'none');
+      $('#update_buyer').css('display', 'inline');
+      $('#delete_buyer').css('display', 'inline');
+    },
+  })
+}

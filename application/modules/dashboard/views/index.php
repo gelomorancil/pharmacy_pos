@@ -1,6 +1,21 @@
 <?php
 main_header(['dashboard']);
 ?>
+  <style>
+
+    /* Scrollable table for low stock */
+    .scrollable-table {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    /* Fix table header when scrolling */
+    .scrollable-table thead th {
+      position: sticky;
+      top: 0;
+      background: #e9ecef;
+      z-index: 2;
+    }
+  </style>
 <!-- ############ PAGE START-->
 
 <div class="content-header">
@@ -21,123 +36,136 @@ main_header(['dashboard']);
 
 
 <section class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-4">
-                <div class="card">
-                    <div class="card-body table-responsive p-0 card-success" style="height: 50vh;">
-                        <div class="card-header">
-                            <div class="car-tools m-2">
-                                <div class="row">
-                                    <div class="col-6 d-flex justify-content-center align-items-center">
-                                        <h4><b>TOP SELLING ITEMS:</b></h4>
-                                    </div>
-
-                                    <div class="col-3">
-                                        <label for="month">Select Month:</label>
-                                        <select id="month" name="month" class="form-control">
-                                            <!-- Month options will be populated by JavaScript -->
-                                        </select>
-                                    </div>
-                                    <div class="col-3">
-                                        <label for="year">Select Year:</label>
-
-                                        <select id="year" name="year" class="form-control">
-                                            <!-- Generate options dynamically in JavaScript for a range of years -->
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <table class="table table-hover text-nowrap table-sm table-striped">
-                            <thead>
-                                <tr class="text-center">
-                                    <th>Rank</th>
-                                    <th>Item Code</th>
-                                    <th>Item Name</th>
-                                    <th>Monthly Sales (QTY)</th>
-                                </tr>
-                            </thead>
-                            <tbody id="top_items">
-                                <!-- Top Items Table Loaded Here via JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="card-footer">
-                    </div>
-                </div>
-            </div>
-            <div class="col-8">
-                <div class="row">
-                    <div class="col-12" id="top_items_chart">
-                        <!-- Top Items Chart Loaded Here Via JS -->
-                    </div>
-                </div>
-            </div>
+<div class="container-fluid mt-4">
+  <div class="row d-flex align-items-stretch">
+    <!-- Top 10 Selling Items -->
+    <div class="col-lg-6 mb-4 d-flex">
+      <div class="card w-100 h-100">
+        <div class="card-header new-color">Top 10 Selling Items</div>
+        <div class="card-body p-0">
+          <table class="table table-hover mb-0">
+            <thead class="thead-light">
+              <tr>
+                <th>Item Name</th>
+                <th>Sales Sold</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Item A</td><td>120</td></tr>
+              <tr><td>Item B</td><td>95</td></tr>
+              <tr><td>Item C</td><td>80</td></tr>
+              <tr><td>Item D</td><td>70</td></tr>
+              <tr><td>Item E</td><td>65</td></tr>
+              <tr><td>Item F</td><td>50</td></tr>
+              <tr><td>Item G</td><td>40</td></tr>
+              <tr><td>Item H</td><td>35</td></tr>
+              <tr><td>Item I</td><td>25</td></tr>
+              <tr><td>Item J</td><td>20</td></tr>
+            </tbody>
+          </table>
         </div>
-        <div class="row">
-            <!-- <h3 class="card-title">Dashboard</h3> -->
-            <div class="col-4">
-                <div class="card card-danger">
-                    <div class="card-header text-center">
-                        <h3 class="card-title">Items Low on Stock</h3>
-                    </div>
-                    <form>
-                        <div class="card-body" style="height: 43.2vh;">
-                            <div id="load_inventory">
-                                <!-- Inventory Loaded here via JS -->
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="col-8">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-body table-responsive p-0" style="height: 50vh;">
-                                <div class="card-header">
-                                    <div class="row">
-                                        <div class="col-10">
-                                            <h4><b>MONTHLY SALES</b></h4>
-                                        </div>
-                                        <div class="col-2">
-                                            <select class="form-control" style="width: 100%;" id="sales_year">
-                                                <?php $date = date('Y'); ?>
-                                                <option selected="selected" value="<?= $date ?>"><?= $date ?></option>
-                                                <option value="<?= $date - 1 ?>"><?= $date - 1 ?></option>
-                                                <option value="<?= $date - 2 ?>"><?= $date - 2 ?></option>
-                                                <option value="<?= $date - 3 ?>"><?= $date - 3 ?></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <table class="table table-hover text-nowrap table-sm table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>MONTH</th>
-                                            <th>SALES</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="report-summary">
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- <div class="col-12" id="load_monthly_sales">
-                        Monthly Sales Loaded Here Via JS
-                        <?php
-                        // include('grid/chart.php');
-                        ?>
-                    </div> -->
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+
+    <!-- Top 10 Buyers -->
+    <div class="col-lg-6 mb-4 d-flex">
+      <div class="card w-100 h-100">
+        <div class="card-header new-color">Top 10 Buyers</div>
+        <div class="card-body p-0">
+          <table class="table table-hover mb-0">
+            <thead class="thead-light">
+              <tr>
+                <th>Buyer Name</th>
+                <th>Email</th>
+                <th>Total Purchases</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>John Doe</td><td>john@example.com</td><td>₱50,000</td></tr>
+              <tr><td>Jane Smith</td><td>jane@example.com</td><td>₱45,000</td></tr>
+              <tr><td>Michael Reyes</td><td>mike@example.com</td><td>₱40,000</td></tr>
+              <tr><td>Ana Cruz</td><td>ana@example.com</td><td>₱38,500</td></tr>
+              <tr><td>Robert Lee</td><td>robert@example.com</td><td>₱36,000</td></tr>
+              <tr><td>Maria Santos</td><td>maria@example.com</td><td>₱34,000</td></tr>
+              <tr><td>Carlos Tan</td><td>carlos@example.com</td><td>₱32,000</td></tr>
+              <tr><td>Lisa Wang</td><td>lisa@example.com</td><td>₱30,000</td></tr>
+              <tr><td>Paul Gomez</td><td>paul@example.com</td><td>₱28,000</td></tr>
+              <tr><td>Sophia Lim</td><td>sophia@example.com</td><td>₱25,000</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row d-flex align-items-stretch">
+    <!-- Low Stock Items -->
+    <div class="col-lg-6 mb-4 d-flex">
+      <div class="card w-100 h-100">
+        <div class="card-header new-color">Items Low on Stock</div>
+        <div class="card-body p-0">
+          <div class="scrollable-table">
+            <table class="table table-hover mb-0">
+              <thead class="thead-light">
+                <tr>
+                  <th>Item</th>
+                  <th>Remaining Stock</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="table-danger"><td>Item X</td><td>2</td></tr>
+                <tr class="table-danger"><td>Item Y</td><td>4</td></tr>
+                <tr><td>Item Z</td><td>10</td></tr>
+                <tr><td>Item W</td><td>8</td></tr>
+                <tr><td>Item Q</td><td>15</td></tr>
+                <tr><td>Item L</td><td>12</td></tr>
+                <tr><td>Item M</td><td>9</td></tr>
+                <tr><td>Item N</td><td>7</td></tr>
+                <tr><td>Item O</td><td>3</td></tr>
+                <tr><td>Item P</td><td>6</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Monthly Sales -->
+    <div class="col-lg-6 mb-4 d-flex">
+      <div class="card w-100 h-100">
+        <div class="card-header new-color d-flex justify-content-between align-items-center">
+          <span>Running Monthly Sales</span>
+          <form>
+            <select name="year" class="form-control form-control-sm">
+              <option value="2025" selected>2025</option>
+              <option value="2024">2024</option>
+              <option value="2023">2023</option>
+            </select>
+          </form>
+        </div>
+        <div class="card-body p-0">
+          <table class="table table-hover mb-0">
+            <thead class="thead-light">
+              <tr>
+                <th>Month</th>
+                <th>Sales</th>
+                <th>Expense</th>
+                <th>Gross</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>January</td><td>₱100,000</td><td>₱40,000</td><td>₱60,000</td></tr>
+              <tr><td>February</td><td>₱90,000</td><td>₱35,000</td><td>₱55,000</td></tr>
+              <tr><td>March</td><td>₱110,000</td><td>₱45,000</td><td>₱65,000</td></tr>
+              <tr><td>April</td><td>₱120,000</td><td>₱50,000</td><td>₱70,000</td></tr>
+              <tr><td>May</td><td>₱105,000</td><td>₱42,000</td><td>₱63,000</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 </section>
 
 <!-- ############ PAGE END-->

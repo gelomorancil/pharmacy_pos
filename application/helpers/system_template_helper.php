@@ -50,11 +50,11 @@ function main_header($menubar = [])
   //   }
   // }
 
-//   function expiry_flag_status() {
-//     $CI =& get_instance();
-//     $CI->load->model('management/Management_model');
-//     return $CI->Management_model->check_nearly_expired_stocks();
-// }
+  function expiry_flag_status() {
+    $CI =& get_instance();
+    $CI->load->model('management/Management_model');
+    return $CI->Management_model->check_nearly_expired_stocks();
+}
 
   ?>
   <!DOCTYPE html>
@@ -66,7 +66,7 @@ function main_header($menubar = [])
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= SYSTEM_MODULE ?></title>
-    <link rel="icon" href="<?= base_url() ?>assets/images/Logo/payment.png" type="image/x-icon">
+    <link rel="icon" href="<?= base_url() ?>assets/images/Logo/logo-alone.png" type="image/x-icon">
 
     <!-- Google Font: Source Sans Pro -->
     <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"> -->
@@ -142,14 +142,20 @@ function main_header($menubar = [])
         </ul>
 
         <!-- Right navbar links -->
-        <ul class="navbar-nav ml-auto">
-          <!-- <li class="nav-item">
-            <h5 class="text-white"><b><?= date('M d, Y - h:i A'); ?></b></h5>
-          </li> -->
-          <li class="nav-item">
-            <a class="nav-link" id="signout" role="button">
-              <i class="fas fa-power-off"></i>
+         <ul class="navbar-nav ml-auto new-color">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fas fa-user"></i>
             </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+              <span class="dropdown-item-text">
+                <!-- PHP session or Laravel auth name -->
+                <?php echo $session->Username?>
+              </span>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" id="signout" role="button">Logout</a>
+            </div>
           </li>
         </ul>
       </nav>
@@ -159,9 +165,9 @@ function main_header($menubar = [])
       <aside class="main-sidebar elevation-4 new-color">
       <!-- <aside class="main-sidebar sidebar-dark-primary elevation-4"> -->
         <!-- Brand Logo -->
-        <a href="index3.html" class="brand-link">
-          <img src="<?= base_url() ?>assets/images/Logo/payment.png" alt="AdminLTE Logo"
-            class="brand-image img-circle" style="opacity: .8">
+        <a href="<?= base_url() ?>dashboard" class="brand-link">
+          <img src="<?= base_url() ?>assets/images/Logo/logo-alone.png" alt="AdminLTE Logo"
+            class="brand-image img-circle" style="opacity:1">
           <span class="brand-text font-weight-light" style="color: #fff"><?= SYSTEM_MODULE ?></span>
         </a>
 
@@ -173,8 +179,9 @@ function main_header($menubar = [])
           <img src="<?= base_url() ?>assets/theme/adminlte/adminLTE/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div> -->
             <div class="info text-wrap">
-              <a href="<?= base_url() ?>/user_profile/index/<?= $session->U_ID ?>"
-                style="color: #fff" class="d-block"><?= '<b>' . ucfirst($session->Role) . ":</b> " . ucfirst($session->FName) . " " . ucfirst($session->LName) ?></a>
+              <?= '<b>' . ucfirst($session->Role) . ":</b> " . ucfirst($session->FName) . " " . ucfirst($session->LName) ?>
+              <!-- <a href="<?= base_url() ?>/user_profile/index/<?= $session->U_ID ?>"
+                style="color: #fff" class="d-block"><?= '<b>' . ucfirst($session->Role) . ":</b> " . ucfirst($session->FName) . " " . ucfirst($session->LName) ?></a> -->
             </div>
           </div>
           <!-- <button class="btn btn-sm btn-flat btn-primary" id="change" value="Cebu">Change</button> -->

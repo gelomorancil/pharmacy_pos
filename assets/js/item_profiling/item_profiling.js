@@ -41,7 +41,7 @@ $('#save_item_profile').click(function () {
                         data: {
                             item_id: $('#item_id').val(),
                             unit_id: $('#unit_id').val(),
-                            unit_price: $('#unit_price').val(),
+                            // unit_price: $('#unit_price').val(),
                             threshold: $('#threshold').val(),
                         },
                         success: function (e) {
@@ -98,7 +98,7 @@ $('#update_item_profile').click(function () {
 
                             item_id: $('#item_id').val(),
                             unit_id: $('#unit_id').val(),
-                            unit_price: $('#unit_price').val(),
+                            // unit_price: $('#unit_price').val(),
                             threshold: $('#threshold').val(),
                         },
                         success: function (e) {
