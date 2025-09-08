@@ -88,16 +88,29 @@ class Inventory_services_model extends CI_Model
         }
 
         foreach($this->items as $val){
+
+            if( $val['pcs']!=null && $val['pcs'] > 0 ){
             $itemRow = [
                 'date_expiry' => $val['date_expiry'],
                 'item_ID'     => $val['item_id'],
                 'unit_price'  => $val['unit_price'],
                 'unit_ID'     => $val['unit_id'],
-                'threshold'   => $val['threshold'],
+                'po_descr'   => $val['desc'],
+                'qty'   => intval($val['pcs'] * $val['qty']),
+                'pcs'   => $val['qty'],
+                'po_ID'    => $po_id,
+            ];
+            } else {
+            $itemRow = [
+                'date_expiry' => $val['date_expiry'],
+                'item_ID'     => $val['item_id'],
+                'unit_price'  => $val['unit_price'],
+                'unit_ID'     => $val['unit_id'],
+                'po_descr'   => $val['desc'],
                 'qty'   => $val['qty'],
                 'po_ID'    => $po_id,
             ];
-    
+            }
             $emptyItemFields = array_filter($itemRow, function ($value) {
                 return $value === null || $value === '';
             });
@@ -159,15 +172,29 @@ public function update_po_with_items($data)
     $this->db->where('po_ID', $poID)->delete($this->Table->purchase_order_items);
 
     // Insert new items
-    foreach ($data['items'] as $item) {
-        $itemRow = [
-            'po_ID'       => $poID,
-            'date_expiry' => $item['date_expiry'],
-            'unit_price'  => $item['unit_price'],
-            'threshold'   => $item['threshold'],
-            'unit_ID'     => $item['unit_id'], // if you need mapping
-            'item_ID'     => $item['item_id']
-        ];
+    foreach ($data['items'] as $val) {
+        if( $val['pcs']!=null && $val['pcs'] > 0 ){
+            $itemRow = [
+                'date_expiry' => $val['date_expiry'],
+                'item_ID'     => $val['item_id'],
+                'unit_price'  => $val['unit_price'],
+                'unit_ID'     => $val['unit_id'],
+                'po_descr'   => $val['desc'],
+                'qty'   => intval($val['pcs'] * $val['qty']),
+                'pcs'   => $val['qty'],
+                'po_ID'    => $poID,
+            ];
+            } else {
+            $itemRow = [
+                'date_expiry' => $val['date_expiry'],
+                'item_ID'     => $val['item_id'],
+                'unit_price'  => $val['unit_price'],
+                'unit_ID'     => $val['unit_id'],
+                'po_descr'   => $val['desc'],
+                'qty'   => $val['qty'],
+                'po_ID'    => $poID,
+            ];
+            }
         $this->db->insert($this->Table->purchase_order_items, $itemRow);
     }
 

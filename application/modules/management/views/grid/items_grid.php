@@ -17,7 +17,7 @@ foreach ($items as $key => $value) {
         <td style="color: <?= $value->active == "1" ? 'green' : 'red' ?>">
             <b><?= $value->active == "1" ? 'Active' : 'In-active' ?></b>
         </td>
-        <td><?=date("M d, Y", strtotime( @$value->item_expiry_date)) ?></td>
+        <!-- <td><?=date("M d, Y", strtotime( @$value->item_expiry_date)) ?></td> -->
     </tr>
 <?php
 }

@@ -63,6 +63,13 @@ class Management extends MY_Controller
 		$this->load->view('layout', $this->data);
 	}
 
+	public function load_clients()
+	{
+		$this->data['clients'] = $this->mModel->get_clients();
+		$this->data['content'] = 'grid/clients_grid';
+		$this->load->view('layout', $this->data);
+	}
+
 	public function load_suppliers()
 	{
 		$this->data['suppliers'] = $this->mModel->get_suppliers();
