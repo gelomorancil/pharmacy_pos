@@ -124,12 +124,12 @@ $subtotal = floatval(0);
       </thead>
       <tbody>
         <?php foreach($po_items as $items) {
-
-          $row_amount = floatval($items->qty * $items->unit_price);
+          $item_qty = ($items->pcs != null && $items->pcs > 0) ? $items->pcs : $items->qty;
+          $row_amount = floatval($item_qty * $items->unit_price);
           $subtotal += $row_amount;
           ?>
         <tr>
-          <td><?=$items->qty?></td>
+          <td><?=$item_qty?></td>
           <td><?=$items->unit_of_measure?></td>
           <td class="text-start"><?=$items->description?></td>
           <td><?=$items->item_name?></td>

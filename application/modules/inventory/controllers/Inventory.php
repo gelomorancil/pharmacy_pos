@@ -87,4 +87,10 @@ class Inventory extends MY_Controller
         }
     }
 
+	public function fill_in_item () {
+		$item_ID = $this->input->post('item_ID');
+		$response = $this->iModel->get_item_data($item_ID);
+		echo json_encode($response);
+	}
+
 }

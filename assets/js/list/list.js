@@ -57,15 +57,23 @@ var load_buyers = () => {
   });
 }
 
+var load_clients = () => {
+  $(document).gmLoadPage({
+    url: 'management/load_clients',
+    load_on: '#load_clients'
+  });
+}
+
 $(document).ready(function () {
   load_items();
   load_user();
   load_supplier();
   load_units();
-  load_buyers();
-  // load_items_drop_down();
-  // load_supplier_drop_down();
-  // load_unit_drop_down();
+  load_clients();
+
+  load_items_drop_down();
+  load_supplier_drop_down();
+  load_unit_drop_down();
 });
 
 
@@ -587,73 +595,168 @@ $('#reset_pass').click(function () {
   })
 });
 
-$('#save_buyer').click(function () {
+// client management
+
+// Save Client
+$('#save_client').click(function () {
+  // basic required-field check
+  if ($.trim($('#client-name').val()) === '') {
+    $('#client-name').addClass('is-invalid');
+    return toastr.error('Client Name is required.');
+  }
+
   $.confirm({
     title: 'Confirmation',
     icon: 'fa fa-question-circle',
-    content: 'Are you sure you want to save this buyer?',
+    content: 'Are you sure you want to save client details?',
     buttons: {
       confirm: {
         text: 'Confirm',
         btnClass: 'btn-success',
         action: function () {
           $.post({
-            url: 'management/service/Management_service/save_buyer',
+            url: 'management/service/Management_service/save_client',
             data: {
-              FName: $('#B_FName').val(),
-              LName: $('#B_LName').val(),
-              CNum: $('#B_CNum').val()
+              client_name: $.trim($('#client-name').val()),
+              client_company_aff: $.trim($('#client-company-aff').val()),
+              contact_number: $.trim($('#client-cn').val()),
+              client_email: $.trim($('#client-email').val()),
+              client_status: $('#client_status').val()
             },
-            success: function (e) {
-              var e = JSON.parse(e);
+            success: function (res) {
+              let e;
+              try {
+                e = (typeof res === 'object') ? res : JSON.parse(res);
+              } catch (err) {
+                toastr.error('Invalid server response.');
+                return;
+              }
+
               if (!e.has_error) {
                 toastr.success(e.message);
-                // load_units();
-                // load_unit_drop_down();
 
-                $('#B_FName').val("");
-                $('#B_CNum').val("");
-                // setTimeout(function () {
-                //   window.location.reload();
-                // }, 2000);
+                // try all probable refresh functions if present (won't throw if absent)
+                // if (typeof load_supplier === 'function') load_supplier();
+                // if (typeof load_suppliers === 'function') load_suppliers();
+                if (typeof load_clients === 'function') load_clients();
+
+                // reset form
+                $('#client-name').val('').removeClass('is-invalid');
+                $('#client-company-aff').val('');
+                $('#client-cn').val('');
+                $('#client-email').val('');
+                $('#client_status').val('1');
+
+                // ensure buttons back to initial state
+                $('#update_client').hide();
+                $('#save_client').show();
               } else {
-                $('#List').attr('class', 'form-control inpt is-invalid');
+                $('#client-name').addClass('is-invalid');
                 toastr.error(e.message);
               }
             },
+            error: function () {
+              toastr.error("Something went wrong while saving client.");
+            }
           });
-        },
+        }
       },
       cancel: {
         text: 'Cancel',
         btnClass: 'btn-danger',
-        action: function () {
-        },
-      },
-    },
+        action: function () {}
+      }
+    }
   });
 });
 
-var editFunctionBuyers = (x) => {
-  global_user_id = x;
 
-  $.post({
-    url: 'management/get_buyer_details',
-    // selector: '.form-control',
-    data: {
-      buyer_id: x,
-    },
-    success: function (e) {
-      var e = JSON.parse(e);
-      $('#B_FName').val(e.FName);
-      $('#B_CNum').val(e.CNum);
+// Update Client
+$('#update_client').click(function () {
+  // You need a hidden input #client_id for updating (e.g. <input type="hidden" id="client_id" />)
+  // if ($('#client_id').length === 0 || $.trim($('#client_id').val()) === '') {
+  //   return toastr.error('No client selected to update. Make sure #client_id exists and contains the record id.');
+  // }
 
-      $('#Update').val(e.ID);
-      $('#delete_user').val(e.ID);
+  $.confirm({
+    title: 'Confirmation',
+    icon: 'fa fa-question-circle',
+    content: 'Are you sure you want to update client details?',
+    buttons: {
+      confirm: {
+        text: 'Confirm',
+        btnClass: 'btn-success',
+        action: function () {
+          $.post({
+            url: 'management/service/Management_service/update_client',
+            data: {
+              id: $.trim($('#client_id').val()),
+              client_name: $.trim($('#client-name').val()),
+              client_company_aff: $.trim($('#client-company-aff').val()),
+              contact_number: $.trim($('#client-cn').val()),
+              client_email: $.trim($('#client-email').val()),
+              client_status: $('#client_status').val()
+            },
+            success: function (res) {
+              let e;
+              try {
+                e = (typeof res === 'object') ? res : JSON.parse(res);
+              } catch (err) {
+                toastr.error('Invalid server response.');
+                return;
+              }
 
-      $('#save_buyer').css('display', 'none');
-      $('#update_buyer').css('display', 'inline');
-      $('#delete_buyer').css('display', 'inline');
-    },
-  })
+              if (!e.has_error) {
+                toastr.success(e.message);
+
+                if (typeof load_clients === 'function') load_clients();
+                // if (typeof load_client_dd === 'function') load_client_dd();
+
+                // reset form
+                $('#client-name').val('').removeClass('is-invalid');
+                $('#client-company-aff').val('');
+                $('#client-cn').val('');
+                $('#client-email').val('');
+                $('#client_status').val('1');
+
+                // optional: hide update button & show save button
+                $('#update_client').hide();
+                $('#save_client').show();
+
+                // refresh the page shortly to ensure table state (matches your previous behavior)
+                // setTimeout(function () {
+                //   window.location.reload();
+                // }, 500);
+              } else {
+                $('#client-name').addClass('is-invalid');
+                toastr.error(e.message);
+              }
+            },
+            error: function () {
+              toastr.error("Something went wrong while updating client.");
+            }
+          });
+        }
+      },
+      cancel: {
+        text: 'Cancel',
+        btnClass: 'btn-danger',
+        action: function () {}
+      }
+    }
+  });
+});
+
+var editClient = (data) => {
+  // console.log(data.getAttribute('data-id'));
+  $('#client_id').val(data.getAttribute('data-id'));
+
+  $('#client-name').val(data.getAttribute('data-name'));
+  $('#client-company-aff').val(data.getAttribute('data-affiliate'));
+  $('#client-cn').val(data.getAttribute('data-cnum'));
+  $('#client-email').val(data.getAttribute('data-email'));
+  $('#client_status').val(data.getAttribute('data-status'));
+
+  $('#save_client').hide();
+  $('#update_client').show();
 }

@@ -78,6 +78,12 @@ class Management_model extends CI_Model
         $query = $this->db->get()->result();
         return $query;
     }
+    public function get_clients(){
+        $this->db->select('*');
+        $this->db->from($this->Table->client_list);
+        $query = $this->db->get()->result();
+        return $query;
+    }
     
     public function check_nearly_expired_stocks() {
         $this->db->where("item_expiry_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 14 DAY)");
