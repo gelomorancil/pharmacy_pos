@@ -6,7 +6,8 @@
         <thead>
             <tr>
                 <th>Date</th>
-                <th>Sub-total</th>
+                <th>Client</th>
+                <!-- <th>Sub-total</th> -->
                 <th>Discount</th>
                 <th>Discount Type</th>
                 <th>Total Amount</th>
@@ -50,7 +51,8 @@
                         $date = DateTime::createFromFormat('Y-m-d H:i:s', $value['date_created']);
                         ?>
                         <td><b><?= $date ? $date->format('M d, Y') : 'Invalid Date' ?></b></td>
-                        <td><?= 'Php ' . number_format($value['sub_total'], 2) ?></td>
+                        <td><?= $value['buyer_name'] ?></td>
+                        <!-- <td><?= 'Php ' . number_format($value['sub_total'], 2) ?></td> -->
                         <td><?= 'Php ' . number_format($value['discount_amount'], 2) ?></td>
                         <td><?= $value['discount_type'] ?></td>
                         <td><b style="color:green;"><?= 'Php ' . number_format($value['total_amount'], 2) ?></b></td>

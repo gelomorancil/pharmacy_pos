@@ -30,7 +30,7 @@ class Cashiering_model extends CI_Model
 
         foreach ($query as $row) {
             // attach stock result directly into each row object
-            $row->current_stock = $this->get_current_stock($row->item_code);
+            $row->current_stock = $this->get_current_stock($row->id);
         }
 
         return $query;
@@ -40,21 +40,21 @@ class Cashiering_model extends CI_Model
     {
         $this->db->select('*');
         $this->db->from($this->Table->buyers);
-        $this->db->where('ID !=', '1');
-        $this->db->order_by('FName', 'asc');
+        $this->db->where('name !=', 'WALK-IN');
+        $this->db->order_by('name', 'asc');
         $query = $this->db->get()->result();
 
         return $query;
     }
 
-    public function get_current_stock($code)
+    public function get_current_stock($item_id)
     {
         $this->db->select('
-            inv.item_profile_id,
-            (SUM(inv.quantity) - IFNULL(sold_quantities.sold_quantity, 0)) AS current_stock
+            inv.item_ID,
+            (SUM(inv.qty) - IFNULL(sold_quantities.sold_quantity, 0)) AS current_stock
         ');
-        $this->db->from($this->Table->inventory . ' AS inv');
-        $this->db->join($this->Table->item_profile . ' AS ip', 'inv.item_profile_id = ip.id', 'left');
+        $this->db->from($this->Table->purchase_order_items . ' AS inv');
+        $this->db->join($this->Table->item_profile . ' AS ip', 'inv.item_ID = ip.id', 'left');
         $this->db->join($this->Table->items . ' AS items', 'ip.item_id = items.id', 'left');
 
         // Subquery for sold quantities
@@ -62,12 +62,12 @@ class Cashiering_model extends CI_Model
             "(SELECT item_profile_id, SUM(quantity) AS sold_quantity 
             FROM {$this->Table->payment_child} 
             GROUP BY item_profile_id) AS sold_quantities",
-            'sold_quantities.item_profile_id = inv.item_profile_id',
+            'sold_quantities.item_profile_id = inv.item_ID',
             'left'
         );
 
-        $this->db->where('items.item_code', $code);
-        $this->db->group_by('inv.item_profile_id');
+        $this->db->where('items.id', $item_id);
+        $this->db->group_by('inv.item_ID');
 
         $query = $this->db->get()->row();
 

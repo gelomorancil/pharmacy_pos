@@ -19,7 +19,7 @@ for (let year = startYear; year <= endYear; year++) {
 // For Month
 const monthSelect = document.getElementById('month');
 const monthNames = [
-    "January", "February", "March", "April", "May", "June",
+    "All","January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
 ];
 const currentMonth = new Date().getMonth(); // 0-based index for current month
@@ -69,6 +69,22 @@ function load_top_items(date) {
     });
 }
 
+function load_top_buyers(date) {
+    $.ajax({
+        url: 'dashboard/load_top_buyers',
+        type: 'POST',
+        data: {
+            date: date,
+        },
+        success: function (response) {
+            $('#top_buyers').html(response);
+        },
+        error: function (xhr, status, error) {
+            console.error("Error loading sales:", error);
+        }
+    });
+}
+
 function load_top_items_chart(date) {
     $.ajax({
         url: 'dashboard/load_top_items_chart',
@@ -104,12 +120,14 @@ function load_monthly_sales(year) {
 $(document).ready(function () {
     load_inventory();
     load_top_items(getCombinedDate());
+    load_top_buyers(getCombinedDate());
     load_top_items_chart(getCombinedDate());
     load_monthly_sales($('#sales_year').val());
 });
 
 $('#month, #year').change(function () {
     load_top_items(getCombinedDate());
+    load_top_buyers(getCombinedDate());
     load_top_items_chart(getCombinedDate());
 });
 

@@ -68,7 +68,9 @@ class Dashboard_model extends CI_Model
         $this->db->join($this->Table->payment_parent . ' AS pParent', 'pChild.payment_id = pParent.id', 'left');
         $this->db->join($this->Table->item_profile . ' AS ip', 'pChild.item_profile_id = ip.id', 'left');
         $this->db->join($this->Table->items . ' AS i', 'ip.item_id = i.id', 'left');
-        $this->db->where("DATE_FORMAT(pParent.date_created, '%Y-%m') =", $this->date);
+           if ($this->date !== "All") {
+                $this->db->where("DATE_FORMAT(pParent.date_created, '%Y-%m') =", $this->date);
+            }
 
         $this->db->group_by('pChild.item_profile_id');
         $this->db->order_by('sale_quantity', 'DESC');
@@ -114,5 +116,25 @@ class Dashboard_model extends CI_Model
         return $results;
     }
 
+    public function get_top_buyers()
+    {
+        $this->db->select('
+            SUM(pParent.total_amount) AS sale_quantity,
+            buyers.name AS buyer_name,
+            MAX(pParent.date_created) AS sale_date
+        ');
 
+        $this->db->from($this->Table->payment_parent . ' AS pParent');
+        $this->db->join($this->Table->buyers . ' AS buyers', 'pParent.Buyer_ID = buyers.ID', 'left');
+            if ($this->date !== "All") {
+                $this->db->where("DATE_FORMAT(pParent.date_created, '%Y-%m') =", $this->date);
+            }
+
+        $this->db->group_by('pParent.Buyer_ID');
+        $this->db->order_by('sale_quantity', 'DESC');
+        $this->db->limit(10);
+
+        $query = $this->db->get()->result();
+        return $query;
+    }
 }

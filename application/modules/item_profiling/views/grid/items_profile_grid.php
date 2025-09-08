@@ -13,7 +13,7 @@ foreach ($items_profiles as $key => $value) {
 
         <td><?= $value->item_name ?></td>
         <td><?= $value->unit_of_measure ?></td>
-        <!-- <td>Php <?= number_format($value->unit_price, 2) ?></td> -->
+        <td>Php <?= number_format($value->unit_price, 2) ?></td>
         <td><?= $value->threshold ?></td>
 
     </tr>

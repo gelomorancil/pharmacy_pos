@@ -80,7 +80,9 @@ class Management_model extends CI_Model
     }
     public function get_clients(){
         $this->db->select('*');
-        $this->db->from($this->Table->client_list);
+        // $this->db->from($this->Table->client_list);
+        $this->db->from($this->Table->buyers);
+         $this->db->where('name !=', 'WALK-IN');
         $query = $this->db->get()->result();
         return $query;
     }

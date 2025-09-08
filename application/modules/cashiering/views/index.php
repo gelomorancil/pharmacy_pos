@@ -24,6 +24,17 @@ $session = (object) get_userdata(USER);
       right: 10px;
     }
 
+    .stock-label-zero {
+      background: #ff0d003a;
+      color: #ff0000ff;
+      font-size: 12px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+
     .stock-low { background: #fff3cd; color: #856404; }
     .btn-add {
       background: #035863;
@@ -106,7 +117,7 @@ $session = (object) get_userdata(USER);
                         <div class="card p-3">
                             <small class="card-text text-muted mb-1"><?=strtoupper($i->Category)?></small>
                             <h6 class="card-title mb-1"><?=$i->item_name?></h6>
-                            <span class="stock-label">Stock: <?=$i->current_stock?></span>
+                            <span class="<?=$i->current_stock == 0 ? 'stock-label-zero' : 'stock-label'?>">Stock: <?=$i->current_stock?></span>
                             <p class="card-text text-muted mb-1"><?=$i->description?></p>
                             <small class="card-text text-muted mb-1"><?=$i->item_code?></small>
                             <div class="font-weight-bold">₱<?=$i->unit_price?></div>
@@ -114,7 +125,8 @@ $session = (object) get_userdata(USER);
                             <button class="btn btn-add" 
                                     data-name="<?=$i->item_name?>" 
                                     data-price="<?=$i->unit_price?>"
-                                    data-item_profile_id="<?=$i->item_profile_id?>">
+                                    data-item_profile_id="<?=$i->item_profile_id?>" 
+                                    <?=$i->current_stock == 0 ? 'disabled' : ''?>>
                                 <span class="fas fa-plus"></span>
                             </button>
                         </div>
@@ -140,11 +152,11 @@ $session = (object) get_userdata(USER);
                                 <option value="" disabled selected>-- Select Buyer --</option>
                                 <?php
                                     foreach($buyers as $b){ ?>
-                                        <option value="<?= $b->ID ?>"><?= ucfirst($b->FName)?></option>
+                                        <option value="<?= $b->ID ?>"><?= ucfirst($b->name)?></option>
 
                                 <?php   }
                                 ?>
-                                <option value="1">WALKIN</option>
+                                <option value="112">WALK-IN</option>
                                 <option value="0">OTHERS</option>
                             </select>
                             <input type="text" class="form-control form-control-sm" id="other_buyer"  style="width: 200px;" placeholder="Enter buyer..." hidden>

@@ -59,4 +59,13 @@ class Dashboard extends MY_Controller
 		$this->data['content'] = 'grid/load_monthly_sales';
 		$this->load->view('layout', $this->data);
 	}
+
+	public function load_top_buyers()
+	{
+		$this->dModel->date = $this->input->post('date');
+		$this->data['buyers'] = $this->dModel->get_top_buyers();
+
+		$this->data['content'] = 'grid/load_top_buyers';
+		$this->load->view('layout', $this->data);
+	}
 }
