@@ -23,6 +23,18 @@ $session = (object) get_userdata(USER);
       top: 10px;
       right: 10px;
     }
+
+    .stock-label-zero {
+      background: #ff0d003a;
+      color: #ff0000ff;
+      font-size: 12px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+
     .stock-low { background: #fff3cd; color: #856404; }
     .btn-add {
       background: #035863;
@@ -84,50 +96,79 @@ $session = (object) get_userdata(USER);
 </div>
 
 <section class="content">
-<div class="container-fluid mt-3">
-  <div class="row">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Left side: Products -->
+            <div class="col-lg-8 col-md-7 col-sm-12" style="background-color: white;">
+                
+                <!-- Search Box -->
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <form class="form-inline">
+                            <input class="form-control mr-sm-2 w-100" type="search" placeholder="Search products..." aria-label="Search" id="productSearch">
+                        </form>
+                    </div>
+                </div>
 
-<!-- Left side: Products -->
-<div class="col-lg-8 col-md-7 col-sm-12" style="background-color: white;">
-  <div class="row mt-2">
-    <?php foreach($items as $item => $i){ ?>
-      <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-        <div class="card p-3">
-          <h6 class="card-title mb-1"><?=$i->item_name?></h6>
-          <span class="stock-label">Stock: <?=$i->current_stock?></span>
-          <p class="card-text text-muted mb-1"><?=$i->description?></p>
-          <div class="font-weight-bold">₱<?=$i->unit_price?></div>
-          <!-- Add data attributes so JS can grab item info -->
-          <button class="btn btn-add" 
-                  data-name="<?=$i->item_name?>" 
-                  data-price="<?=$i->unit_price?>"
-                  data-item_profile_id="<?=$i->item_profile_id?>">
-            <span class="fas fa-plus"></span>
-          </button>
+                <!-- Product Grid -->
+                <div class="row mt-3" id="productList">
+                    <?php foreach($items as $item => $i){ ?>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-12 product-card">
+                        <div class="card p-3">
+                            <small class="card-text text-muted mb-1"><?=strtoupper($i->Category)?></small>
+                            <h6 class="card-title mb-1"><?=$i->item_name?></h6>
+                            <span class="<?=$i->current_stock == 0 ? 'stock-label-zero' : 'stock-label'?>">Stock: <?=$i->current_stock?></span>
+                            <p class="card-text text-muted mb-1"><?=$i->description?></p>
+                            <small class="card-text text-muted mb-1"><?=$i->item_code?></small>
+                            <div class="font-weight-bold">₱<?=$i->unit_price?></div>
+                            <!-- Add data attributes so JS can grab item info -->
+                            <button class="btn btn-add" 
+                                    data-name="<?=$i->item_name?>" 
+                                    data-price="<?=$i->unit_price?>"
+                                    data-item_profile_id="<?=$i->item_profile_id?>" 
+                                    <?=$i->current_stock == 0 ? 'disabled' : ''?>>
+                                <span class="fas fa-plus"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <?php } ?>
+                </div>
+            </div>
+            <!-- Right side: Cart -->
+            <div class="col-lg-4 col-md-5 col-sm-12">
+                <div class="cart-panel">
+                    <div class="cart-header">
+                        Current Sale <a href="#" id="clear-cart" class="float-right text-danger">Clear All</a>
+                    </div>
+
+                    <!-- Cart items will load here -->
+                    <div id="cart-items"></div>
+
+                    <hr>
+                  
+                    <p class="cart-total">Buyer: 
+                        <span class="float-right">
+                          <select name="" id="Buyer_id" class="form-control form-control-sm"  style="width: 200px;" >
+                                <option value="" disabled selected>-- Select Buyer --</option>
+                                <?php
+                                    foreach($buyers as $b){ ?>
+                                        <option value="<?= $b->ID ?>"><?= ucfirst($b->name)?></option>
+
+                                <?php   }
+                                ?>
+                                <option value="112">WALK-IN</option>
+                                <option value="0">OTHERS</option>
+                            </select>
+                            <input type="text" class="form-control form-control-sm" id="other_buyer"  style="width: 200px;" placeholder="Enter buyer..." hidden>
+                        </span>
+                    </p>
+                    <p class="cart-total mt-5">Discount: <span class="float-right"><input type="number" class="form-control form-control-sm" id="total_discounts"  style="width: 200px;"  placeholder="Enter discount..." ></span></p>
+                    <p class="cart-total">Total: <span class="float-right" id="total">₱0.00</span></p>
+                    <button class="btn btn-checkout" id="tend_customer">Proceed to Payment</button>
+                </div>
+            </div>
         </div>
-      </div>
-    <?php } ?>
-  </div>
-</div>
-
-<!-- Right side: Cart -->
-<div class="col-lg-4 col-md-5 col-sm-12">
-  <div class="cart-panel">
-    <div class="cart-header">
-      Current Sale <a href="#" id="clear-cart" class="float-right text-danger">Clear All</a>
     </div>
-
-    <!-- Cart items will load here -->
-    <div id="cart-items"></div>
-
-    <hr>
-    <p class="cart-total">Discount: <span class="float-right"><input type="number" class="form-control form-control-sm" id="total_discounts" ></span></p>
-    <p class="cart-total">Total: <span class="float-right" id="total">₱0.00</span></p>
-    <button class="btn btn-checkout" id="tend_customer">Proceed to Payment</button>
-  </div>
-</div>
-
-
 </section>
 
 <!-- Tend Customer Modal -->
@@ -386,7 +427,7 @@ function renderCart() {
     return `
       <div class="cart-item mb-3 pb-2 border-bottom" data-index="${i}"  data-item_profile_id="${item.item_profile_id}">
         <div><strong>${item.name}</strong></div>
-         <input type="text" disabled value="${item.item_profile_id}">
+         <input type="text" hidden value="${item.item_profile_id}">
         <div class="d-flex justify-content-between align-items-center">
           <div>
             ₱${item.price.toLocaleString("en-PH", {minimumFractionDigits:2})} each
@@ -449,5 +490,22 @@ document.getElementById("clear-cart").addEventListener("click", e => {
   e.preventDefault();
   cart = [];
   renderCart();
+});
+
+$("#productSearch").on("keyup", function () {
+    var value = $(this).val().toLowerCase();
+    $(".product-card").filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+    });
+    currentPage = 1; // reset to first page when searching
+    showPage(currentPage);
+});
+
+$("#Buyer_id").on("change", function () {
+    if(($(this).val() == 0)){
+        $('#other_buyer').removeAttr('hidden');
+    }else{
+        $('#other_buyer').attr('hidden', 'true');
+    }
 });
 </script>

@@ -213,15 +213,15 @@ main_header(['list_management']);
 
                                 <div class="row">
                                     <div class="col-4">
-                                        <div class="card m-3">
+                                        <!-- <div class="card m-3">
                                             <div class="card-header">
                                                 <h3 class="card-title">
                                                     <div id="unit_drop_down"></div>
                                                 </h3>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-12">
                                         <div class="card m-3">
                                             <div class="card-body table-responsive p-0" style="height: 12rem;">
                                                 <table class="table table-hover text-nowrap">
@@ -315,7 +315,7 @@ main_header(['list_management']);
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-4">
+                                    <!-- <div class="col-4">
                                         <div class="card m-3">
                                             <div class="card-header">
                                                 <h3 class="card-title">
@@ -323,8 +323,8 @@ main_header(['list_management']);
                                                 </h3>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-8">
+                                    </div> -->
+                                    <div class="col-12">
                                         <div class="card m-3">
                                             <div class="card-body table-responsive p-0" style="height: 22.6rem;">
                                                 <table class="table table-hover text-nowrap">
@@ -434,7 +434,7 @@ main_header(['list_management']);
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-4">
+                                    <!-- <div class="col-4">
                                         <div class="card m-3">
                                             <div class="card-header">
                                                 <h3 class="card-title">
@@ -442,8 +442,8 @@ main_header(['list_management']);
                                                 </h3>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-8">
+                                    </div> -->
+                                    <div class="col-12">
                                         <div class="card m-3">
                                             <div class="card-body table-responsive p-0" style="height: 34.3rem;">
                                                 <table class="table table-hover text-nowrap">

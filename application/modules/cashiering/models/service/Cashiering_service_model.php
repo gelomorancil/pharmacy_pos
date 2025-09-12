@@ -125,7 +125,14 @@ class Cashiering_service_model extends CI_Model
         $amount_rendered = $this->input->post('amount_rendered');
         $reference_number = $this->input->post('reference_number');
         $remarks = $this->input->post('remarks');
+        $other_buyer = $this->input->post('other_buyer');
 
+        if($this->input->post('buyer') == 0){
+            $buyer = $this->save_new_buyer($other_buyer);
+        } else{
+            $buyer = $this->input->post('buyer');
+        }
+        
         $control_number = $this->generateControlNumber();
 
         try {
@@ -140,6 +147,7 @@ class Cashiering_service_model extends CI_Model
                 'control_number' => $control_number,
                 'remarks' => $remarks,
                 'recieved_by' => $this->session->ID,
+                'Buyer_id' => $buyer,
                 // 'item_id' => $this->item_id,
             );
 
@@ -230,6 +238,32 @@ class Cashiering_service_model extends CI_Model
             }
         } catch (Exception $e) {
             return array('message' => $e->getMessage(), 'has_error' => true);
+        }
+    }
+
+    public function save_new_buyer($x)
+    {
+        try {
+
+            $data = array(
+                'FName' => $x,
+            );
+
+            $this->db->trans_start();
+
+            $this->db->insert($this->Table->buyers, $data);
+            $buyer_last_id = $this->db->insert_id();
+
+            $this->db->trans_complete();
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                throw new Exception(ERROR_PROCESSING, true);
+            } else {
+                $this->db->trans_commit();
+                return $buyer_last_id;
+            }
+        } catch (Exception $msg) {
+            return (array('message' => $msg->getMessage(), 'has_error' => true));
         }
     }
 }
