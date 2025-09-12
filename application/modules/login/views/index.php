@@ -122,7 +122,7 @@ login_header();
 
       <!-- Right Side - Image -->
       <div class="col-md-6 login-right">
-        <img src="<?= base_url()?>/assets/images/logo/zana-logo-green-bg.png" alt="Pharmacy">
+        <img src="<?= base_url()?>/assets/images/Logo/zana-logo-green-bg.png" alt="Pharmacy">
       </div>
     </div>
   </div>

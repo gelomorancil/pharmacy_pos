@@ -39,6 +39,7 @@ function main_header($menubar = [])
 
   $userRoleId = $session->Role_ID;
 
+
   // if (isset($allowedUrls[$userRoleId])) {
   //   $currentUrl = current_url();
 
@@ -54,7 +55,15 @@ function main_header($menubar = [])
     $CI =& get_instance();
     $CI->load->model('management/Management_model');
     return $CI->Management_model->check_nearly_expired_stocks();
+  }
+
+function get_image() {
+    $CI =& get_instance();
+    $CI->load->model('user_profile/User_profile_model');
+    
+    return $CI->User_profile_model->get_image();
 }
+
 
   ?>
   <!DOCTYPE html>
@@ -66,7 +75,7 @@ function main_header($menubar = [])
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= SYSTEM_MODULE ?></title>
-    <link rel="icon" href="<?= base_url() ?>assets/images/Logo/logo-alone.png" type="image/x-icon">
+    <link rel="icon" href="<?= base_url() ?>assets/images/Logo/zana-logo-green-bg.png" type="image/x-icon">
 
     <!-- Google Font: Source Sans Pro -->
     <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"> -->
@@ -114,7 +123,7 @@ function main_header($menubar = [])
         color: #fff !important;
       }
       .nav-link:hover {
-        background: #023C43 !important;
+        background: #0000000b !important;
       }
       .new-color{
         background: #035863;
@@ -135,29 +144,34 @@ function main_header($menubar = [])
       <!-- Navbar -->
       <nav class="main-header navbar navbar-expand ">
         <!-- Left navbar links -->
-        <ul class="navbar-nav">
+        <ul class="navbar-nav new-color">
           <li class="nav-item">
             <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
           </li>
         </ul>
 
         <!-- Right navbar links -->
-         <ul class="navbar-nav ml-auto new-color">
+       <ul class="navbar-nav ml-auto">
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button"
               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <i class="fas fa-user"></i>
-            </a>
+
+              <!-- Replace icon with image -->
+              <img id="profileImage"
+                class="rounded-circle"
+                src="<?= !empty(get_image()) ? base_url().'/assets/images/Users/'.get_image() : base_url().'/assets/images/Users/default-avatar.avif' ?>"
+                alt="User profile picture"
+                style="width: 35px; height: 35px; object-fit: cover;">
+    </a>
+
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-              <span class="dropdown-item-text">
-                <!-- PHP session or Laravel auth name -->
-                <?php echo $session->Username?>
-              </span>
+                 <a class="" href="<?=base_url()?>/user_profile">  <?= $session->Username ?></a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" id="signout" role="button">Logout</a>
             </div>
           </li>
         </ul>
+
       </nav>
       <!-- /.navbar -->
 
@@ -179,9 +193,9 @@ function main_header($menubar = [])
           <img src="<?= base_url() ?>assets/theme/adminlte/adminLTE/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div> -->
             <div class="info text-wrap">
-              <?= '<b>' . ucfirst($session->Role) . ":</b> " . ucfirst($session->FName) . " " . ucfirst($session->LName) ?>
-              <!-- <a href="<?= base_url() ?>/user_profile/index/<?= $session->U_ID ?>"
-                style="color: #fff" class="d-block"><?= '<b>' . ucfirst($session->Role) . ":</b> " . ucfirst($session->FName) . " " . ucfirst($session->LName) ?></a> -->
+              <!-- <?= '<b>' . ucfirst($session->Role) . ":</b> " . ucfirst($session->FName) . " " . ucfirst($session->LName) ?> -->
+              <a href="<?= base_url() ?>/user_profile/index/<?= $session->U_ID ?>"
+                style="color: #fff" class="d-block"><?= '<b>' . ucfirst($session->Role) . ":</b> " . ucfirst($session->FName) . " " . ucfirst($session->LName) ?></a>
             </div>
           </div>
           <!-- <button class="btn btn-sm btn-flat btn-primary" id="change" value="Cebu">Change</button> -->
@@ -479,7 +493,14 @@ function main_footer()
       var base_url = <?php echo json_encode(base_url()) ?>;
 
       $('#signout').on('click', function () {
-        window.location = base_url + "login/authentication";
+        // window.location = base_url + "login/authentication";
+            $.ajax({
+              url: base_url + "login/authentication",
+              type: "POST",
+              success: function () {
+                  window.location = base_url; // redirect anywhere you want
+              }
+          });
       })
 
       $(function () {

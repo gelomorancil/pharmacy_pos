@@ -66,6 +66,7 @@ $array = array(
     'purchase_order' => 'tbl_purchase_order',
     'purchase_order_items' => 'tbl_purchase_order_items',
     'buyers' => 'tbl_buyers',
+    'u_image' => 'tbl_user_image',
 
 
 
