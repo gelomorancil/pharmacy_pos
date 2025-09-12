@@ -133,27 +133,29 @@ class Inventory_model extends CI_Model
     public function get_history()
     {
         $this->db->select('
-            inv.quantity,
-            inv.date_created,
+            poi.qty,
+            poi.pcs,
+            po.date_added,
+            po.po_num,
+            po.received_by,
 
             unit.unit_of_measure,
 
             items.item_name,
-            items.short_name,
-            items.item_code,
-            items.description,
+            poi.po_descr,
 
             supplier.supplier_name
         ');
 
-        $this->db->from($this->Table->inventory . ' AS inv');
-        $this->db->join($this->Table->item_profile . ' AS ip', 'inv.item_profile_id = ip.id', 'left');
-        $this->db->join($this->Table->items . ' AS items', 'ip.item_id = items.id', 'left');
-        $this->db->join($this->Table->unit . ' AS unit', 'ip.unit_id = unit.id', 'left');
-        $this->db->join($this->Table->supplier . ' AS supplier', 'inv.supplier_id = supplier.id', 'left');
+        $this->db->from($this->Table->purchase_order . ' AS po');
+        $this->db->join($this->Table->purchase_order_items . ' AS poi', 'poi.po_ID = po.ID', 'left');
+        $this->db->join($this->Table->items . ' AS items', 'poi.item_ID = items.id', 'left');
+        $this->db->join($this->Table->unit . ' AS unit', 'poi.unit_ID = unit.id', 'left');
+        $this->db->join($this->Table->supplier . ' AS supplier', 'po.supplier_ID = supplier.id', 'left');
 
-        $this->db->where('inv.item_profile_id', $this->id);
-        $this->db->order_by('inv.date_created', 'DESC');
+        $this->db->where('poi.item_ID', $this->id);
+        $this->db->where('po.approved', 1);
+        $this->db->order_by('po.date_approved', 'DESC');
         $this->db->limit(50);
 
         $query = $this->db->get()->result();
