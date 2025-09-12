@@ -123,8 +123,6 @@ class Inventory_model extends CI_Model
         );
     
         $this->db->where('po.approved', 1);
-    
-        // Keep or trim columns here depending on how you want to group rows
         $this->db->group_by('inv.item_ID, ip.threshold, unit.unit_of_measure, items.item_name, items.short_name, items.item_code, items.description');
     
         return $this->db->get()->result();

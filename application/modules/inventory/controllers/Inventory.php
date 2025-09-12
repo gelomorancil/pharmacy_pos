@@ -33,6 +33,7 @@ class Inventory extends MY_Controller
 
 	public function load_inventory(){
 		$this->data['inventory'] = $this->iModel->get_inventory();
+		var_dump($this->data['inventory']);
 		$this->data['content'] = 'grid/load_inventory';
 		$this->load->view('layout', $this->data);
 	}

@@ -18,6 +18,7 @@ function main_header($menubar = [])
       base_url() . 'cashiering',
       base_url() . 'dashboard',
       base_url() . 'inventory',
+      base_url() . 'quotation',
       base_url() . 'report',
       base_url() . 'expense',
     ],
@@ -236,6 +237,15 @@ function main_header($menubar = [])
                       class="nav-link <?= (sidebar($menubar, ['expense'])) ? 'active' : '' ?>">
                       <i class="fa fa-box nav-icon"></i>
                       <p>Expense</p>
+                    </a>
+                  </li>
+                </ul>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="<?= base_url() ?>quotation"
+                      class="nav-link <?= (sidebar($menubar, ['quotation'])) ? 'active' : '' ?>">
+                      <i class="fa fa-book nav-icon"></i>
+                      <p>Quotation</p>
                     </a>
                   </li>
                 </ul>
