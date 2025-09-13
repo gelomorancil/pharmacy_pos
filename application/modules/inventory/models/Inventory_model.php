@@ -270,4 +270,41 @@ class Inventory_model extends CI_Model
         return $query;
     }
 
+    public function check_low_stocks(){
+        $this->db->select('
+            inv.item_ID,
+            (SUM(inv.qty) - COALESCE(MAX(sq.sold_quantity), 0)) AS current_stock,
+            ip.threshold,
+            unit.unit_of_measure,
+            items.item_name,
+            items.short_name,
+            items.item_code,
+            items.description
+        ');
+        $this->db->from($this->Table->purchase_order_items . ' AS inv');
+        $this->db->join($this->Table->purchase_order . ' AS po', 'inv.po_ID = po.ID', 'left');
+        $this->db->join($this->Table->item_profile . ' AS ip', 'inv.item_ID = ip.item_id', 'left');
+        $this->db->join($this->Table->items . ' AS items', 'inv.item_ID = items.id', 'left');
+        $this->db->join($this->Table->unit . ' AS unit', 'inv.unit_ID = unit.id', 'left');
+    
+        // Subquery: one row per item_id (sold total)
+        $this->db->join("
+            (SELECT ipj.item_id, SUM(pc.quantity) AS sold_quantity
+               FROM {$this->Table->payment_child} pc
+               JOIN {$this->Table->item_profile} ipj
+                 ON pc.item_profile_id = ipj.id
+              GROUP BY ipj.item_id
+            ) AS sq",
+            'sq.item_id = inv.item_ID',
+            'left'
+        );
+    
+        $this->db->where('po.approved', 1);
+        $this->db->group_by('inv.item_ID, ip.threshold, unit.unit_of_measure, items.item_name, items.short_name, items.item_code, items.description');
+        $this->db->having('current_stock <= ip.threshold');
+    
+        $q = $this->db->get()->result();
+        return $q!=null ? true : false;
+    }
+
 }

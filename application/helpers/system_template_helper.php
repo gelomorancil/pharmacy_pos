@@ -23,11 +23,13 @@ function main_header($menubar = [])
       base_url() . 'expense',
     ],
     2 => [
+      base_url() . 'quotation',
       base_url() . 'cashiering',
       base_url() . 'inventory'
     ],
     1 => [
       base_url() . 'expense',
+      base_url() . 'quotation',
       base_url() . 'cashiering',
       base_url() . 'inventory',
       base_url() . 'dashboard',
@@ -65,6 +67,12 @@ function get_image() {
     return $CI->User_profile_model->get_image();
 }
 
+function check_low_stocks() {
+  $CI =& get_instance();
+  $CI->load->model('inventory/Inventory_model');
+  
+  return $CI->Inventory_model->check_low_stocks();
+}
 
   ?>
   <!DOCTYPE html>
@@ -248,7 +256,11 @@ function get_image() {
                     <a href="<?= base_url() ?>inventory"
                       class="nav-link <?= (sidebar($menubar, ['inventory'])) ? 'active' : '' ?>">
                       <i class="fa fa-box nav-icon"></i>
-                      <p>Inventory</p>
+                      <p>Inventory
+                      <?php if (check_low_stocks() === true): ?>
+                        <span class="badge bg-danger ml-1">Low Stock Item(s)</span>
+                      <?php endif; ?>
+                      </p>
                     </a>
                   </li>
                 </ul>
