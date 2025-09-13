@@ -165,7 +165,7 @@ function get_image() {
     </a>
 
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                 <a class="" href="<?=base_url()?>/user_profile">  <?= $session->Username ?></a>
+                 <a class="dropdown-item" href="<?=base_url()?>/user_profile">  <?= $session->Username ?></a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" id="signout" role="button">Logout</a>
             </div>
