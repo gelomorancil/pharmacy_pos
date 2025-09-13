@@ -271,15 +271,16 @@ class Inventory_model extends CI_Model
     }
 
     public function check_low_stocks(){
+        // ip.threshold,
+        // unit.unit_of_measure,
+        // items.item_name,
+        // items.short_name,
+        // items.item_code,
+        // items.description
+        
         $this->db->select('
             inv.item_ID,
             (SUM(inv.qty) - COALESCE(MAX(sq.sold_quantity), 0)) AS current_stock,
-            ip.threshold,
-            unit.unit_of_measure,
-            items.item_name,
-            items.short_name,
-            items.item_code,
-            items.description
         ');
         $this->db->from($this->Table->purchase_order_items . ' AS inv');
         $this->db->join($this->Table->purchase_order . ' AS po', 'inv.po_ID = po.ID', 'left');
