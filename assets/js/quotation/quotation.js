@@ -76,3 +76,42 @@ function delete_q(row) {
         }
     });
 }
+
+function approve_q(row) {
+    const ID = $(row).data('id');
+
+    $.confirm({
+        title: 'Approval of Quotation to Purchase Order',
+        icon: 'fa fa-question-circle',
+        content: 'Are you sure you want to <b>APPROVE</b> the quotation?',
+        buttons: {
+            confirm: {
+                text: 'Confirm',
+                btnClass: 'btn-success',
+                action: function () {
+                    $.ajax({
+                        url: 'quotation/approve_quotation',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: { ID: ID },
+                        success: function (res) {
+                            if (res.success) {
+                                toastr.success(res.message);
+                                setTimeout(() => location.reload(), 2000);
+                            } else {
+                                toastr.error(res.message || "Failed to approve quotation.");
+                            }
+                        },
+                        error: function () {
+                            toastr.error("Something went wrong while approving quotation.");
+                        }
+                    });
+                }
+            },
+            cancel: {
+                text: 'Cancel',
+                btnClass: 'btn-danger'
+            }
+        }
+    });
+}

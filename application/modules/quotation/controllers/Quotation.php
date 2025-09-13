@@ -163,4 +163,22 @@ class Quotation extends MY_Controller
         }
     }
 
+    public function approve_quotation()
+    {
+        $id = $this->input->post('ID');
+
+        if (!isset($id)) {
+            echo json_encode(['success' => false, 'message' => 'Invalid ID']);
+            return;
+        }
+
+        $this->load->model('Quotation_model');
+
+        if ($this->Quotation_model->approve($id)) {
+            echo json_encode(['success' => true, 'message' => 'Quotation approved successfully.']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to approve quotation.']);
+        }
+    }
+
 }
