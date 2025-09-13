@@ -7,7 +7,7 @@ var load_items = () => {
   });
 }
 
-var load_suppliers = () => {
+var load_supplier = () => {
   $(document).gmLoadPage({
     url: 'management/load_suppliers',
     load_on: '#load_suppliers'
@@ -50,6 +50,12 @@ var load_user = () => {
   });
 }
 
+var load_buyers = () => {
+  $(document).gmLoadPage({
+    url: 'management/load_buyers',
+    load_on: '#load_buyers'
+  });
+}
 
 var load_clients = () => {
   $(document).gmLoadPage({
@@ -61,7 +67,7 @@ var load_clients = () => {
 $(document).ready(function () {
   load_items();
   load_user();
-  load_suppliers();
+  load_supplier();
   load_units();
   load_clients();
 
@@ -90,6 +96,7 @@ $('#save_item').click(function () {
               item_code: $('#code').val(),
               short_name: $('#short_name').val(),
               description: $('#item_description').val(),
+              category: $('#Category').val(),
               status: $('#item_status').val(),
               // w: $('#item_expiry_date').val(),
             },
@@ -105,6 +112,7 @@ $('#save_item').click(function () {
                 $('#short_name').val("");
                 $('#item_status').val("1");
                 $('#item_description').val("");
+                $('#Category').val("");
                 // setTimeout(function () {
                 //   window.location.reload();
                 // }, 2000);
@@ -146,6 +154,7 @@ $('#update_item').click(function () {
               short_name: $('#short_name').val(),
               description: $('#item_description').val(),
               status: $('#item_status').val(),
+              category: $('#Category').val(),
             },
             success: function (e) {
               var e = JSON.parse(e);
@@ -159,6 +168,7 @@ $('#update_item').click(function () {
                 $('#short_name').val("");
                 $('#item_status').val("1");
                 $('#item_description').val("");
+                $('#Category').val("");
                 setTimeout(function () {
                   window.location.reload();
                 }, 500);
@@ -189,6 +199,7 @@ var editItem = (data) => {
   $('#short_name').val(data.getAttribute('data-short_name'));
   $('#item_status').val(data.getAttribute('data-status'));
   $('#item_description').val(data.getAttribute('data-description'));
+  $('#Category').val(data.getAttribute('data-category'));
 
 
   $('#save_item').hide();
@@ -341,7 +352,7 @@ $('#save_supplier').click(function () {
               var e = JSON.parse(e);
               if (!e.has_error) {
                 toastr.success(e.message);
-                load_suppliers();
+                load_supplier();
                 load_supplier_drop_down();
 
                 $('#supplier_name').val("");
@@ -400,7 +411,7 @@ $('#update_supplier').click(function () {
               var e = JSON.parse(e);
               if (!e.has_error) {
                 toastr.success(e.message);
-                load_suppliers();
+                load_supplier();
                 load_supplier_drop_down();
 
                 $('#supplier_name').val("");

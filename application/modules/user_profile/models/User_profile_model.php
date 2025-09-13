@@ -16,4 +16,18 @@ class User_profile_model extends CI_Model
         $this->load->model($model_list);
         $this->Table = json_decode(TABLE);
     }
+
+    public function get_image()
+    {
+        try {
+            $this->db->select('Image');
+            $this->db->from($this->Table->u_image);
+            $this->db->where('user_id', $this->session->ID);
+            $query = $this->db->get()->row();
+
+            return $query->Image;
+        } catch (Exception $ex) {
+            return null;
+        }
+    }
 }

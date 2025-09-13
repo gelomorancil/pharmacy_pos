@@ -88,7 +88,10 @@ $session = (object)get_userdata(USER);
         </div>
         <!-- CUSTOMERS ORDER HISTORY -->
         <div class="col-md-8">
-            <div class="card card-primary">
+            <div class="card">
+                <div class="card-header new-color">
+                    <div class="card-title">Expenses for today</div>
+                </div>
                     <!-- Modified by KYLE 12-19-2023 -->
                     <!-- <div class="input-group input-group-sm" style="margin-top:1rem; margin-left:1rem; margin-left:1rem;">
 

@@ -30,6 +30,7 @@ class User_profile extends MY_Controller
 		// }
 
 		$this->data['session'] =  $this->session;
+		$this->data['image'] =  $this->upModel->get_image($this->session->ID);
 		$this->data['content'] = 'index';
 		$this->load->view('layout', $this->data);
 	}

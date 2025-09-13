@@ -74,4 +74,37 @@ class User_profile_services_model extends CI_Model
             return (array('message'=>$msg->getMessage(), 'has_error'=>true));
         }
     }
+
+public function update_profile_image()
+{
+    try {
+        $config['upload_path']   = FCPATH . 'assets/images/Users/';
+        $config['allowed_types'] = 'jpg|png|jpeg|gif';
+        $config['max_size']      = 10240;
+
+        $this->load->library('upload', $config);
+
+        if ($this->upload->do_upload('fileInput')) {
+            $uploadData = $this->upload->data();
+            $imagePath  = $uploadData['file_name'];
+
+            $ID = $this->session->ID; // logged-in user id
+            $data = array('image' => $imagePath);
+
+            $this->db->where('user_id', $ID);
+            $this->db->update($this->Table->u_image, $data);
+
+            return array(
+                'message'   => SAVED_SUCCESSFUL,
+                'has_error' => false,
+                'new_image' => $imagePath
+            );
+        } else {
+            throw new Exception('Image upload failed: ' . $this->upload->display_errors('', ''));
+        }
+    } catch (Exception $msg) {
+        return array('message' => $msg->getMessage(), 'has_error' => true);
+    }
+}
+
 }

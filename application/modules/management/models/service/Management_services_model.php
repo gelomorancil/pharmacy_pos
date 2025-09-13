@@ -114,6 +114,7 @@ class Management_services_model extends CI_Model
                 'short_name' => $this->short_name,
                 // 'item_expiry_date' => $this->item_expiry_date,
                 'active' => $this->status,
+                'Category' => $this->category,
             );
 
             $this->db->trans_start();
@@ -447,7 +448,7 @@ class Management_services_model extends CI_Model
 
         $this->db->trans_start();
 
-        $this->db->insert($this->Table->client_list, $data);
+        $this->db->insert($this->Table->buyers, $data);
 
         $this->db->trans_complete();
         if ($this->db->trans_status() === FALSE) {
@@ -492,7 +493,7 @@ public function update_client()
 
         // use ID because CREATE TABLE shows `ID` as the PK
         $this->db->where('ID', $this->client_id);
-        $this->db->update($this->Table->client_list, $data);
+        $this->db->update($this->Table->buyers, $data);
 
         $this->db->trans_complete();
         if ($this->db->trans_status() === FALSE) {

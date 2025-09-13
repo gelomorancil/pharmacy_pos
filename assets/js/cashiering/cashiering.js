@@ -270,6 +270,8 @@ function process_payment() {
     let amount_rendered = $('#amount_recieved').val();
     let reference_number = $('#reference_number').val();
     let remarks = $('#remarks').val();
+    let buyer = $('#Buyer_id').val();
+    let other_buyer = $('#other_buyer').val();
 
     // Data for tbl_proof
     let imageFile = $("#proof_image")[0].files[0];
@@ -338,6 +340,8 @@ function process_payment() {
     formData.append("amount_rendered", amount_rendered);
     formData.append("reference_number", reference_number);
     formData.append("remarks", remarks);
+    formData.append("buyer", buyer);
+    formData.append("other_buyer", other_buyer);
 
     // For tbl_proof
     formData.append("image", imageFile);

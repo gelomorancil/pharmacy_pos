@@ -16,6 +16,7 @@ class Management extends MY_Controller
 
 		$model_list = [
 			'management/Management_model' => 'mModel',
+			'Item_profiling/Item_profiling_model' => 'ipModel',
 		];
 		$this->load->model($model_list);
 	}
@@ -24,6 +25,8 @@ class Management extends MY_Controller
 	public function index()
 	{
 		$this->data['session'] =  $this->session;
+		$this->data['units'] = $this->ipModel->get_units();
+		$this->data['items'] = $this->ipModel->get_items();
 		$this->data['content'] = 'new_management';
 		$this->load->view('layout', $this->data);
 	}
@@ -90,6 +93,13 @@ class Management extends MY_Controller
 		$this->data['content'] = 'grid/list_user';
 		$this->load->view('layout', $this->data);
 	}
+
+	public function load_buyers()
+	{
+		$this->data['buyers'] = $this->mModel->get_buyers();
+		$this->data['content'] = 'grid/load_buyers';
+		$this->load->view('layout', $this->data);
+	}
 	
 	public function get_user_details(){
 		$this->mModel->user_id = $this->input->post("user_id");
@@ -102,6 +112,13 @@ class Management extends MY_Controller
 		$this->mModel->list_id = $this->input->post("list_id");
 		$this->data['list_details'] = $this->mModel->get_list_details();
 		$response = $this->mModel->get_list_details();
+		echo json_encode($response);
+	}
+
+	public function get_buyer_details(){
+		$this->mModel->buyer_id = $this->input->post("buyer_id");
+		$this->data['buyer_details'] = $this->mModel->get_buyers_details();
+		$response = $this->mModel->get_buyers_details();
 		echo json_encode($response);
 	}
 }

@@ -25,6 +25,7 @@ class Cashiering extends MY_Controller
 	{
 		// $this->data['units'] = $this->cModel->get_units();
 		$this->data['items'] = $this->cModel->get_items();
+		$this->data['buyers'] = $this->cModel->get_buyers();
 		$this->data['content'] = 'index';
 		$this->load->view('layout', $this->data);
 	}

@@ -65,7 +65,6 @@
         <td></td>
         <td></td>
         <td></td>
-        <td></td>
         <td class="text-bold text-danger"><?= @number_format(@$total_act,2)?></td>
         <td class="text-bold text-danger"><?= @number_format(@$total_exp,2)?></td>
         <td class="text-bold text-danger"><?= @number_format(@$total_act - $total_exp,2)?></td>
