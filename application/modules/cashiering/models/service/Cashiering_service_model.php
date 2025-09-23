@@ -127,12 +127,12 @@ class Cashiering_service_model extends CI_Model
         $remarks = $this->input->post('remarks');
         $other_buyer = $this->input->post('other_buyer');
 
-        if($this->input->post('buyer') == 0){
+        if ($this->input->post('buyer') == 0) {
             $buyer = $this->save_new_buyer($other_buyer);
-        } else{
+        } else {
             $buyer = $this->input->post('buyer');
         }
-        
+
         $control_number = $this->generateControlNumber();
 
         try {
@@ -159,8 +159,12 @@ class Cashiering_service_model extends CI_Model
             $this->db->trans_complete();
 
             $this->insert_to_child_table($payment_id, json_decode($this->input->post('itemsArray'), true));
-            
-            if($payment_type == "ONLINE"){
+
+            $ls_items = $this->check_low_items(json_decode($this->input->post('itemsArray'), true));
+
+            $this->add_to_purchase_order_item($ls_items);
+
+            if ($payment_type == "ONLINE") {
                 $this->add_image($payment_id, $_FILES['image']);
             }
 
@@ -264,6 +268,117 @@ class Cashiering_service_model extends CI_Model
             }
         } catch (Exception $msg) {
             return (array('message' => $msg->getMessage(), 'has_error' => true));
+        }
+    }
+
+    public function check_low_items($items_arr)
+    {
+        $low_items = [];
+        $this->db->select('
+        inv.item_ID,
+        (SUM(inv.qty) - COALESCE(MAX(sq.sold_quantity), 0)) AS current_stock,
+    ');
+        $this->db->from($this->Table->purchase_order_items . ' AS inv');
+        $this->db->join($this->Table->purchase_order . ' AS po', 'inv.po_ID = po.ID', 'left');
+        $this->db->join($this->Table->item_profile . ' AS ip', 'inv.item_ID = ip.item_id', 'left');
+        $this->db->join($this->Table->items . ' AS items', 'inv.item_ID = items.id', 'left');
+        $this->db->join($this->Table->unit . ' AS unit', 'inv.unit_ID = unit.id', 'left');
+
+        // Subquery: one row per item_id (sold total)
+        $this->db->join(
+            "
+        (SELECT ipj.item_id, SUM(pc.quantity) AS sold_quantity
+           FROM {$this->Table->payment_child} pc
+           JOIN {$this->Table->item_profile} ipj
+             ON pc.item_profile_id = ipj.id
+          GROUP BY ipj.item_id
+        ) AS sq",
+            'sq.item_id = inv.item_ID',
+            'left'
+        );
+
+        $this->db->where('po.approved', 1);
+        $this->db->group_by('inv.item_ID, ip.threshold, unit.unit_of_measure, items.item_name, items.short_name, items.item_code, items.description');
+        $this->db->having('current_stock <= ip.threshold');
+
+        $q = $this->db->get()->result();
+
+        $low_ids = array_map(function ($row) {
+            return $row->item_ID;
+        }, $q);
+
+        foreach ($items_arr as $item) {
+            $this->db->select('item_id');
+            $this->db->from($this->Table->item_profile);
+            $this->db->where('id', $item['item_profile_id']);
+            $row = $this->db->get()->row();
+
+            if ($row && in_array($row->item_id, $low_ids)) {
+                // echo "Item {$row->item_id} is low stock!<br>";
+                $low_items[] = $row->item_id;
+            }
+        }
+
+        return $low_items;
+    }
+
+    public function add_to_purchase_order_item($items_arr)
+    {
+        if (empty($items_arr)) {
+            return;
+        }
+        // get recent unapproved PO or create one
+        $this->db->select('ID,po_num');
+        $this->db->from($this->Table->purchase_order);
+        $this->db->where('approved', 0);
+        $this->db->order_by('ID', 'DESC');
+        $this->db->limit(1);
+        $po = $this->db->get()->row();
+
+        if (!$po) {
+            $last_po = $po->po_num;
+            $new_po = intval($last_po) + 1;
+            $data = array(
+                'po_num' => str_pad($new_po, 6, '0', STR_PAD_LEFT),
+            );
+            $this->db->insert($this->Table->purchase_order, $data);
+            $po_id = $this->db->insert_id();
+        } else {
+            $po_id = $po->ID;
+        }
+        var_dump($po_id);
+
+        foreach ($items_arr as $item_id) {
+            // check if item already exists in purchase_order_items
+            $this->db->select('ID')
+                ->from($this->Table->purchase_order_items)
+                ->where('po_ID', $po_id)
+                ->where('item_ID', $item_id);
+            $existing = $this->db->get()->row();
+            var_dump($existing);
+            if ($existing) {
+                continue; // skip if already exists
+            }
+
+            $this->db->select('*');
+            $this->db->from($this->Table->item_profile);
+            $this->db->where('item_id', $item_id);
+            $this->db->order_by('ID', 'DESC');
+            $ip_row = $this->db->get()->row();
+            // insert item to purchase_order_items
+            var_dump($ip_row);
+            $data = array(
+                'item_ID' => $item_id,
+                'unit_ID' => $ip_row->unit_id,
+                'qty' => $ip_row->unit_id == 2 ? 1 : 100, // very bad practice
+                'unit_price' => $ip_row->unit_price,
+                'pcs' => $ip_row->unit_id == 2 ? 1 : 0,
+                'po_ID' => $po_id,
+                'po_descr' => '',
+            );
+            var_dump($data);
+
+            $this->db->insert($this->Table->purchase_order_items, $data);
         }
     }
 }

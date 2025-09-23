@@ -123,8 +123,6 @@ class Inventory_model extends CI_Model
         );
     
         $this->db->where('po.approved', 1);
-    
-        // Keep or trim columns here depending on how you want to group rows
         $this->db->group_by('inv.item_ID, ip.threshold, unit.unit_of_measure, items.item_name, items.short_name, items.item_code, items.description');
     
         return $this->db->get()->result();
@@ -133,27 +131,29 @@ class Inventory_model extends CI_Model
     public function get_history()
     {
         $this->db->select('
-            inv.quantity,
-            inv.date_created,
+            poi.qty,
+            poi.pcs,
+            po.date_added,
+            po.po_num,
+            po.received_by,
 
             unit.unit_of_measure,
 
             items.item_name,
-            items.short_name,
-            items.item_code,
-            items.description,
+            poi.po_descr,
 
             supplier.supplier_name
         ');
 
-        $this->db->from($this->Table->inventory . ' AS inv');
-        $this->db->join($this->Table->item_profile . ' AS ip', 'inv.item_profile_id = ip.id', 'left');
-        $this->db->join($this->Table->items . ' AS items', 'ip.item_id = items.id', 'left');
-        $this->db->join($this->Table->unit . ' AS unit', 'ip.unit_id = unit.id', 'left');
-        $this->db->join($this->Table->supplier . ' AS supplier', 'inv.supplier_id = supplier.id', 'left');
+        $this->db->from($this->Table->purchase_order . ' AS po');
+        $this->db->join($this->Table->purchase_order_items . ' AS poi', 'poi.po_ID = po.ID', 'left');
+        $this->db->join($this->Table->items . ' AS items', 'poi.item_ID = items.id', 'left');
+        $this->db->join($this->Table->unit . ' AS unit', 'poi.unit_ID = unit.id', 'left');
+        $this->db->join($this->Table->supplier . ' AS supplier', 'po.supplier_ID = supplier.id', 'left');
 
-        $this->db->where('inv.item_profile_id', $this->id);
-        $this->db->order_by('inv.date_created', 'DESC');
+        $this->db->where('poi.item_ID', $this->id);
+        $this->db->where('po.approved', 1);
+        $this->db->order_by('po.date_approved', 'DESC');
         $this->db->limit(50);
 
         $query = $this->db->get()->result();
@@ -190,7 +190,7 @@ class Inventory_model extends CI_Model
 
     public function get_po_list()
     {
-        $this->db->select('po.ID,po.po_num, po.date_ordered, s.supplier_name');
+        $this->db->select('po.ID,po.po_num, po.date_ordered, po.date_added, s.supplier_name');
         $this->db->from($this->Table->purchase_order. ' as po');
         $this->db->join($this->Table->supplier . ' AS s', 'po.supplier_id = s.id', 'left');
         $this->db->where('approved', 0);
@@ -268,6 +268,44 @@ class Inventory_model extends CI_Model
 
         $query = $this->db->get()->row();
         return $query;
+    }
+
+    public function check_low_stocks(){
+        // ip.threshold,
+        // unit.unit_of_measure,
+        // items.item_name,
+        // items.short_name,
+        // items.item_code,
+        // items.description
+        
+        $this->db->select('
+            inv.item_ID,
+            (SUM(inv.qty) - COALESCE(MAX(sq.sold_quantity), 0)) AS current_stock,
+        ');
+        $this->db->from($this->Table->purchase_order_items . ' AS inv');
+        $this->db->join($this->Table->purchase_order . ' AS po', 'inv.po_ID = po.ID', 'left');
+        $this->db->join($this->Table->item_profile . ' AS ip', 'inv.item_ID = ip.item_id', 'left');
+        $this->db->join($this->Table->items . ' AS items', 'inv.item_ID = items.id', 'left');
+        $this->db->join($this->Table->unit . ' AS unit', 'inv.unit_ID = unit.id', 'left');
+    
+        // Subquery: one row per item_id (sold total)
+        $this->db->join("
+            (SELECT ipj.item_id, SUM(pc.quantity) AS sold_quantity
+               FROM {$this->Table->payment_child} pc
+               JOIN {$this->Table->item_profile} ipj
+                 ON pc.item_profile_id = ipj.id
+              GROUP BY ipj.item_id
+            ) AS sq",
+            'sq.item_id = inv.item_ID',
+            'left'
+        );
+    
+        $this->db->where('po.approved', 1);
+        $this->db->group_by('inv.item_ID, ip.threshold, unit.unit_of_measure, items.item_name, items.short_name, items.item_code, items.description');
+        $this->db->having('current_stock <= ip.threshold');
+    
+        $q = $this->db->get()->result();
+        return $q!=null ? true : false;
     }
 
 }

@@ -85,7 +85,7 @@ $subtotal = floatval(0);
     <h5 class="text-center mb-1">PURCHASE ORDER</h5>
     <div class="po-meta">
       <div><strong>PO No.:</strong> <span class="text-danger">PO-<?=$po->po_num?></span></div>
-      <div><strong>Date:</strong> <?=date("m/d/Y", strtotime($po->date_added))?></div>
+      <div><strong>Date:</strong> <?=date("m/d/Y", strtotime(@$po->date_added))?></div>
     </div>
   </div>
 
@@ -97,10 +97,10 @@ $subtotal = floatval(0);
       <div>Generic and Branded Drug Distributor</div>
       <div>1549 TCS III BLDG. Bambang, South, Santa Cruz Manila, 1003 Metro Manila</div>
       <div>Tel. Nos.: (02) 8711-5945 / 8712-2906 / 3495-1250 / 3495-1526</div> -->
-       <div><strong><?=$supplier_deets->supplier_name?></strong></div>
-      <div><?=$supplier_deets->contact_person?></div>
-      <div><?=$supplier_deets->address?></div>
-      <div>Contact Details.: <?=$supplier_deets->contact_number_1?> / <?=$supplier_deets->contact_number_2?> / <?=$supplier_deets->email?> </div>
+       <div><strong><?=@$supplier_deets->supplier_name?></strong></div>
+      <div><?=@$supplier_deets->contact_person?></div>
+      <div><?=@$supplier_deets->address?></div>
+      <div>Contact Details.: <?=@$supplier_deets->contact_number_1?> / <?=@$supplier_deets->contact_number_2?> / <?=@$supplier_deets->email?> </div>
     </div>
   </div>
 
