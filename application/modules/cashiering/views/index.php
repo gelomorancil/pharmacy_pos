@@ -24,6 +24,15 @@ $session = (object) get_userdata(USER);
       right: 10px;
     }
 
+    .price-label {
+      background: #eafaf1;
+      color: #005fc4ff;
+      font-size: 12px;
+      padding: 1px 10px;
+      border-radius: 20px;
+      margin-left: 5px;
+    }
+
     .stock-label-zero {
       background: #ff0d003a;
       color: #ff0000ff;
@@ -120,11 +129,16 @@ $session = (object) get_userdata(USER);
                             <span class="<?=$i->current_stock == 0 ? 'stock-label-zero' : 'stock-label'?>">Stock: <?=$i->current_stock?></span>
                             <p class="card-text text-muted mb-1"><?=$i->description?></p>
                             <small class="card-text text-muted mb-1"><?=$i->item_code?></small>
-                            <div class="font-weight-bold">₱<?=$i->unit_price?></div>
-                            <!-- Add data attributes so JS can grab item info -->
+                            <div class="font-weight-bold">
+                                <span class="price-label">WI</span> ₱<?=number_format($i->Walkin_price,2)?>   <br>
+                                <span class="price-label">R </span> ₱<?=number_format($i->unit_price,2)?> <br>
+                                <span class="price-label">WS</span> ₱<?=number_format($i->Wholesale_price,2)?>
+                            </div>
                             <button class="btn btn-add" 
                                     data-name="<?=$i->item_name?>" 
                                     data-price="<?=$i->unit_price?>"
+                                    data-walkin="<?=$i->Walkin_price?>"
+                                    data-wholesaler="<?=$i->Wholesale_price?>"
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
                                     <?=$i->current_stock == 0 ? 'disabled' : ''?>>
                                 <span class="fas fa-plus"></span>
@@ -132,6 +146,13 @@ $session = (object) get_userdata(USER);
                         </div>
                     </div>
                     <?php } ?>
+                </div>
+
+                <!-- Pagination controls -->
+                <div class="d-flex justify-content-center mt-3">
+                    <nav>
+                        <ul class="pagination" id="pagination"></ul>
+                    </nav>
                 </div>
             </div>
             <!-- Right side: Cart -->
@@ -145,7 +166,15 @@ $session = (object) get_userdata(USER);
                     <div id="cart-items"></div>
 
                     <hr>
-                  
+                     <p class="cart-total">Buyer type:
+                        <span class="float-right">
+                          <select name="" id="buyer_type" class="form-control form-control-sm"  style="width: 200px;" >
+                                <option value="WALKIN" selected>WALKIN</option>
+                                <option value="REGULAR">REGULAR</option>
+                                <option value="WHOLESALER">WHOLESALER</option>
+                            </select>
+                        </span>
+                    </p>
                     <p class="cart-total">Buyer: 
                         <span class="float-right">
                           <select name="" id="Buyer_id" class="form-control form-control-sm"  style="width: 200px;" >
@@ -162,6 +191,7 @@ $session = (object) get_userdata(USER);
                             <input type="text" class="form-control form-control-sm" id="other_buyer"  style="width: 200px;" placeholder="Enter buyer..." hidden>
                         </span>
                     </p>
+                    <br>
                     <p class="cart-total mt-5">Discount: <span class="float-right"><input type="number" class="form-control form-control-sm" id="total_discounts"  style="width: 200px;"  placeholder="Enter discount..." ></span></p>
                     <p class="cart-total">Total: <span class="float-right" id="total">₱0.00</span></p>
                     <button class="btn btn-checkout" id="tend_customer">Proceed to Payment</button>
@@ -419,6 +449,12 @@ main_footer();
 function renderCart() {
   let cartItemsDiv = document.getElementById("cart-items");
   let total = 0;
+  // Save focus state
+  let activeElement = document.activeElement;
+  let activeIndex = activeElement && activeElement.classList.contains("qty")
+    ? activeElement.closest(".cart-item").dataset.index
+    : null;
+  let caretPos = activeElement && activeElement.selectionStart;
 
   cartItemsDiv.innerHTML = cart.map((item, i) => {
     let itemTotal = item.qty * item.price;
@@ -427,15 +463,15 @@ function renderCart() {
     return `
       <div class="cart-item mb-3 pb-2 border-bottom" data-index="${i}"  data-item_profile_id="${item.item_profile_id}">
         <div><strong>${item.name}</strong></div>
-         <input type="text" hidden value="${item.item_profile_id}">
+        <input type="text" hidden value="${item.item_profile_id}">
         <div class="d-flex justify-content-between align-items-center">
           <div>
             ₱${item.price.toLocaleString("en-PH", {minimumFractionDigits:2})} each
           </div>
           <div class="d-flex align-items-center">
             <button class="btn btn-sm btn-outline-secondary minus">-</button>
-            <input type="number" class="form-control form-control-sm text-center mx-1 qty" 
-                   value="${item.qty}" min="1" style="width:60px;">
+            <input type="text" class="form-control form-control-sm text-center mx-1 qty" 
+                  value="${item.qty}" min="1" style="width:60px;">
             <button class="btn btn-sm btn-outline-secondary plus">+</button>
           </div>
         </div>
@@ -447,65 +483,164 @@ function renderCart() {
 
   document.getElementById("total").innerText =
     "₱" + total.toLocaleString("en-PH", {minimumFractionDigits:2});
+
+  // Restore focus + caret
+    if (activeIndex !== null) {
+        let newInput = cartItemsDiv.querySelector(`.cart-item[data-index="${activeIndex}"] .qty`);
+        if (newInput) {
+            newInput.focus();
+
+            // Put caret at the end of the value
+            let length = newInput.value.length;
+            newInput.setSelectionRange(length, length);
+        }
+    }
 }
 
 
+  // Handle cart actions with one listener
+  document.getElementById("cart-items").addEventListener("click", e => {
+    let parent = e.target.closest(".cart-item");
+    if (!parent) return;
+    let index = parent.dataset.index;
 
-// Handle cart actions with one listener
-document.getElementById("cart-items").addEventListener("click", e => {
-  let parent = e.target.closest(".cart-item");
-  if (!parent) return;
-  let index = parent.dataset.index;
-
-  if (e.target.classList.contains("plus")) cart[index].qty++;
-  if (e.target.classList.contains("minus")) {
-    cart[index].qty > 1 ? cart[index].qty-- : cart.splice(index, 1);
-  }
-  renderCart();
-});
-
-// Handle manual input
-document.getElementById("cart-items").addEventListener("change", e => {
-  if (!e.target.classList.contains("qty")) return;
-  let index = e.target.closest(".cart-item").dataset.index;
-  cart[index].qty = Math.max(1, parseInt(e.target.value) || 1);
-  renderCart();
-});
-
-// Example: add item
-document.querySelectorAll(".btn-add").forEach(btn => {
-  btn.addEventListener("click", () => {
-    let name = btn.dataset.name;
-    let price = parseFloat(btn.dataset.price);
-    let item_profile_id = btn.dataset.item_profile_id;
-    let existing = cart.find(i => i.item_profile_id === item_profile_id);
-    
-
-    existing ? existing.qty++ :  cart.push({ item_profile_id, name, price, qty: 1 });
+    if (e.target.classList.contains("plus")) cart[index].qty++;
+    if (e.target.classList.contains("minus")) {
+      cart[index].qty > 1 ? cart[index].qty-- : cart.splice(index, 1);
+    }
     renderCart();
   });
-});
 
-document.getElementById("clear-cart").addEventListener("click", e => {
-  e.preventDefault();
-  cart = [];
-  renderCart();
-});
+  // Handle manual input (update while typing)
+  document.getElementById("cart-items").addEventListener("input", e => {
+    if (!e.target.classList.contains("qty")) return;
+    let index = e.target.closest(".cart-item").dataset.index;
+    cart[index].qty = Math.max(1, parseInt(e.target.value) || 1);
+    renderCart();
+  });
 
-$("#productSearch").on("keyup", function () {
-    var value = $(this).val().toLowerCase();
-    $(".product-card").filter(function () {
-        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-    });
-    currentPage = 1; // reset to first page when searching
-    showPage(currentPage);
-});
+  // Example: add item
+  document.querySelectorAll(".btn-add").forEach(btn => {
+    btn.addEventListener("click", () => {
+      let name = btn.dataset.name;
+      let b_type = $('#buyer_type').val();
 
-$("#Buyer_id").on("change", function () {
-    if(($(this).val() == 0)){
-        $('#other_buyer').removeAttr('hidden');
-    }else{
-        $('#other_buyer').attr('hidden', 'true');
+    //   let price = parseFloat(btn.dataset.price);
+      let price = 0;
+
+
+
+    if(b_type == 'WALKIN'){
+           price = parseFloat(btn.dataset.walkin);
+    } else if(b_type == 'REGULAR'){
+            price = parseFloat(btn.dataset.price);
+    } else if(b_type == 'WHOLESALER'){
+        price = parseFloat(btn.dataset.wholesaler);
     }
+
+      let item_profile_id = btn.dataset.item_profile_id;
+      let existing = cart.find(i => i.item_profile_id === item_profile_id);
+      
+      existing ? existing.qty++ : cart.push({ item_profile_id, name, price, qty: 1 });
+      renderCart();
+    });
+  });
+
+  document.getElementById("clear-cart").addEventListener("click", e => {
+    e.preventDefault();
+    cart = [];
+    renderCart();
+  });
+
+//   // Search filter
+//   $("#productSearch").on("keyup", function () {
+//       var value = $(this).val().toLowerCase();
+//       $(".product-card").filter(function () {
+//           $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+//       });
+//       currentPage = 1; // reset to first page when searching
+//       showPage(currentPage);
+//   });
+
+  // Buyer toggle
+  $("#Buyer_id").on("change", function () {
+      if(($(this).val() == 0)){
+          $('#other_buyer').removeAttr('hidden');
+      }else{
+          $('#other_buyer').attr('hidden', 'true');
+      }
+  });
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const itemsPerPage = 16;
+    const pagination = document.getElementById("pagination");
+    let currentPage = 1;
+    let searchValue = "";
+
+    const allCards = Array.from(document.querySelectorAll(".product-card"));
+
+    function getFilteredCards() {
+        if (!searchValue) return allCards;
+        return allCards.filter(card =>
+            card.textContent.toLowerCase().includes(searchValue)
+        );
+    }
+
+    function showPage(page) {
+        const filteredCards = getFilteredCards();
+        const totalPages = Math.ceil(filteredCards.length / itemsPerPage);
+        currentPage = Math.min(page, totalPages || 1);
+
+        // Hide everything first
+        allCards.forEach(card => card.style.display = "none");
+
+        // Show only filtered + paginated items
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        filteredCards.slice(start, end).forEach(card => {
+            card.style.display = "block";
+        });
+
+        renderPagination(totalPages);
+    }
+
+    function renderPagination(totalPages) {
+        pagination.innerHTML = "";
+        if (totalPages <= 1) return;
+
+        // Previous Button
+        const prevLi = document.createElement("li");
+        prevLi.className = `page-item ${currentPage === 1 ? "disabled" : ""}`;
+        prevLi.innerHTML = `<a class="page-link" href="#">Previous</a>`;
+        prevLi.onclick = () => { if (currentPage > 1) showPage(currentPage - 1); };
+        pagination.appendChild(prevLi);
+
+        // Page Numbers
+        for (let i = 1; i <= totalPages; i++) {
+            const li = document.createElement("li");
+            li.className = `page-item ${i === currentPage ? "active" : ""}`;
+            li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+            li.onclick = () => showPage(i);
+            pagination.appendChild(li);
+        }
+
+        // Next Button
+        const nextLi = document.createElement("li");
+        nextLi.className = `page-item ${currentPage === totalPages ? "disabled" : ""}`;
+        nextLi.innerHTML = `<a class="page-link" href="#">Next</a>`;
+        nextLi.onclick = () => { if (currentPage < totalPages) showPage(currentPage + 1); };
+        pagination.appendChild(nextLi);
+    }
+
+    // ✅ Search filter (does not directly toggle)
+    $("#productSearch").on("keyup", function () {
+        searchValue = $(this).val().toLowerCase();
+        currentPage = 1; // reset to first page
+        showPage(currentPage);
+    });
+
+    // Initialize
+    showPage(1);
 });
 </script>

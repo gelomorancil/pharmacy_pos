@@ -33,6 +33,7 @@ class Management_services_model extends CI_Model
                 'item_code' => $this->item_code,
                 'short_name' => $this->short_name,
                 'description' => $this->description,
+                'Category' => $this->category,
                 // 'item_expiry_date' => $this->item_expiry_date,
                 'active' => $this->status,
             );

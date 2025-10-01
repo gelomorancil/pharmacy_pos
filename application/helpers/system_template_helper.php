@@ -138,6 +138,17 @@ function check_low_stocks() {
         background: #035863;
         color: white;
       }
+      /* For Chrome, Safari, Edge, Opera */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* For Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
     </style>
   </head>
 

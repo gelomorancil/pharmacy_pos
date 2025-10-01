@@ -13,7 +13,7 @@
                 <th>Total Amount</th>
                 <th>Payment Type</th>
                 <th>Reference Number</th>
-                <th>Control Number</th>
+                <th>Series Number</th>
                 <th>Remarks</th>
                 <th>Recieved By</th>
                 <th>Status</th>

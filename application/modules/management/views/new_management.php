@@ -3,10 +3,11 @@ main_header(['list_management']);
 ?>
 <!-- ############ PAGE START-->
 <!-- HIDDEN ID's USED AS UPDATE FLAGS -->
-<input hidden value="" id="item_id">
+<!-- <input hidden value="" id="item_id"> -->
 <input hidden value="" id="supplier_id">
-<input hidden value="" id="unit_id">
+<!-- <input hidden value="" id="unit_id"> -->
 <input hidden value="" id="client_id">
+<input hidden value="" id="item_profile_id">
 
 <style>
   /* Scoped only to Management page */
@@ -126,9 +127,25 @@ main_header(['list_management']);
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="form-group w-100">
-                                                    <label for="">Unit Price:</label>
+                                                    <label for="">Regular Price:</label>
                                                     <input type="number" id="unit_price" class="form-control inpt"
-                                                        placeholder="Enter Unit Price">
+                                                        placeholder="Enter Regular Price">
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-group w-100">
+                                                    <label for="">Walk-in Price:</label>
+                                                    <input type="number" id="walkin_price" class="form-control inpt"
+                                                        placeholder="Enter Walkin Price">
+                                                </div>
+                                            </div>
+                                        </div>
+                                         <div class="row">
+                                            <div class="col-6">
+                                                <div class="form-group w-100">
+                                                    <label for="">Wholesale Price:</label>
+                                                    <input type="number" id="wholesale_price" class="form-control inpt"
+                                                        placeholder="Enter Wholesale Price">
                                                 </div>
                                             </div>
                                             <div class="col-6">
@@ -161,9 +178,11 @@ main_header(['list_management']);
                                                 <table class="table table-hover text-nowrap">
                                                     <thead>
                                                         <tr>
-                                                            <th>Item Name</th>
+                                                            <th>Brand Name</th>
                                                             <th>Unit</th>
                                                             <th>Unit Price</th>
+                                                            <th>Walkin Price</th>
+                                                            <th>Wholesale Price</th>
                                                             <th>Threshold</th>
                                                         </tr>
                                                     </thead>
@@ -254,9 +273,9 @@ main_header(['list_management']);
                                         <div class="row">
                                             <div class="col-8">
                                                 <div class="form-group w-100">
-                                                    <label for="">Item Name:</label>
+                                                    <label for="">Brand Name:</label>
                                                     <input type="text" id="item_name" class="form-control inpt"
-                                                        placeholder="Item Name">
+                                                        placeholder="Brand Name">
                                                 </div>
                                             </div>
                                             <div class="col-4">
@@ -289,6 +308,19 @@ main_header(['list_management']);
                                                 <label for="">Description:</label>
                                                 <textarea id="item_description" class="form-control" rows="3"
                                                     placeholder="Item Description"></textarea>
+                                            </div>
+
+                                        </div>
+                                         <div class="row mt-2">
+                                            <div class="col-12">
+                                                <label for="">Category:</label>
+                                                <select name="" id="Category" class="form-control">
+                                                    <option value="" disabled selected>-- Select Category --</option>
+                                                    <option value="Generic">Generic</option>
+                                                    <option value="Branded">Branded</option>
+                                                    <option value="Refreshment">Refreshment</option>
+                                                    <option value="J&T">J&T</option>
+                                                </select>
                                             </div>
 
                                         </div>
@@ -330,7 +362,7 @@ main_header(['list_management']);
                                                 <table class="table table-hover text-nowrap">
                                                     <thead>
                                                         <tr>
-                                                            <th>Item Name</th>
+                                                            <th>Brand Name</th>
                                                             <th>Item Code</th>
                                                             <th>Status</th>
                                                             <!-- <th>Expiration Date</th> -->

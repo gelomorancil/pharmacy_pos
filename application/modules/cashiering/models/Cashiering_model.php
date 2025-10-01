@@ -18,6 +18,8 @@ class Cashiering_model extends CI_Model
         $this->db->select('
             i.*, 
             ip.unit_price,
+            ip.Walkin_price,
+            ip.Wholesale_price,
             ip.id AS item_profile_id,
             u.unit_of_measure
         ');
