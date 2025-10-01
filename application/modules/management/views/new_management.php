@@ -3,10 +3,11 @@ main_header(['list_management']);
 ?>
 <!-- ############ PAGE START-->
 <!-- HIDDEN ID's USED AS UPDATE FLAGS -->
-<input hidden value="" id="item_id">
+<!-- <input hidden value="" id="item_id"> -->
 <input hidden value="" id="supplier_id">
-<input hidden value="" id="unit_id">
+<!-- <input hidden value="" id="unit_id"> -->
 <input hidden value="" id="client_id">
+<input hidden value="" id="item_profile_id">
 
 <style>
   /* Scoped only to Management page */
@@ -126,9 +127,25 @@ main_header(['list_management']);
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="form-group w-100">
-                                                    <label for="">Unit Price:</label>
+                                                    <label for="">Regular Price:</label>
                                                     <input type="number" id="unit_price" class="form-control inpt"
-                                                        placeholder="Enter Unit Price">
+                                                        placeholder="Enter Regular Price">
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-group w-100">
+                                                    <label for="">Walk-in Price:</label>
+                                                    <input type="number" id="walkin_price" class="form-control inpt"
+                                                        placeholder="Enter Walkin Price">
+                                                </div>
+                                            </div>
+                                        </div>
+                                         <div class="row">
+                                            <div class="col-6">
+                                                <div class="form-group w-100">
+                                                    <label for="">Wholesale Price:</label>
+                                                    <input type="number" id="wholesale_price" class="form-control inpt"
+                                                        placeholder="Enter Wholesale Price">
                                                 </div>
                                             </div>
                                             <div class="col-6">
@@ -157,20 +174,22 @@ main_header(['list_management']);
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="card m-3">
-                                            <div class="card-body table-responsive p-0" style="height: 34.3rem;">
-                                                <table class="table table-hover text-nowrap">
+                                            <div class="card-body table-responsive p-0" style="height: 34.3rem;" id="load_item_profiles">
+                                                <!-- <table class="table table-hover text-nowrap">
                                                     <thead>
                                                         <tr>
-                                                            <th>Item Name</th>
+                                                            <th>Brand Name</th>
                                                             <th>Unit</th>
                                                             <th>Unit Price</th>
+                                                            <th>Walkin Price</th>
+                                                            <th>Wholesale Price</th>
                                                             <th>Threshold</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="load_item_profiles">
 
                                                     </tbody>
-                                                </table>
+                                                </table> -->
                                             </div>
                                         </div>
                                     </div>
@@ -223,8 +242,8 @@ main_header(['list_management']);
                                     </div>
                                     <div class="col-12">
                                         <div class="card m-3">
-                                            <div class="card-body table-responsive p-0" style="height: 12rem;">
-                                                <table class="table table-hover text-nowrap">
+                                            <div class="card-body table-responsive p-0" style="height: 12rem;"  id="load_units">
+                                                <!-- <table class="table table-hover text-nowrap">
                                                     <thead>
                                                         <tr>
                                                             <th>Unit</th>
@@ -233,7 +252,7 @@ main_header(['list_management']);
                                                     <tbody id="load_units">
 
                                                     </tbody>
-                                                </table>
+                                                </table> -->
                                             </div>
                                         </div>
                                     </div>
@@ -254,9 +273,9 @@ main_header(['list_management']);
                                         <div class="row">
                                             <div class="col-8">
                                                 <div class="form-group w-100">
-                                                    <label for="">Item Name:</label>
+                                                    <label for="">Brand Name:</label>
                                                     <input type="text" id="item_name" class="form-control inpt"
-                                                        placeholder="Item Name">
+                                                        placeholder="Brand Name">
                                                 </div>
                                             </div>
                                             <div class="col-4">
@@ -289,6 +308,19 @@ main_header(['list_management']);
                                                 <label for="">Description:</label>
                                                 <textarea id="item_description" class="form-control" rows="3"
                                                     placeholder="Item Description"></textarea>
+                                            </div>
+
+                                        </div>
+                                         <div class="row mt-2">
+                                            <div class="col-12">
+                                                <label for="">Category:</label>
+                                                <select name="" id="Category" class="form-control">
+                                                    <option value="" disabled selected>-- Select Category --</option>
+                                                    <option value="Generic">Generic</option>
+                                                    <option value="Branded">Branded</option>
+                                                    <option value="Refreshment">Refreshment</option>
+                                                    <option value="J&T">J&T</option>
+                                                </select>
                                             </div>
 
                                         </div>
@@ -326,20 +358,19 @@ main_header(['list_management']);
                                     </div> -->
                                     <div class="col-12">
                                         <div class="card m-3">
-                                            <div class="card-body table-responsive p-0" style="height: 22.6rem;">
-                                                <table class="table table-hover text-nowrap">
+                                            <div class="card-body table-responsive p-0" style="height: 25rem;" id="load_items">
+                                                <!-- <table class="table table-hover text-nowrap">
                                                     <thead>
                                                         <tr>
-                                                            <th>Item Name</th>
+                                                            <th>Brand Name</th>
                                                             <th>Item Code</th>
                                                             <th>Status</th>
-                                                            <!-- <th>Expiration Date</th> -->
                                                         </tr>
                                                     </thead>
                                                     <tbody id="load_items">
 
                                                     </tbody>
-                                                </table>
+                                                </table> -->
                                             </div>
                                         </div>
                                     </div>
@@ -445,8 +476,8 @@ main_header(['list_management']);
                                     </div> -->
                                     <div class="col-12">
                                         <div class="card m-3">
-                                            <div class="card-body table-responsive p-0" style="height: 34.3rem;">
-                                                <table class="table table-hover text-nowrap">
+                                            <div class="card-body table-responsive p-0" style="height: 34.3rem;" id="load_suppliers">
+                                                <!-- <table class="table table-hover text-nowrap">
                                                     <thead>
                                                         <tr>
                                                             <th>Supplier Name</th>
@@ -458,7 +489,7 @@ main_header(['list_management']);
                                                     <tbody id="load_suppliers">
 
                                                     </tbody>
-                                                </table>
+                                                </table> -->
                                             </div>
                                         </div>
                                     </div>
@@ -511,6 +542,13 @@ main_header(['list_management']);
                                             </div>
                                         </div>
                                         <div class="row">
+                                            <div class="col-8">
+                                                <div class="form-group w-100">
+                                                    <label for="">LTO Number:</label>
+                                                    <input type="text" id="client-lto" class="form-control inpt"
+                                                        placeholder="Enter LTO Number">
+                                                </div>
+                                            </div>
                                             <div class="col-4">
                                                 <div class="form-group w-100">
                                                     <label for="">Status:</label>
@@ -533,18 +571,19 @@ main_header(['list_management']);
                         <div class="col-lg-8 col-md-6 col-sm-12">
                             <div class="card">
                                 <div class="card-header new-color">
-                                    <h3 class="card-title">Current Suppliers:</h3>
+                                    <h3 class="card-title">Current Clients:</h3>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="card m-3">
-                                            <div class="card-body table-responsive p-0" style="height: 34.3rem;">
-                                                <table class="table table-hover text-nowrap">
+                                            <div class="card-body table-responsive p-0" style="height: 34.3rem;" id="load_clients">
+                                                <!-- <table class="table table-hover text-nowrap">
                                                     <thead>
                                                         <tr>
                                                             <th>Client Name</th>
                                                             <th>Contact Number</th>
+                                                            <th>LTO Number</th>
                                                             <th>Email Address</th>
                                                             <th>Company Affiliate</th>
                                                             <th>Status</th>
@@ -552,7 +591,7 @@ main_header(['list_management']);
                                                     </thead>
                                                     <tbody id="load_clients">
                                                     </tbody>
-                                                </table>
+                                                </table> -->
                                             </div>
                                         </div>
                                     </div>
@@ -674,20 +713,26 @@ main_header(['list_management']);
                                 <div class="card-header new-color">
                                     <h3 class="card-title">User lists</h3>
                                 </div>
+                                
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="card m-3">
+                                            <div class="card-body table-responsive p-0" style="height: 280px;"  id="load_user">
+                                                <!-- <table class="table table-hover text-nowrap">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Name</th>
+                                                            <th>Username</th>
+                                                            <th>Role</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="load_user">
 
-                                <div class="card-body table-responsive p-0" style="height: 280px;">
-                                    <table class="table table-hover text-nowrap">
-                                        <thead>
-                                            <tr>
-                                                <th>Name</th>
-                                                <th>Username</th>
-                                                <th>Role</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="load_user">
-
-                                        </tbody>
-                                    </table>
+                                                    </tbody>
+                                                </table> -->
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

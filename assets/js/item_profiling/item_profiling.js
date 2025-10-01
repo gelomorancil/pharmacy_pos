@@ -18,6 +18,8 @@ var editProfile = (data) => {
     $('#item_id').val(data.getAttribute('data-item_id'));
     $('#unit_id').val(data.getAttribute('data-unit_id'));
     $('#unit_price').val(data.getAttribute('data-unit_price'));
+    $('#walkin_price').val(data.getAttribute('data-walkin_price'));
+    $('#wholesale_price').val(data.getAttribute('data-unit_price'));
     $('#threshold').val(data.getAttribute('data-threshold'));
   
     $('#save_item_profile').hide();
@@ -25,7 +27,8 @@ var editProfile = (data) => {
   }
 
 $('#save_item_profile').click(function () {
-    // alert($('#unit_id').val());
+    // alert($('#item_id_prof').val());
+    // return;
     $.confirm({
         title: 'Confirmation',
         icon: 'fa fa-question-circle',
@@ -41,7 +44,9 @@ $('#save_item_profile').click(function () {
                         data: {
                             item_id: $('#item_id').val(),
                             unit_id: $('#unit_id').val(),
-                            // unit_price: $('#unit_price').val(),
+                            unit_price: $('#unit_price').val(),
+                            walkin_price: $('#walkin_price').val(),
+                            wholesale_price: $('#wholesale_price').val(),
                             threshold: $('#threshold').val(),
                         },
                         success: function (e) {
@@ -53,6 +58,8 @@ $('#save_item_profile').click(function () {
                                   $('#item_id').val("1");
                                   $('#unit_id').val("1");
                                   $('#unit_price').val("");
+                                  $('#walkin_price').val("");
+                                  $('#wholesale_price').val("");
                                   $('#threshold').val("");
 
                                 //   setTimeout(function () {
@@ -98,7 +105,9 @@ $('#update_item_profile').click(function () {
 
                             item_id: $('#item_id').val(),
                             unit_id: $('#unit_id').val(),
-                            // unit_price: $('#unit_price').val(),
+                            unit_price: $('#unit_price').val(),
+                            walkin_price: $('#walkin_price').val(),
+                            wholesale_price: $('#wholesale_price').val(),
                             threshold: $('#threshold').val(),
                         },
                         success: function (e) {

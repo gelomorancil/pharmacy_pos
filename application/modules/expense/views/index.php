@@ -48,19 +48,6 @@ $session = (object)get_userdata(USER);
                             <input type="number" id="aamount" class="form-control inpt_edit" placeholder="Actual Money">
                         </div>
 
-                        <!-- <div class="form-group">
-                            <label for="">Insert to Branch</label>
-                            <select class="form-control" style="width: 100%;" id="Branch">
-                                <option value=""></option>
-                                <?php
-                                    foreach($branch as $key => $value){ ?>
-                                        <option value="<?=$value->List_name?>"><?=$value->List_name?></option>
-                                    <?php }
-                                ?>
-                            </select>
-                        </div> -->
-
-
                         <div class="form-group act_exp" style="display: <?=$session->Role == "Admin" ? "" : "none"?>">
                             <label for="">Actual Expenses</label>
                             <input type="number" id="aexp" class="form-control inpt_edit" placeholder="Actual Expenses">
@@ -92,30 +79,10 @@ $session = (object)get_userdata(USER);
                 <div class="card-header new-color">
                     <div class="card-title">Expenses for today</div>
                 </div>
-                    <!-- Modified by KYLE 12-19-2023 -->
-                    <!-- <div class="input-group input-group-sm" style="margin-top:1rem; margin-left:1rem; margin-left:1rem;">
+                <div class="card-body">
 
-                        <select class="form-control-sm mr-1" style="width: 30%;" id="branch_filter" <?=empty($session->Branch) ? '' : 'hidden'?>>
-                            <option value="All">All Branch</option>
-                            <?php 
-                                foreach($branch as $key => $x){ ?>
-                                <option value="<?=$x->List_name?>"><?=$x->List_name?></option>
-                            <?php } ?>
-                        </select>
-                        <label class="mr-2"for="" style=" margin-left:1rem;">From</label>
-                        <input type="date" id="d_from" class="form-control form-control-sm" style="max-width: 25%;">
-                        <label class="ml-2 mr-2" for="" style=" margin-left:1rem;">To</label>
-                        <input type="date" id="d_to" class="form-control form-control-sm" style="max-width: 25%;">
-                        <div class="input-group-append">
-                            <button type="submit" class="btn btn-default" id="submit_date_exp">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                                
-                    </div> -->
-                
-                    <!-- Moved Entire table to grid -> load_expenses KYLE 12-19-2023 -->
-                <div class="" id="load_expenses">
+                    <div class="" id="load_expenses">
+                    </div>
                 </div>
                  
 <?php

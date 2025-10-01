@@ -138,6 +138,17 @@ function check_low_stocks() {
         background: #035863;
         color: white;
       }
+      /* For Chrome, Safari, Edge, Opera */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* For Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
     </style>
   </head>
 
@@ -174,7 +185,7 @@ function check_low_stocks() {
     </a>
 
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                 <a class="" href="<?=base_url()?>/user_profile">  <?= $session->Username ?></a>
+                 <a class="dropdown-item" href="<?=base_url()?>/user_profile">  <?= $session->Username ?></a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" id="signout" role="button">Logout</a>
             </div>
@@ -600,6 +611,51 @@ function main_footer()
         "responsive": true,
       });
     });
+
+$(function () {
+  $(".datatable").each(function () {
+    let table = $(this);
+
+    // prevent reinit
+    if ($.fn.DataTable.isDataTable(table)) {
+      table.DataTable().destroy();
+    }
+
+    let dt = table.DataTable({
+      destroy: true, // allows safe reinit
+      paging: true,
+      lengthChange: false,
+      searching: true,
+      ordering: true,
+      info: true,
+      autoWidth: false,
+      responsive: true,
+     buttons: [
+  {
+    extend: 'excelHtml5',
+    text: '<i class="fas fa-file-excel"></i> Excel',
+    className: 'btn btn-success btn-sm mr-1'
+  },
+  {
+    extend: 'pdfHtml5',
+    text: '<i class="fas fa-file-pdf"></i> PDF',
+    className: 'btn btn-danger btn-sm mr-1'
+  },
+  {
+    extend: 'print',
+    text: '<i class="fas fa-print"></i> Print',
+    className: 'btn btn-primary btn-sm'
+  }
+]
+    });
+
+    // move buttons after init
+    dt.buttons().container()
+      .appendTo(table.closest('.dataTables_wrapper').find('.col-md-6:eq(0)'));
+  });
+});
+
+
 
     $(function () {
       /* ChartJS

@@ -55,7 +55,7 @@ class Quotation extends MY_Controller
     public function load_quotation_items()
     {
         $id = $this->input->get('qID');
-        var_dump($this->quotation->get_quotation_items($id));
+        // var_dump($this->quotation->get_quotation_items($id));
         $this->data['items'] = $this->quotation->get_quotation_items($id);
         $this->data['content'] = 'grid/load_q_items';
         $this->load->view('layout', $this->data);

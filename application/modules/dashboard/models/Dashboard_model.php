@@ -68,7 +68,7 @@ class Dashboard_model extends CI_Model
         $this->db->join($this->Table->payment_parent . ' AS pParent', 'pChild.payment_id = pParent.id', 'left');
         $this->db->join($this->Table->item_profile . ' AS ip', 'pChild.item_profile_id = ip.id', 'left');
         $this->db->join($this->Table->items . ' AS i', 'ip.item_id = i.id', 'left');
-           if ($this->date !== "All") {
+           if ($this->date !== '2025-13') {
                 $this->db->where("DATE_FORMAT(pParent.date_created, '%Y-%m') =", $this->date);
             }
 
@@ -126,7 +126,7 @@ class Dashboard_model extends CI_Model
 
         $this->db->from($this->Table->payment_parent . ' AS pParent');
         $this->db->join($this->Table->buyers . ' AS buyers', 'pParent.Buyer_ID = buyers.ID', 'left');
-            if ($this->date !== "All") {
+            if ($this->date !==  '2025-13') {
                 $this->db->where("DATE_FORMAT(pParent.date_created, '%Y-%m') =", $this->date);
             }
 

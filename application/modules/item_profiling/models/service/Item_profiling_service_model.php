@@ -22,7 +22,9 @@ class Item_profiling_service_model extends CI_Model
             $data = array(
                 'item_id' => $this->item_id,
                 'unit_id' => $this->unit_id,
-                // 'unit_price' => $this->unit_price,
+                'unit_price' => $this->unit_price,
+                'Walkin_price' => $this->walkin_price,
+                'Wholesale_price' => $this->wholesale_price,
                 'threshold' => $this->threshold,
             );
             $emptyFields = array_filter($data, function ($value) {
@@ -58,8 +60,10 @@ class Item_profiling_service_model extends CI_Model
             $data = array(
                 'item_id' => $this->item_id,
                 'unit_id' => $this->unit_id,
-                // 'unit_price' => $this->unit_price,
+                'unit_price' => $this->unit_price,
                 'threshold' => $this->threshold,
+                 'Walkin_price' => $this->walkin_price,
+                'Wholesale_price' => $this->wholesale_price,
             );
             $emptyFields = array_filter($data, function ($value) {
                 // Only check for null or empty string, not other falsy values like '0' or 0

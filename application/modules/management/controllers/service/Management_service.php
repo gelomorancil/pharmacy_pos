@@ -139,6 +139,7 @@ class Management_service extends MY_Controller
     $this->msModel->client_cn         = $this->input->post("contact_number");
     $this->msModel->client_email      = $this->input->post("client_email");
     $this->msModel->client_status     = $this->input->post("client_status");
+    $this->msModel->client_lto     = $this->input->post("client_lto");
 
     $response = $this->msModel->save_client();
     echo json_encode($response);
@@ -152,6 +153,7 @@ public function update_client()
     $this->msModel->client_cn         = $this->input->post("contact_number");
     $this->msModel->client_email      = $this->input->post("client_email");
     $this->msModel->client_status     = $this->input->post("client_status");
+    $this->msModel->client_lto     = $this->input->post("client_lto");
 
     $response = $this->msModel->update_client();
     echo json_encode($response);

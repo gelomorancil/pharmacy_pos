@@ -236,7 +236,7 @@ $session = (object) get_userdata(USER);
             <table id="quotation_table">
                 <thead>
                     <tr>
-                        <th style="width:8%;">Qty</th>
+                        <th style="width:8%;">#</th>
                         <th style="width:26%;">Item</th>
                         <th style="width:10%;">Unit of Measure</th>
                         <th style="width:28%;">Item Description</th>
@@ -253,22 +253,22 @@ $session = (object) get_userdata(USER);
         <table class="totals">
             <tr>
                 <td>
-                    SUBTOTAL: ₱ <span id="subtotal_display"><?= $quotation->subtotal ?></span>
+                    SUBTOTAL: ₱ <span id="subtotal_display"><?= number_format($quotation->subtotal,2) ?></span>
                     <input type="hidden" id="subtotal_value" value="0.00">
                 </td>
             </tr>
             <tr>
                 <td>
-                    FREIGHT: ₱
-                    <input type="number" id="freight_input" value="<?= $quotation->total ?>" step="0.01" min="0"
-                        disabled style="width:120px; text-align:right;">
-                    <span id="freight_display" style="display:none;">0.00</span>
+                    FREIGHT: ₱ 
+                    <!-- <input type="number" id="freight_input" value="<?= number_format($quotation->total,2) ?>" step="0.01" min="0"
+                        disabled style="width:120px; text-align:right;"> -->
+                    <span id="subtotal_display"><?= number_format($quotation->freight,2) ?></span>
                     <input type="hidden" id="freight_value" value="0.00">
                 </td>
             </tr>
             <tr>
                 <td>
-                    TOTAL: ₱ <span id="total_display"><?= $quotation->total ?></span>
+                    TOTAL: ₱ <span id="total_display"><?= number_format($quotation->total,2) ?></span>
                     <input type="hidden" id="total_value" value="0.00">
                 </td>
             </tr>

@@ -360,61 +360,61 @@ function process_payment() {
             if (e.has_error == false) {
                 toastr.success(e.message);
 
-                // function showPrintConfirmation() {
-                //     $.confirm({
-                //         title: 'Print Confirmation',
-                //         content: 'Confirm if Receipt Printing is Successful',
-                //         buttons: {
-                //             reprint: {
-                //                 text: 'Reprint',
-                //                 btnClass: 'btn-blue',
-                //                 action: function () {
-                //                     // Reprint the receipt by calling the $.post again
-                //                     $.post({
-                //                         url: 'cashiering/Cashiering/load_receipt',
-                //                         data: {
-                //                             control_number: e.control_number,
-                //                             sub_total: sub_total,
-                //                             discount_amount: discount_amount,
-                //                             total_amount: total_amount,
-                //                             discount_type: discount_type,
-                //                             data_array: itemsArray,
-                //                         },
-                //                         success: function (data) {
-                //                             $('#to_be_printed').html(data);
-                //                             $("#to_be_printed").printThis({
-                //                                 debug: false,
-                //                                 importCSS: true,
-                //                                 importStyle: true,
-                //                                 printContainer: true,
-                //                                 removeInline: false,
-                //                                 printDelay: 333,
-                //                                 header: null,
-                //                                 footer: null,
-                //                                 base: false,
-                //                                 formValues: true,
-                //                                 removeScripts: false,
-                //                                 copyTagClasses: false,
-                //                                 beforePrintEvent: null,
-                //                                 beforePrint: null,
-                //                                 afterPrint: function () {
-                //                                     showPrintConfirmation(); // Call confirmation again after reprint
-                //                                 }
-                //                             });
-                //                         }
-                //                     });
-                //                 }
-                //             },
-                //             confirm: {
-                //                 text: 'Confirm',
-                //                 btnClass: 'btn-green',
-                //                 action: function () {
-                //                     window.location.reload(); // Refresh the page
-                //                 }
-                //             },
-                //         }
-                //     });
-                // }
+                function showPrintConfirmation() {
+                    $.confirm({
+                        title: 'Print Confirmation',
+                        content: 'Confirm if Receipt Printing is Successful',
+                        buttons: {
+                            reprint: {
+                                text: 'Reprint',
+                                btnClass: 'btn-blue',
+                                action: function () {
+                                    // Reprint the receipt by calling the $.post again
+                                    $.post({
+                                        url: 'cashiering/Cashiering/load_receipt',
+                                        data: {
+                                            control_number: e.control_number,
+                                            sub_total: sub_total,
+                                            discount_amount: discount_amount,
+                                            total_amount: total_amount,
+                                            discount_type: discount_type,
+                                            data_array: itemsArray,
+                                        },
+                                        success: function (data) {
+                                            $('#to_be_printed').html(data);
+                                            $("#to_be_printed").printThis({
+                                                debug: false,
+                                                importCSS: true,
+                                                importStyle: true,
+                                                printContainer: true,
+                                                removeInline: false,
+                                                printDelay: 333,
+                                                header: null,
+                                                footer: null,
+                                                base: false,
+                                                formValues: true,
+                                                removeScripts: false,
+                                                copyTagClasses: false,
+                                                beforePrintEvent: null,
+                                                beforePrint: null,
+                                                afterPrint: function () {
+                                                    showPrintConfirmation(); // Call confirmation again after reprint
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            },
+                            confirm: {
+                                text: 'Confirm',
+                                btnClass: 'btn-green',
+                                action: function () {
+                                    window.location.reload(); // Refresh the page
+                                }
+                            },
+                        }
+                    });
+                }
 
                 // Initial post and print
                 $.post({

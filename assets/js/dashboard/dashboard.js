@@ -19,8 +19,8 @@ for (let year = startYear; year <= endYear; year++) {
 // For Month
 const monthSelect = document.getElementById('month');
 const monthNames = [
-    "All","January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December", "All"
 ];
 const currentMonth = new Date().getMonth(); // 0-based index for current month
 
