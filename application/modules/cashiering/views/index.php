@@ -454,103 +454,124 @@ function renderCart() {
   let activeIndex = activeElement && activeElement.classList.contains("qty")
     ? activeElement.closest(".cart-item").dataset.index
     : null;
-  let caretPos = activeElement && activeElement.selectionStart;
 
   cartItemsDiv.innerHTML = cart.map((item, i) => {
-    let itemTotal = item.qty * item.price;
+    let qty = item.qty === "" ? "" : item.qty; // allow empty while typing
+    let itemTotal = (item.qty && !isNaN(item.qty) ? item.qty : 0) * item.price;
     total += itemTotal;
 
     return `
-      <div class="cart-item mb-3 pb-2 border-bottom" data-index="${i}"  data-item_profile_id="${item.item_profile_id}">
+      <div class="cart-item mb-3 pb-2 border-bottom" data-index="${i}" data-item_profile_id="${item.item_profile_id}">
         <div><strong>${item.name}</strong></div>
         <input type="text" hidden value="${item.item_profile_id}">
         <div class="d-flex justify-content-between align-items-center">
           <div>
-            ₱${item.price.toLocaleString("en-PH", {minimumFractionDigits:2})} each
+            ₱${item.price.toLocaleString("en-PH", { minimumFractionDigits: 2 })} each
           </div>
           <div class="d-flex align-items-center">
             <button class="btn btn-sm btn-outline-secondary minus">-</button>
             <input type="text" class="form-control form-control-sm text-center mx-1 qty" 
-                  value="${item.qty}" min="1" style="width:60px;">
+                  value="${qty}" style="width:60px;">
             <button class="btn btn-sm btn-outline-secondary plus">+</button>
           </div>
         </div>
-
-        <div class="text-right mt-1">= ₱${itemTotal.toLocaleString("en-PH", {minimumFractionDigits:2})}</div>
+        <div class="text-right mt-1">= ₱${itemTotal.toLocaleString("en-PH", { minimumFractionDigits: 2 })}</div>
       </div>
     `;
   }).join("");
 
   document.getElementById("total").innerText =
-    "₱" + total.toLocaleString("en-PH", {minimumFractionDigits:2});
+    "₱" + total.toLocaleString("en-PH", { minimumFractionDigits: 2 });
 
   // Restore focus + caret
-    if (activeIndex !== null) {
-        let newInput = cartItemsDiv.querySelector(`.cart-item[data-index="${activeIndex}"] .qty`);
-        if (newInput) {
-            newInput.focus();
-
-            // Put caret at the end of the value
-            let length = newInput.value.length;
-            newInput.setSelectionRange(length, length);
-        }
+  if (activeIndex !== null) {
+    let newInput = cartItemsDiv.querySelector(`.cart-item[data-index="${activeIndex}"] .qty`);
+    if (newInput) {
+      newInput.focus();
+      let length = newInput.value.length;
+      newInput.setSelectionRange(length, length);
     }
+  }
 }
 
+// Handle plus/minus buttons
+document.getElementById("cart-items").addEventListener("click", e => {
+  let parent = e.target.closest(".cart-item");
+  if (!parent) return;
+  let index = parent.dataset.index;
 
-  // Handle cart actions with one listener
-  document.getElementById("cart-items").addEventListener("click", e => {
-    let parent = e.target.closest(".cart-item");
-    if (!parent) return;
-    let index = parent.dataset.index;
-
-    if (e.target.classList.contains("plus")) cart[index].qty++;
-    if (e.target.classList.contains("minus")) {
-      cart[index].qty > 1 ? cart[index].qty-- : cart.splice(index, 1);
+  if (e.target.classList.contains("plus")) cart[index].qty = (parseInt(cart[index].qty) || 0) + 1;
+  if (e.target.classList.contains("minus")) {
+    let current = parseInt(cart[index].qty) || 1;
+    if (current > 1) {
+      cart[index].qty = current - 1;
+    } else {
+      cart.splice(index, 1);
     }
-    renderCart();
-  });
+  }
+  renderCart();
+});
 
-  // Handle manual input (update while typing)
-  document.getElementById("cart-items").addEventListener("input", e => {
-    if (!e.target.classList.contains("qty")) return;
-    let index = e.target.closest(".cart-item").dataset.index;
-    cart[index].qty = Math.max(1, parseInt(e.target.value) || 1);
-    renderCart();
-  });
+// Handle qty input on keyup
+document.getElementById("cart-items").addEventListener("keyup", e => {
+  if (!e.target.classList.contains("qty")) return;
+  let index = e.target.closest(".cart-item").dataset.index;
+  let value = e.target.value;
 
-  // Example: add item
-  document.querySelectorAll(".btn-add").forEach(btn => {
-    btn.addEventListener("click", () => {
-      let name = btn.dataset.name;
-      let b_type = $('#buyer_type').val();
+  if (value === "") {
+    // allow empty while typing
+    cart[index].qty = "";
+  } else {
+    let num = parseInt(value, 10);
+    cart[index].qty = isNaN(num) || num < 1 ? 1 : num;
+  }
 
-    //   let price = parseFloat(btn.dataset.price);
-      let price = 0;
+  renderCart();
+});
 
+// Validate when leaving input (blur)
+document.getElementById("cart-items").addEventListener("blur", e => {
+  if (!e.target.classList.contains("qty")) return;
+  let index = e.target.closest(".cart-item").dataset.index;
+  let value = e.target.value.trim();
 
+  if (value === "" || isNaN(value) || parseInt(value) < 1) {
+    cart[index].qty = 1; // fallback
+  } else {
+    cart[index].qty = parseInt(value, 10);
+  }
+  renderCart();
+}, true);
 
-    if(b_type == 'WALKIN'){
-           price = parseFloat(btn.dataset.walkin);
-    } else if(b_type == 'REGULAR'){
-            price = parseFloat(btn.dataset.price);
-    } else if(b_type == 'WHOLESALER'){
-        price = parseFloat(btn.dataset.wholesaler);
+// Example: add item
+document.querySelectorAll(".btn-add").forEach(btn => {
+  btn.addEventListener("click", () => {
+    let name = btn.dataset.name;
+    let b_type = $('#buyer_type').val();
+    let price = 0;
+
+    if (b_type == 'WALKIN') {
+      price = parseFloat(btn.dataset.walkin);
+    } else if (b_type == 'REGULAR') {
+      price = parseFloat(btn.dataset.price);
+    } else if (b_type == 'WHOLESALER') {
+      price = parseFloat(btn.dataset.wholesaler);
     }
 
-      let item_profile_id = btn.dataset.item_profile_id;
-      let existing = cart.find(i => i.item_profile_id === item_profile_id);
-      
-      existing ? existing.qty++ : cart.push({ item_profile_id, name, price, qty: 1 });
-      renderCart();
-    });
-  });
+    let item_profile_id = btn.dataset.item_profile_id;
+    let existing = cart.find(i => i.item_profile_id === item_profile_id);
 
-  document.getElementById("clear-cart").addEventListener("click", e => {
-    e.preventDefault();
-    cart = [];
+    existing ? existing.qty++ : cart.push({ item_profile_id, name, price, qty: 1 });
     renderCart();
   });
+});
+
+// Clear cart
+document.getElementById("clear-cart").addEventListener("click", e => {
+  e.preventDefault();
+  cart = [];
+  renderCart();
+});
 
 //   // Search filter
 //   $("#productSearch").on("keyup", function () {

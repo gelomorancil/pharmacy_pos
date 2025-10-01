@@ -612,6 +612,51 @@ function main_footer()
       });
     });
 
+$(function () {
+  $(".datatable").each(function () {
+    let table = $(this);
+
+    // prevent reinit
+    if ($.fn.DataTable.isDataTable(table)) {
+      table.DataTable().destroy();
+    }
+
+    let dt = table.DataTable({
+      destroy: true, // allows safe reinit
+      paging: true,
+      lengthChange: false,
+      searching: true,
+      ordering: true,
+      info: true,
+      autoWidth: false,
+      responsive: true,
+     buttons: [
+  {
+    extend: 'excelHtml5',
+    text: '<i class="fas fa-file-excel"></i> Excel',
+    className: 'btn btn-success btn-sm mr-1'
+  },
+  {
+    extend: 'pdfHtml5',
+    text: '<i class="fas fa-file-pdf"></i> PDF',
+    className: 'btn btn-danger btn-sm mr-1'
+  },
+  {
+    extend: 'print',
+    text: '<i class="fas fa-print"></i> Print',
+    className: 'btn btn-primary btn-sm'
+  }
+]
+    });
+
+    // move buttons after init
+    dt.buttons().container()
+      .appendTo(table.closest('.dataTables_wrapper').find('.col-md-6:eq(0)'));
+  });
+});
+
+
+
     $(function () {
       /* ChartJS
        * -------

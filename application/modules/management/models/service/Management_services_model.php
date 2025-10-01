@@ -430,6 +430,7 @@ class Management_services_model extends CI_Model
             'cnum'     => $this->client_cn,
             'email'    => $this->client_email,
             'active'   => $this->client_status,
+            'lto'   => $this->client_lto,
         );
 
         // required fields: name and cnum (affiliate/email are nullable in schema)
@@ -474,6 +475,7 @@ public function update_client()
             'cnum'     => $this->client_cn,
             'email'    => $this->client_email,
             'active'   => $this->client_status,
+            'lto'   => $this->client_lto,
         );
 
         // required fields: name and cnum

@@ -621,7 +621,8 @@ $('#save_client').click(function () {
               client_company_aff: $.trim($('#client-company-aff').val()),
               contact_number: $.trim($('#client-cn').val()),
               client_email: $.trim($('#client-email').val()),
-              client_status: $('#client_status').val()
+              client_status: $('#client_status').val(),
+              client_lto: $('#client-lto').val()
             },
             success: function (res) {
               let e;
@@ -646,6 +647,7 @@ $('#save_client').click(function () {
                 $('#client-cn').val('');
                 $('#client-email').val('');
                 $('#client_status').val('1');
+                $('#client-lto').val('');
 
                 // ensure buttons back to initial state
                 $('#update_client').hide();
@@ -695,7 +697,9 @@ $('#update_client').click(function () {
               client_company_aff: $.trim($('#client-company-aff').val()),
               contact_number: $.trim($('#client-cn').val()),
               client_email: $.trim($('#client-email').val()),
-              client_status: $('#client_status').val()
+              client_status: $('#client_status').val(),
+              client_lto: $('#client-lto').val()
+
             },
             success: function (res) {
               let e;
@@ -718,6 +722,7 @@ $('#update_client').click(function () {
                 $('#client-cn').val('');
                 $('#client-email').val('');
                 $('#client_status').val('1');
+                $('#client-lto').val('');
 
                 // optional: hide update button & show save button
                 $('#update_client').hide();
@@ -756,6 +761,7 @@ var editClient = (data) => {
   $('#client-cn').val(data.getAttribute('data-cnum'));
   $('#client-email').val(data.getAttribute('data-email'));
   $('#client_status').val(data.getAttribute('data-status'));
+  $('#client-lto').val(data.getAttribute('data-lto'));
 
   $('#save_client').hide();
   $('#update_client').show();
