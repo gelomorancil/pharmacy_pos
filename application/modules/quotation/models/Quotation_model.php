@@ -44,7 +44,7 @@ class Quotation_model extends CI_Model
             $new_qn = intval($last_qn) + 1;
             return str_pad($new_qn, 6, '0', STR_PAD_LEFT);
         } else {
-            return '000000';
+            return '000001';
         }
     }
 
@@ -60,11 +60,11 @@ class Quotation_model extends CI_Model
 
     public function get_quotation_items($quotation_id)
     {
-        $this->db->select('qi.*, i.item_name, qi.po_descr,u.unit_of_measure');
+        $this->db->select('qi.*, i.item_name,u.unit_of_measure');
         $this->db->from('tbl_quotation_items qi');
         $this->db->join('tbl_items i', 'qi.item_ID = i.ID', 'left');
         $this->db->join('tbl_unit u', 'qi.unit_ID = u.ID', 'left');
-        $this->db->where('qi.ID', $quotation_id);
+        $this->db->where('qi.qo_ID', $quotation_id);
         $query = $this->db->get();
         return $query->result();
     }

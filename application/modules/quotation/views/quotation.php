@@ -249,7 +249,7 @@ $session = (object) get_userdata(USER);
         </div>
         <div style="margin-bottom:10px;">
             <button id="openModalBtn" class="btn">➕ Add Item</button>
-            <button class="btn" id="savePrintBtn">🖨️ Print Quotation</button>
+            <button class="btn" id="savePrintBtn">🖨️ Save & Print Quotation</button>
         </div>
         <div class="table-responsive">
             <table id="quotation_table">
@@ -401,6 +401,7 @@ main_footer();
             let itemId = $('#modal_select_item').val() || '';
             let itemName = $('#modal_select_item option:selected').text() || '';
             let uom = $('#modal_specs').val() || '';
+            let uom_display = $('#modal_specs option:selected').text() || '';
             let qty = parseInt($('#modal_qty').val(), 10) || 0;
             let pcs = parseInt($('#modal_pcs').val(), 10) || 0;
             let unit = parseFloat($('#modal_unit').val()) || 0;
@@ -462,7 +463,7 @@ main_footer();
          <input type="hidden" name="items[${rowIndex}][item_id]" value="${escapeHtml(itemId)}">`
                 ));
                 $tr.append($('<td>').html(
-                    `<span class="display-uom">${escapeHtml(uom)}</span>
+                    `<span class="display-uom">${escapeHtml(uom_display)}</span>
          <input type="hidden" name="items[${rowIndex}][uom]" value="${escapeHtml(uom)}">`
                 ));
                 $tr.append($('<td>').html(
@@ -470,8 +471,8 @@ main_footer();
          <input type="hidden" name="items[${rowIndex}][desc]" value="${escapeHtml(desc)}">`
                 ));
                 $tr.append($('<td>').html(
-                    `<span class="display-pcs">${pcs}</span>
-         <input type="hidden" name="items[${rowIndex}][pcs]" value="${pcs}" class="i_pcs_${rowIndex}">`
+            `<span class="display-pcs">${pcs == 0 ? qty : pcs}</span>
+            <input type="hidden" name="items[${rowIndex}][pcs]" value="${pcs}" class="i_pcs_${rowIndex}">`
                 ));
                 $tr.append($('<td>').html(
                     `<span class="display-unit">${unit.toFixed(2)}</span>
@@ -556,7 +557,7 @@ main_footer();
 
             const subtotal = items.reduce((s, it) => s + (parseFloat(it.total) || 0), 0);
             // optional inputs on page; if missing, defaults
-            const freight = parseFloat($('#freight').val && $('#freight').val() ? $('#freight').val() : 0) || 0;
+            const freight = parseFloat($('#freight_input').val && $('#freight_input').val() ? $('#freight_input').val() : 0) || 0;
             const total = parseFloat((subtotal + freight).toFixed(2));
 
             // optional: allow user-specified quotation_no
@@ -606,94 +607,129 @@ main_footer();
             });
         }
 
+        // function printOnlyBondPaper() {
+        //     // 1) Clone the bond-paper (work on a copy)
+        //     const $clone = $('.bond-paper').first().clone();
+
+        //     // 2) Remove UI elements from the clone
+        //     // $clone.find('#openModalBtn, #savePrintBtn, .modal, .modal-backdrop, .action-btn, .btn').remove();
+
+        //     // 3) Remove action column (header + last cell in each row) from clone
+        //     $clone.find('#quotation_table th:last-child').remove();
+        //     $clone.find('#quotation_table tbody tr').each(function () {
+        //         $(this).find('td:last-child').remove();
+        //     });
+
+        //     // // 4) For each table cell: choose a single canonical value and replace the cell with that value
+        //     // $clone.find('#quotation_table tbody tr').each(function () {
+        //     //     $(this).find('td').each(function () {
+        //     //         const $td = $(this);
+
+        //     //         // Prefer visible display elements (classes like .display-*)
+        //     //         let $display = $td.find('[class*="display-"]').filter(function () {
+        //     //             return $(this).text().trim() !== '';
+        //     //         }).first();
+
+        //     //         let text = '';
+
+        //     //         if ($display && $display.length) {
+        //     //             text = $display.text().trim();
+        //     //         } else {
+        //     //             // then prefer visible inputs/selects/textarea (not hidden)
+        //     //             let $valEl = $td.find('input:not([type="hidden"]), select, textarea').first();
+        //     //             if ($valEl && $valEl.length) {
+        //     //                 text = $valEl.val() != null ? String($valEl.val()).trim() : '';
+        //     //             } else {
+        //     //                 // then check for hidden input (we use hidden inputs for server payload)
+        //     //                 let $hidden = $td.find('input[type="hidden"]').first();
+        //     //                 if ($hidden && $hidden.length) {
+        //     //                     text = $hidden.val() != null ? String($hidden.val()).trim() : '';
+        //     //                 } else {
+        //     //                     // fallback to raw td text (trimmed)
+        //     //                     text = $td.text().trim();
+        //     //                 }
+        //     //             }
+        //     //         }
+
+        //     //         // Replace the cell content with a single text node (no duplicates)
+        //     //         $td.empty().text(text);
+        //     //     });
+        //     // });
+
+        //     // // 5) Convert any remaining inputs/selects/textarea anywhere in the clone (e.g., totals/freight)
+        //     // $clone.find('input, select, textarea').each(function () {
+        //     //     const $el = $(this);
+        //     //     const val = $el.val() != null ? String($el.val()).trim() : '';
+        //     //     $el.replaceWith($('<span>').text(val));
+        //     // });
+
+        //     // // 6) Remove any leftover hidden inputs or form attributes to avoid leaking names
+        //     // $clone.find('input[type="hidden"]').remove();
+        //     // $clone.find('[name]').removeAttr('name');
+
+        //     // // 7) Prepare print markup (replace body with cleaned clone)
+        //     // const printContents = `<div class="container my-4">${$clone.prop('outerHTML')}</div>`;
+        //     // const originalContents = document.body.innerHTML;
+
+        //     // // Replace body with the clean printable content
+        //     // document.body.innerHTML = printContents;
+        //     // window.print();
+
+        //     // // restore original page and reload to re-bind events / state
+        //     // document.body.innerHTML = originalContents;
+        //     // // Give browser a moment to render, then print and restore
+        //     let printContents = document.querySelector('.bond-paper').innerHTML;
+        //     let originalContents = document.body.innerHTML;
+
+        //     document.body.innerHTML = `
+        //       <div class="container my-4">
+        //         ${printContents}
+        //       </div>
+        //     `;
+
+        //     window.print();
+
+        //     document.body.innerHTML = originalContents;
+        //     setTimeout(() => {
+
+        //         location.reload(); // keep this so your UI gets back to interactive state
+        //     }, 250);
+        // }
+
         function printOnlyBondPaper() {
-            // 1) Clone the bond-paper (work on a copy)
-            const $clone = $('.bond-paper').first().clone();
+    // Clone the bond-paper (work on a copy so original stays intact)
+    const $clone = $('.bond-paper').first().clone();
 
-            // 2) Remove UI elements from the clone
-            // $clone.find('#openModalBtn, #savePrintBtn, .modal, .modal-backdrop, .action-btn, .btn').remove();
+    // Show freight as text instead of input
+    const freightVal = $('#freight_input').val(); 
+    $clone.find('#freight_input').remove(); 
+    $clone.find('#freight_display')
+        .text(parseFloat(freightVal).toFixed(2)) // format as 0.00
+        .show(); 
 
-            // 3) Remove action column (header + last cell in each row) from clone
-            $clone.find('#quotation_table th:last-child').remove();
-            $clone.find('#quotation_table tbody tr').each(function () {
-                $(this).find('td:last-child').remove();
-            });
+    // Remove hidden value (not needed in print)
+    $clone.find('#freight_value').remove();
 
-            // // 4) For each table cell: choose a single canonical value and replace the cell with that value
-            // $clone.find('#quotation_table tbody tr').each(function () {
-            //     $(this).find('td').each(function () {
-            //         const $td = $(this);
+    // Clean up unnecessary buttons, modals, etc. (if needed)
+    $clone.find('#openModalBtn, #savePrintBtn, .modal, .modal-backdrop, .action-btn, .btn').remove();
+    $clone.find('#quotation_table th:last-child').remove();
+    $clone.find('#quotation_table tbody tr').each(function () {
+        $(this).find('td:last-child').remove();
+    });
 
-            //         // Prefer visible display elements (classes like .display-*)
-            //         let $display = $td.find('[class*="display-"]').filter(function () {
-            //             return $(this).text().trim() !== '';
-            //         }).first();
+    // Prepare print contents
+    const printContents = `<div class="container my-4">${$clone.prop('outerHTML')}</div>`;
+    const originalContents = document.body.innerHTML;
 
-            //         let text = '';
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
 
-            //         if ($display && $display.length) {
-            //             text = $display.text().trim();
-            //         } else {
-            //             // then prefer visible inputs/selects/textarea (not hidden)
-            //             let $valEl = $td.find('input:not([type="hidden"]), select, textarea').first();
-            //             if ($valEl && $valEl.length) {
-            //                 text = $valEl.val() != null ? String($valEl.val()).trim() : '';
-            //             } else {
-            //                 // then check for hidden input (we use hidden inputs for server payload)
-            //                 let $hidden = $td.find('input[type="hidden"]').first();
-            //                 if ($hidden && $hidden.length) {
-            //                     text = $hidden.val() != null ? String($hidden.val()).trim() : '';
-            //                 } else {
-            //                     // fallback to raw td text (trimmed)
-            //                     text = $td.text().trim();
-            //                 }
-            //             }
-            //         }
+    setTimeout(() => {
+        location.reload();
+    }, 250);
+}
 
-            //         // Replace the cell content with a single text node (no duplicates)
-            //         $td.empty().text(text);
-            //     });
-            // });
-
-            // // 5) Convert any remaining inputs/selects/textarea anywhere in the clone (e.g., totals/freight)
-            // $clone.find('input, select, textarea').each(function () {
-            //     const $el = $(this);
-            //     const val = $el.val() != null ? String($el.val()).trim() : '';
-            //     $el.replaceWith($('<span>').text(val));
-            // });
-
-            // // 6) Remove any leftover hidden inputs or form attributes to avoid leaking names
-            // $clone.find('input[type="hidden"]').remove();
-            // $clone.find('[name]').removeAttr('name');
-
-            // // 7) Prepare print markup (replace body with cleaned clone)
-            // const printContents = `<div class="container my-4">${$clone.prop('outerHTML')}</div>`;
-            // const originalContents = document.body.innerHTML;
-
-            // // Replace body with the clean printable content
-            // document.body.innerHTML = printContents;
-            // window.print();
-
-            // // restore original page and reload to re-bind events / state
-            // document.body.innerHTML = originalContents;
-            // // Give browser a moment to render, then print and restore
-            let printContents = document.querySelector('.bond-paper').innerHTML;
-            let originalContents = document.body.innerHTML;
-
-            document.body.innerHTML = `
-              <div class="container my-4">
-                ${printContents}
-              </div>
-            `;
-
-            window.print();
-
-            document.body.innerHTML = originalContents;
-            setTimeout(() => {
-
-                location.reload(); // keep this so your UI gets back to interactive state
-            }, 250);
-        }
 
         $('#savePrintBtn').off('click').on('click', saveQuotationAndPrint);
 

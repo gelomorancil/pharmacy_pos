@@ -24,34 +24,39 @@ $session = (object) get_userdata(USER);
 <section class="content">
 
     <div class="row">
-        <div class="col-lg-8 col-md-6 col-sm-12">
-            <div class="card card-gray-dark">
-                <div class="card-header">
+        <div class="col-lg-12 col-md-6 col-sm-12">
+                <button type="button" class="btn btn-success mb-2" id="create_quotation"><b>Generate Quotation</b></button>
+
+            <div class="card">
+                <div class="card-header new-color">
                     <h3 class="card-title">Quotation List :</h3>
                 </div>
 
                 <div class="row">
                     <div class="col-12">
                         <div class="card m-3">
-                            <div class="card-body table-responsive p-0" style="height: 34.3rem;">
-                                <table class="table table-hover text-nowrap">
+                            <div class="card-body table-responsive p-0" style="height: 34.3rem;" id="load_quotation">
+                                <!-- <table class="table table-hover text-nowrap">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
-                                            <th>Date Added</th>
+                                            <th>Quotation Number</th>
+                                            <th>Total</th>
+                                            <th>Freight</th>
+                                            <th>Date Created</th>
+                                            <th>Date Approved</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody id="load_quotation">
                                     </tbody>
-                                </table>
+                                </table> -->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 col-md-6 col-sm-12">
+        <!-- <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="card card-gray-dark">
                 <div class="card-header">
                     <h3 class="card-title">-</h3>
@@ -71,7 +76,7 @@ $session = (object) get_userdata(USER);
                     </div>
                 </form>
             </div>
-        </div>
+        </div> -->
     </div>
 
 </section>
@@ -88,7 +93,7 @@ main_footer();
 
     function load_quotation() {
         $(document).gmLoadPage({
-            url: base_url + 'Quotation/load_quotation',
+            url: base_url + 'quotation/load_quotation',
             load_on: '#load_quotation'
         });
     }

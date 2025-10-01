@@ -1,8 +1,7 @@
-<?php if ($items): ?>
-    <?php foreach ($items as $val): ?>
+    <?php foreach ($items as $key => $val): ?>
         <tr>
             <!-- Qty -->
-            <td><?php echo $val->qty; ?></td>
+            <td><?php echo $key+1; ?></td>
 
             <!-- Item (e.g., item name / product reference) -->
             <td><?php echo $val->item_name; ?></td>
@@ -24,4 +23,3 @@
 
         </tr>
     <?php endforeach; ?>
-<?php endif; ?>
