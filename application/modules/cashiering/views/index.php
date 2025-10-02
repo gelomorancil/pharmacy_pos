@@ -161,7 +161,12 @@ $session = (object) get_userdata(USER);
                     <div class="cart-header">
                         Current Sale <a href="#" id="clear-cart" class="float-right text-danger">Clear All</a>
                     </div>
-
+                    <hr>
+                     <p class="cart-total">Transaction Date:
+                        <span class="float-right">
+                          <input type="date" class="form-control form-control-sm" id="transaction_date" value="<?= date('Y-m-d') ?>" style="width: 200px;">
+                        </span>
+                    </p>
                     <!-- Cart items will load here -->
                     <div id="cart-items"></div>
 

@@ -112,7 +112,8 @@ class Cashiering_service_model extends CI_Model
     }
 
     public function process_payment()
-    {
+    {   
+       
         // var_dump(json_decode($this->input->post('itemsArray'), true));
         // var_dump($_FILES['image']);
 
@@ -126,16 +127,24 @@ class Cashiering_service_model extends CI_Model
         $reference_number = $this->input->post('reference_number');
         $remarks = $this->input->post('remarks');
         $other_buyer = $this->input->post('other_buyer');
-
-        if ($this->input->post('buyer') == 0) {
-            $buyer = $this->save_new_buyer($other_buyer);
-        } else {
-            $buyer = $this->input->post('buyer');
-        }
-
+        $transaction_date = $this->input->post('transaction_date');
+        
+       
         $control_number = $this->generateControlNumber();
 
         try {
+
+            if($this->input->post('buyer') == "null"){
+                throw new Exception("Please select buyer.", true);
+
+            } else {
+                if ($this->input->post('buyer') == 0) {
+                    $buyer = $this->save_new_buyer($other_buyer);
+                } else {
+                    $buyer = $this->input->post('buyer');
+                }
+            }
+
             $data = array(
                 'sub_total' => $sub_total,
                 'discount_amount' => $discount_amount,
@@ -148,6 +157,7 @@ class Cashiering_service_model extends CI_Model
                 'remarks' => $remarks,
                 'recieved_by' => $this->session->ID,
                 'Buyer_id' => $buyer,
+                'date_created' => $transaction_date
                 // 'item_id' => $this->item_id,
             );
 
@@ -346,7 +356,7 @@ class Cashiering_service_model extends CI_Model
         } else {
             $po_id = $po->ID;
         }
-        var_dump($po_id);
+        // var_dump($po_id);
 
         foreach ($items_arr as $item_id) {
             // check if item already exists in purchase_order_items
@@ -355,7 +365,7 @@ class Cashiering_service_model extends CI_Model
                 ->where('po_ID', $po_id)
                 ->where('item_ID', $item_id);
             $existing = $this->db->get()->row();
-            var_dump($existing);
+            // var_dump($existing);
             if ($existing) {
                 continue; // skip if already exists
             }
@@ -366,7 +376,7 @@ class Cashiering_service_model extends CI_Model
             $this->db->order_by('ID', 'DESC');
             $ip_row = $this->db->get()->row();
             // insert item to purchase_order_items
-            var_dump($ip_row);
+            // var_dump($ip_row);
             $data = array(
                 'item_ID' => $item_id,
                 'unit_ID' => $ip_row->unit_id,
@@ -376,7 +386,7 @@ class Cashiering_service_model extends CI_Model
                 'po_ID' => $po_id,
                 'po_descr' => '',
             );
-            var_dump($data);
+            // var_dump($data);
 
             $this->db->insert($this->Table->purchase_order_items, $data);
         }

@@ -250,7 +250,7 @@ $('#new_transaction').click(function () {
 // <<=======================================================>> STAND ALONE FUNCTIONS <<=======================================================>>
 
 function process_payment() {
-
+    
     // Data for Parent Table
     // let sub_total = $('#amount_due').text();
     let raw = $('#tender_total_amount').text();
@@ -272,6 +272,7 @@ function process_payment() {
     let remarks = $('#remarks').val();
     let buyer = $('#Buyer_id').val();
     let other_buyer = $('#other_buyer').val();
+    let transaction_date = $('#transaction_date').val();
 
     // Data for tbl_proof
     let imageFile = $("#proof_image")[0].files[0];
@@ -302,7 +303,7 @@ function process_payment() {
     //         itemsArray.push(item);
     //     }
     // });
-
+    
     document.querySelectorAll(".cart-item").forEach(cartItem => {
         const item = {
             // You can store the index if needed
@@ -342,6 +343,7 @@ function process_payment() {
     formData.append("remarks", remarks);
     formData.append("buyer", buyer);
     formData.append("other_buyer", other_buyer);
+    formData.append("transaction_date", transaction_date);
 
     // For tbl_proof
     formData.append("image", imageFile);
@@ -378,6 +380,7 @@ function process_payment() {
                                             discount_amount: discount_amount,
                                             total_amount: total_amount,
                                             discount_type: discount_type,
+                                            transaction_date: transaction_date,
                                             data_array: itemsArray,
                                         },
                                         success: function (data) {
