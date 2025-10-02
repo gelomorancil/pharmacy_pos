@@ -552,21 +552,33 @@ document.getElementById("cart-items").addEventListener("blur", e => {
 document.querySelectorAll(".btn-add").forEach(btn => {
   btn.addEventListener("click", () => {
     let name = btn.dataset.name;
-    let b_type = $('#buyer_type').val();
-    let price = 0;
-
-    if (b_type == 'WALKIN') {
-      price = parseFloat(btn.dataset.walkin);
-    } else if (b_type == 'REGULAR') {
-      price = parseFloat(btn.dataset.price);
-    } else if (b_type == 'WHOLESALER') {
-      price = parseFloat(btn.dataset.wholesaler);
-    }
-
     let item_profile_id = btn.dataset.item_profile_id;
-    let existing = cart.find(i => i.item_profile_id === item_profile_id);
 
-    existing ? existing.qty++ : cart.push({ item_profile_id, name, price, qty: 1 });
+    // store all prices in the cart item
+    let walkin = parseFloat(btn.dataset.walkin);
+    let regular = parseFloat(btn.dataset.price);
+    let wholesaler = parseFloat(btn.dataset.wholesaler);
+
+    // decide active price based on buyer_type
+    let b_type = $('#buyer_type').val();
+    let price = (b_type === "WALKIN") ? walkin 
+              : (b_type === "REGULAR") ? regular 
+              : wholesaler;
+
+    let existing = cart.find(i => i.item_profile_id === item_profile_id);
+    if (existing) {
+      existing.qty++;
+    } else {
+      cart.push({ 
+        item_profile_id, 
+        name, 
+        walkin, 
+        regular, 
+        wholesaler, 
+        price, 
+        qty: 1 
+      });
+    }
     renderCart();
   });
 });
@@ -575,6 +587,17 @@ document.querySelectorAll(".btn-add").forEach(btn => {
 document.getElementById("clear-cart").addEventListener("click", e => {
   e.preventDefault();
   cart = [];
+  renderCart();
+});
+
+// Buyer type change -> update all cart prices
+$("#buyer_type").on("change", function () {
+  let b_type = $(this).val();
+  cart.forEach(item => {
+    if (b_type === "WALKIN") item.price = item.walkin;
+    else if (b_type === "REGULAR") item.price = item.regular;
+    else if (b_type === "WHOLESALER") item.price = item.wholesaler;
+  });
   renderCart();
 });
 
