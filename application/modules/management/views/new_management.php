@@ -67,10 +67,10 @@ main_header(['list_management']);
             <!-- Sub Tabs -->
             <ul class="nav nav-tabs mb-3" id="itemSubTabs" role="tablist">
                 <li class="nav-item">
-                <a class="nav-link active" id="profile-sub-tab" data-toggle="tab" href="#profile-sub" role="tab">Item Profile</a>
+                <a class="nav-link active" id="profile-sub-tab" data-toggle="tab" href="#profile-sub" role="tab">Items</a>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link" id="items-sub-tab" data-toggle="tab" href="#items-sub" role="tab">Items</a>
+                <a class="nav-link" id="items-sub-tab" data-toggle="tab" href="#items-sub" role="tab">Item Profile</a>
                 </li>
                 <li class="nav-item">
                 <a class="nav-link" id="uom-sub-tab" data-toggle="tab" href="#uom-sub" role="tab">Unit of Measure</a>
@@ -263,7 +263,7 @@ main_header(['list_management']);
                 </div>
                 <div class="tab-pane fade" id="items-sub" role="tabpanel">
                     <div class="row">
-                        <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="col-lg-12 col-md-6 col-sm-12">
                             <div class="card">
                                 <div class="card-header new-color">
                                     <h3 class="card-title">Items Management:</h3>
@@ -271,48 +271,54 @@ main_header(['list_management']);
                                 <form>
                                     <div class="card-body">
                                         <div class="row">
-                                            <div class="col-8">
+                                            <div class="col-3">
                                                 <div class="form-group w-100">
                                                     <label for="">Brand Name:</label>
                                                     <input type="text" id="item_name" class="form-control inpt"
                                                         placeholder="Brand Name">
                                                 </div>
                                             </div>
-                                            <div class="col-4">
+                                             <div class="col-3">
+                                                <div class="form-group w-100">
+                                                    <label for="">Generic Name:</label>
+                                                    <input type="text" id="short_name" class="form-control inpt"
+                                                        placeholder="Item Generic Name">
+                                                </div>
+                                            </div>
+                                            <div class="col-1">
                                                 <div class="form-group w-100">
                                                     <label for="">Code:</label>
                                                     <input type="text" id="code" class="form-control inpt" placeholder="Item Code">
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-8">
-                                                <div class="form-group w-100">
-                                                    <label for="">Short Name:</label>
-                                                    <input type="text" id="short_name" class="form-control inpt"
-                                                        placeholder="Item Short Name">
-                                                </div>
-                                            </div>
-                                            <div class="col-4">
-                                                <div class="form-group w-100">
-                                                    <label for="">Status:</label>
-                                                    <select class="form-control" style="width: 100%;" id="item_status">
-                                                        <option value="1" selected>Active</option>
-                                                        <option value="0">In-active</option>
+                                             <div class="col-2">
+                                                 <div class="form-group w-100">
+                                                    <label for="">UOM:</label>
+                                                     <select class="form-control" style="width: 100%;" id="uom">
+                                                        <option value="" selected disabled>-- Select UOM --</option>
+                                                        <option value="Capsule" >Capsule</option>
+                                                        <option value="Tablet">Tablet</option>
                                                     </select>
                                                 </div>
                                             </div>
+                                            <div class="col-3">
+                                                 <div class="form-group w-100">
+                                                    <label for="">Strenght / Dosage:</label>
+                                                     <input type="text" id="strenght" class="form-control inpt"
+                                                        placeholder="Strenght / Dosage">
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-12">
-                                                <label for="">Description:</label>
-                                                <textarea id="item_description" class="form-control" rows="3"
-                                                    placeholder="Item Description"></textarea>
+                                            <div class="col-3">
+                                                <div class="form-group w-100">
+                                                    <label for="">Packaging:</label>
+                                                    <input type="text" id="packaging" class="form-control inpt"
+                                                        placeholder="Packaging">
+                                                </div>
                                             </div>
-
-                                        </div>
-                                         <div class="row mt-2">
-                                            <div class="col-12">
+                                           
+                                            <div class="col-2">
                                                 <label for="">Category:</label>
                                                 <select name="" id="Category" class="form-control">
                                                     <option value="" disabled selected>-- Select Category --</option>
@@ -322,14 +328,42 @@ main_header(['list_management']);
                                                     <option value="J&T">J&T</option>
                                                 </select>
                                             </div>
-
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-12">
+                                           
+                                            <div class="col-2">
+                                                <label for="">Classification (Rx/OTC):</label>
+                                                <select name="" id="classification" class="form-control">
+                                                    <option value="" disabled selected>-- Select Classification --</option>
+                                                    <option value="Rx">Rx</option>
+                                                    <option value="OTC">OTC</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-3">
+                                                <label for="">Batch No:</label>
+                                                <input type="text" id="batch_no" class="form-control inpt" placeholder="Batch number">
+                                            </div>
+                                            <div class="col-2">
                                                 <label for="">Expiration Date:</label>
                                                 <input type="date" id="item_expiry_date" class="form-control inpt">
                                             </div>
-
+                                        </div>
+                                         <div class="row">
+                                             <div class="col-5">
+                                                <label for="">Indication / Category:</label>
+                                                <textarea id="item_description" class="form-control" rows="3"
+                                                    placeholder="Item Description"></textarea>
+                                            </div>
+                                            <div class="col-5">
+                                                <label for="">Storage Condition:</label>
+                                                <textarea id="storage_condition" class="form-control" rows="3"
+                                                    placeholder="Storage Condition"></textarea>
+                                            </div>
+                                             <div class="col-2">
+                                                <label for="">Status:</label>
+                                                <select class="form-control" style="width: 100%;" id="item_status">
+                                                    <option value="1" selected>Active</option>
+                                                    <option value="0">In-active</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="card-footer">
@@ -340,37 +374,16 @@ main_header(['list_management']);
                                 </form>
                             </div>
                         </div>
-                        <div class="col-lg-8 col-md-6 col-sm-12">
+                        <div class="col-lg-12 col-md-6 col-sm-12">
                             <div class="card">
                                 <div class="card-header new-color">
                                     <h3 class="card-title">Current Items:</h3>
                                 </div>
 
                                 <div class="row">
-                                    <!-- <div class="col-4">
-                                        <div class="card m-3">
-                                            <div class="card-header">
-                                                <h3 class="card-title">
-                                                    <div id="items_drop_down"></div>
-                                                </h3>
-                                            </div>
-                                        </div>
-                                    </div> -->
                                     <div class="col-12">
                                         <div class="card m-3">
-                                            <div class="card-body table-responsive p-0" style="height: 25rem;" id="load_items">
-                                                <!-- <table class="table table-hover text-nowrap">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Brand Name</th>
-                                                            <th>Item Code</th>
-                                                            <th>Status</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="load_items">
-
-                                                    </tbody>
-                                                </table> -->
+                                            <div class="card-body table-responsive p-0" style="height: 50rem;" id="load_items">
                                             </div>
                                         </div>
                                     </div>

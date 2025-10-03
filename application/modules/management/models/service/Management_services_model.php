@@ -34,8 +34,16 @@ class Management_services_model extends CI_Model
                 'short_name' => $this->short_name,
                 'description' => $this->description,
                 'Category' => $this->category,
-                // 'item_expiry_date' => $this->item_expiry_date,
+                'item_expiry_date' => $this->item_expiry_date,
                 'active' => $this->status,
+                'strenght' => $this->strenght,
+                'packaging' => $this->packaging,
+                'uom' => $this->uom,
+                'classification' => $this->classification,
+                'storage_condition' => $this->storage_condition,
+                'batch_no' => $this->batch_no,
+                'item_expiry_date' => $this->item_expiry_date,
+
             );
 
             $this->db->trans_start();
@@ -113,9 +121,15 @@ class Management_services_model extends CI_Model
                 'item_code' => $this->item_code,
                 'description' => $this->description,
                 'short_name' => $this->short_name,
-                // 'item_expiry_date' => $this->item_expiry_date,
+                'item_expiry_date' => $this->item_expiry_date,
                 'active' => $this->status,
                 'Category' => $this->category,
+                'strenght' => $this->strenght,
+                'packaging' => $this->packaging,
+                'uom' => $this->uom,
+                'classification' => $this->classification,
+                'storage_condition' => $this->storage_condition,
+                'batch_no' => $this->batch_no,
             );
 
             $this->db->trans_start();

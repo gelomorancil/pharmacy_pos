@@ -98,7 +98,14 @@ $('#save_item').click(function () {
               description: $('#item_description').val(),
               category: $('#Category').val(),
               status: $('#item_status').val(),
-              // w: $('#item_expiry_date').val(),
+              strenght: $('#strenght').val(),
+              packaging: $('#packaging').val(),
+              uom: $('#uom').val(),
+              classification: $('#classification').val(),
+              storage_condition: $('#storage_condition').val(),
+              batch_no: $('#batch_no').val(),
+
+              item_expiry_date: $('#item_expiry_date').val(),
             },
             success: function (e) {
               var e = JSON.parse(e);
@@ -113,6 +120,13 @@ $('#save_item').click(function () {
                 $('#item_status').val("1");
                 $('#item_description').val("");
                 $('#Category').val("");
+                $('#strenght').val();
+                $('#packaging').val("");
+                $('#uom').val("");
+                $('#classification').val("");
+                $('#storage_condition').val("");
+                $('#item_expiry_date').val("");
+                $('#batch_no').val("");
                 // setTimeout(function () {
                 //   window.location.reload();
                 // }, 2000);
@@ -155,6 +169,13 @@ $('#update_item').click(function () {
               description: $('#item_description').val(),
               status: $('#item_status').val(),
               category: $('#Category').val(),
+              strenght: $('#strenght').val(),
+              packaging: $('#packaging').val(),
+              uom: $('#uom').val(),
+              classification: $('#classification').val(),
+              storage_condition: $('#storage_condition').val(),
+              item_expiry_date: $('#item_expiry_date').val(),
+              batch_no: $('#batch_no').val(),
             },
             success: function (e) {
               var e = JSON.parse(e);
@@ -169,6 +190,13 @@ $('#update_item').click(function () {
                 $('#item_status').val("1");
                 $('#item_description').val("");
                 $('#Category').val("");
+                $('#strenght').val("");
+                $('#packaging').val("");
+                $('#uom').val("");
+                $('#classification').val("");
+                $('#storage_condition').val("");
+                $('#item_expiry_date').val("");
+                $('#batch_no').val("");
                 setTimeout(function () {
                   window.location.reload();
                 }, 500);
@@ -200,6 +228,13 @@ var editItem = (data) => {
   $('#item_status').val(data.getAttribute('data-status'));
   $('#item_description').val(data.getAttribute('data-description'));
   $('#Category').val(data.getAttribute('data-category'));
+  $('#strenght').val(data.getAttribute('data-strenght'));
+  $('#packaging').val(data.getAttribute('data-packaging'));
+  $('#uom').val(data.getAttribute('data-uom'));
+  $('#classification').val(data.getAttribute('data-classification'));
+  $('#storage_condition').val(data.getAttribute('data-storage_condition'));
+  $('#item_expiry_date').val(data.getAttribute('data-item_expiry_date'));
+  $('#batch_no').val(data.getAttribute('data-batch_no'));
 
 
   $('#save_item').hide();
