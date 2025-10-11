@@ -1,4 +1,3 @@
-// alert();
 var load_suppliers = () => {
     $(document).gmLoadPage({
         url: 'item_profiling/load_item_profiles',
@@ -85,8 +84,6 @@ $('#save_item_profile').click(function () {
 
 
 $('#update_item_profile').click(function () {
-    // alert($('#item_profile_id').val());
-    // return;
 
     $.confirm({
         title: 'Confirmation',
@@ -103,8 +100,8 @@ $('#update_item_profile').click(function () {
                         data: {
                             id: $('#item_profile_id').val(),
 
-                            item_id: $('#item_id').val(),
-                            unit_id: $('#unit_id').val(),
+                            // item_id: $('#item_id').val(),
+                            // unit_id: $('#unit_id').val(),
                             unit_price: $('#unit_price').val(),
                             walkin_price: $('#walkin_price').val(),
                             wholesale_price: $('#wholesale_price').val(),

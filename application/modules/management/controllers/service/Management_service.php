@@ -33,8 +33,9 @@ class Management_service extends MY_Controller
 		$this->msModel->uom = $this->input->post("uom");
 		$this->msModel->classification = $this->input->post("classification");
 		$this->msModel->storage_condition = $this->input->post("storage_condition");
-		$this->msModel->item_expiry_date = $this->input->post("item_expiry_date");
-		$this->msModel->batch_no = $this->input->post("batch_no");
+		$this->msModel->distributor = $this->input->post("distributor");
+		// $this->msModel->item_expiry_date = $this->input->post("item_expiry_date");
+		// $this->msModel->batch_no = $this->input->post("batch_no");
 
 		$response = $this->msModel->save_list();
 		echo json_encode($response);
@@ -93,8 +94,9 @@ class Management_service extends MY_Controller
 		$this->msModel->packaging = $this->input->post("packaging");
 		$this->msModel->uom = $this->input->post("uom");
 		$this->msModel->classification = $this->input->post("classification");
-		$this->msModel->storage_condition = $this->input->post("storage_condition");
-		$this->msModel->batch_no = $this->input->post("batch_no");
+		$this->msModel->distributor = $this->input->post("distributor");
+		// $this->msModel->storage_condition = $this->input->post("storage_condition");
+		// $this->msModel->batch_no = $this->input->post("batch_no");
 
 		$response = $this->msModel->update_item();
 		echo json_encode($response);

@@ -3,15 +3,13 @@
     <thead>
         <tr>
             <th>Brand Name</th>
+            <th>Pricing</th>
+            <th>Item Category</th>
             <th>Strenght/Dosage</th>
             <th>UOM</th>
             <th>Packaging</th>
             <th>Indication / Category</th>
             <th>Classification</th>
-            <th>Item Category</th>
-            <th>Expiry Date</th>
-            <th>Batch No</th>
-            <th>Status</th>
         </tr>
     </thead>
     <tbody>
@@ -19,7 +17,8 @@
         $prevCat = '';
         foreach ($items as $key => $value) {
             ?>
-            <tr onclick="editItem(this)" 
+            <!-- onclick="editItem(this)"  -->
+            <tr 
             data-id="<?=$value->id?>" 
             data-item_name="<?=$value->item_name?>" 
             data-item_code="<?=$value->item_code?>" 
@@ -37,22 +36,71 @@
             >
 
 
-                <td>
-                    <?= $value->item_name ?><br>
-                    <small class="text-muted"><span class="text-danger">GENERIC:</span><?= $value->short_name ?></small><br>
-                    <small class="text-muted"><span class="text-danger">CODE:</span><?= $value->item_code ?></small>
+               <td>
+                    <!-- Item name with status circle -->
+                    <div class="d-flex align-items-center">
+                        <span 
+                            class="me-2" 
+                            style="
+                                display:inline-block;
+                                width:10px;
+                                height:10px;
+                                border-radius:50%;
+                                background-color: <?= $value->active == "1" ? 'green' : 'red' ?>;
+                            ">
+                        </span>
+                        <strong><?= $value->item_name ?></strong>
+                    </div>
+
+                    <!-- Other details -->
+                    <small class="text-muted d-block">
+                        <span class="text-danger">GENERIC NAME:</span> <?= $value->short_name ?>
+                    </small>
+                    <small class="text-muted d-block">
+                        <span class="text-danger">MANUFACTURER:</span> <?= $value->item_code ?>
+                    </small>
+                    <small class="text-muted d-block">
+                        <span class="text-danger">DISTRIBUTOR:</span> <?= $value->distributor ?>
+                    </small>
                 </td>
+
+                <td>
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <small class="text-muted d-block">
+                                <span class="text-success">REGULAR:</span> <?= $value->unit_price ?>
+                            </small>
+                            <small class="text-muted d-block">
+                                <span class="text-success">WALKIN:</span> <?= $value->Walkin_price ?>
+                            </small>
+                            <small class="text-muted d-block">
+                                <span class="text-success">WHOLESALE:</span> <?= $value->Wholesale_price ?>
+                            </small>
+                        </div>
+                        <button 
+                            class="btn btn-sm btn-outline-primary ms-2 p-1 edit-price-btn" 
+                            title="Edit Prices" 
+                            data-toggle="modal" 
+                            data-target="#pricingModal"
+                            data-id="<?= $value->id ?>"
+                            data-unitprice="<?= $value->unit_price ?>"
+                            data-walkin="<?= $value->Walkin_price ?>"
+                            data-wholesale="<?= $value->Wholesale_price ?>"
+                            data-threshold="<?= $value->threshold ?>"
+                            data-item_name="<?= $value->item_name ?>"
+                        >
+                            <i class="fas fa-edit"></i>
+                        </button>
+
+                    </div>
+                </td>
+
+                <td><?= $value->Category ?></td>
                 <td><?= $value->strenght ?></td>
                 <td><?= $value->uom ?></td>
                 <td><?= $value->packaging ?></td>
                 <td><?= $value->description ?></td>
                 <td><?= $value->classification ?></td>
-                <td><?= $value->Category ?></td>
-                <td><?= $value->item_expiry_date ?></td>
-                <td><?= $value->batch_no ?></td>
-                <td style="color: <?= $value->active == "1" ? 'green' : 'red' ?>">
-                    <b><?= $value->active == "1" ? 'Active' : 'In-active' ?></b>
-                </td>
             </tr>
         <?php
         }
@@ -60,3 +108,29 @@
         ?>
     </tbody>
 </table>
+
+
+
+<script>
+$(document).ready(function() {
+    // When edit button is clicked
+    $(document).on('click', '.edit-price-btn', function() {
+        let itemId = $(this).data('id');
+        let item_name = $(this).data('item_name');
+        let unitPrice = $(this).data('unitprice');
+        let walkinPrice = $(this).data('walkin');
+        let wholesalePrice = $(this).data('wholesale');
+        let threshold = $(this).data('threshold');
+
+        // Fill the modal fields
+        $('#item_profile_id').val(itemId);  // Select item
+        $('#unit_price').val(unitPrice);
+        $('#walkin_price').val(walkinPrice);
+        $('#wholesale_price').val(wholesalePrice);
+        $('#edit_item_id').val(itemId);
+        $('#threshold').val(threshold);
+        $('#item_name_display').text(item_name);
+
+    });
+});
+</script>

@@ -44,8 +44,15 @@ class Management_model extends CI_Model
     }
 
     public function get_items(){
-        $this->db->select('*');
-        $this->db->from($this->Table->items);
+        $this->db->select(
+            'i.*,'.
+            'ip.unit_price,'.
+            'ip.Walkin_price,'.
+            'ip.Wholesale_price,'.
+            'ip.threshold'
+        );
+        $this->db->join($this->Table->item_profile . ' AS ip', 'ip.item_id = i.id', 'left');
+        $this->db->from($this->Table->items.' AS i');
         $query = $this->db->get()->result();
         return $query;
     }

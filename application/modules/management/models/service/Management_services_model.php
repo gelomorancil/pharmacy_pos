@@ -34,22 +34,26 @@ class Management_services_model extends CI_Model
                 'short_name' => $this->short_name,
                 'description' => $this->description,
                 'Category' => $this->category,
-                'item_expiry_date' => $this->item_expiry_date,
+                // 'item_expiry_date' => $this->item_expiry_date,
                 'active' => $this->status,
                 'strenght' => $this->strenght,
                 'packaging' => $this->packaging,
                 'uom' => $this->uom,
                 'classification' => $this->classification,
                 'storage_condition' => $this->storage_condition,
-                'batch_no' => $this->batch_no,
-                'item_expiry_date' => $this->item_expiry_date,
+                'distributor' => $this->distributor,
+                // 'batch_no' => $this->batch_no,
 
             );
 
             $this->db->trans_start();
 
             $this->db->insert($this->Table->items, $data);
+    
+            $item_last_id = $this->db->insert_id();
 
+            $this->db->insert($this->Table->item_profile, ['item_id' => $item_last_id]);
+            
             $this->db->trans_complete();
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
@@ -128,8 +132,9 @@ class Management_services_model extends CI_Model
                 'packaging' => $this->packaging,
                 'uom' => $this->uom,
                 'classification' => $this->classification,
-                'storage_condition' => $this->storage_condition,
-                'batch_no' => $this->batch_no,
+                'distributor' => $this->distributor,
+                // 'storage_condition' => $this->storage_condition,
+                // 'batch_no' => $this->batch_no,
             );
 
             $this->db->trans_start();
