@@ -221,6 +221,45 @@ $('#update_item').click(function () {
   });
 });
 
+$('#delete_item').click(function () {
+  $.confirm({
+    title: 'Confirmation',
+    icon: 'fa fa-question-circle',
+    content: 'Are you sure you want to delete this item?',
+    buttons: {
+      confirm: {
+        text: 'Confirm',
+        btnClass: 'btn-success',
+        action: function () {
+          $.post({
+            url: 'management/service/Management_service/delete_item',
+            data: {
+              id: $('#select_item').val(),
+            },
+            success: function (e) {
+              var e = JSON.parse(e);
+              if (!e.has_error) {
+                toastr.success(e.message);
+              
+                setTimeout(function () {
+                  window.location.reload();
+                }, 500);
+              } else {
+                toastr.error(e.message);
+              }
+            },
+          });
+        },
+      },
+      cancel: {
+        text: 'Cancel',
+        btnClass: 'btn-danger',
+        action: function () {
+        },
+      },
+    },
+  });
+});
 
 var editItem = (data) => {
   // console.log(data.getAttribute('data-id'));
@@ -244,6 +283,7 @@ var editItem = (data) => {
 
   $('#save_item').hide();
   $('#update_item').show();
+  $('#delete_item').show();
 }
 
 
@@ -255,6 +295,8 @@ $('#select_item').change(function () {
   $('#save_item').hide();
   $('#cancel').show();
   $('#update_item').show();
+  $('#delete_item').show();
+
   var selectedOption = $(this).find('option:selected');
 
   var dataId = selectedOption.data('id'); 

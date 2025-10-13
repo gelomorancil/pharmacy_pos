@@ -175,5 +175,11 @@ public function update_client()
     echo json_encode($response);
 }
 
+	public function delete_item(){
+		$this->msModel->item_id = $this->input->post("id");
+
+		$response = $this->msModel->delete_item();
+		echo json_encode($response);
+	}
 
 }

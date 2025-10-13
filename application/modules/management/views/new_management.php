@@ -67,6 +67,9 @@ main_header(['list_management']);
         <li class="nav-item">
             <a class="nav-link active" id="items-tab" data-toggle="tab" href="#items" role="tab">Item Management</a>
         </li>
+         <li class="nav-item">
+            <a class="nav-link" id="preferences-tab" data-toggle="tab" href="#preferences" role="tab">Preferences</a>
+        </li>
         <li class="nav-item">
             <a class="nav-link" id="accounts-tab" data-toggle="tab" href="#accounts" role="tab">User Accounts</a>
         </li>
@@ -86,15 +89,6 @@ main_header(['list_management']);
                 </li>
                 <li class="nav-item">
                 <a class="nav-link" id="items-sub-tab" data-toggle="tab" href="#items-sub" role="tab">Item Profile</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" id="uom-sub-tab" data-toggle="tab" href="#uom-sub" role="tab">Unit of Measure</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" id="supp-sub-tab" data-toggle="tab" href="#supp-sub" role="tab">Supplier</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="client-sub-tab" data-toggle="tab" href="#client-sub" role="tab">Clients</a>
                 </li>
             </ul>
 
@@ -289,70 +283,6 @@ main_header(['list_management']);
                         </div>
                     </div>
                 </div>
-                <!-- UOM Tab -->
-                <div class="tab-pane fade" id="uom-sub" role="tabpanel">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-6 col-sm-12">
-                            <div class="card">
-                                <div class="card-header new-color">
-                                    <h3 class="card-title">Unit Management:</h3>
-                                </div>
-                                <form>
-                                    <div class="card-body" style="height: 10.1rem;">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <div class="form-group w-100">
-                                                    <label for="">Unit:</label>
-                                                    <input type="text" id="unit" class="form-control inpt" placeholder="Enter Unit">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card-footer">
-                                        <button type="button" class="btn btn-primary" id="save_unit">Submit</button>
-                                        <button type="button" class="btn btn-danger" id="delete_unit" style="display: none">Delete</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-8 col-md-6 col-sm-12">
-                            <div class="card">
-                                <div class="card-header new-color">
-                                    <h3 class="card-title">Current Units:</h3>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-4">
-                                        <!-- <div class="card m-3">
-                                            <div class="card-header">
-                                                <h3 class="card-title">
-                                                    <div id="unit_drop_down"></div>
-                                                </h3>
-                                            </div>
-                                        </div> -->
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="card m-3">
-                                            <div class="card-body table-responsive p-0" style="height: 12rem;"  id="load_units">
-                                                <!-- <table class="table table-hover text-nowrap">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Unit</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="load_units">
-
-                                                    </tbody>
-                                                </table> -->
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <!-- Item profile Tab -->
                 <div class="tab-pane fade" id="items-sub" role="tabpanel">
                     <div class="row">
@@ -511,7 +441,9 @@ main_header(['list_management']);
                                         <button type="button" class="btn btn-primary" id="save_item"  style="display: none">Submit</button>
                                         <button type="button" class="btn btn-warning" style="display: none"
                                             id="update_item">Update</button>
-                                        <button type="button" class="btn btn-danger" id="cancel"  style="display: none">Cancel</button>
+                                        <button type="button" class="btn btn-danger" style="display: none"
+                                            id="delete_item">Delete</button>
+                                        <button type="button" class="btn btn-default" id="cancel"  style="display: none">Cancel</button>
                                     </div>
                                 </form>
                             </div>
@@ -532,6 +464,209 @@ main_header(['list_management']);
                                 </div>
                             </div>
                         </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         <div class="tab-pane fade" id="accounts" role="tabpanel">
+        
+            <!-- Sub Tabs -->
+            <ul class="nav nav-tabs mb-3" id="accounts" role="tablist">
+                <li class="nav-item">
+                <a class="nav-link active" id="accounts-sub-tab" data-toggle="tab" href="#accounts-sub" role="tab">User Accounts</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" id="items-sub-tab" data-toggle="tab" href="#items-sub" role="tab">Role Based Access Control</a>
+                </li>
+            </ul>
+
+            <!-- Sub Tab Content -->
+            <div class="tab-content" id="accountsubTabsContent">
+                <div class="tab-pane fade show active" id="accounts-sub" role="tabpanel">
+                <!-- your table + search + button here -->
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <!-- NEW CUSTOMER -->
+                            <div class="card">
+                                <div class="card-header new-color">
+                                    <h3 class="card-title">New User</h3>
+                                </div>
+                                <form>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="form-group w-100">
+                                                    <label for="">Last Name</label>
+                                                    <input type="text" id="LName" class="form-control inpt" placeholder="Last Name">
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-group w-100">
+                                                    <label for="">First Name</label>
+                                                    <input type="text" id="FName" class="form-control inpt"
+                                                        placeholder="First Name">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="form-group w-100">
+                                                    <label for="">Username</label>
+                                                    <input type="text" id="UName" class="form-control inpt" placeholder="Username">
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-group w-100">
+                                                    <label for="">User Role</label>
+                                                    <select class="form-control" style="width: 100%;" id="Role">
+                                                        <?php
+                                                        foreach ($user_role as $key => $value) { ?>
+                                                            <option data-id="<?= $value->id ?>" data-role="<?= $value->user_role ?>">
+                                                                <?= $value->user_role ?>
+                                                            </option>
+                                                        <?php }
+
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <small>Default Password: <cite>Password1234</cite></small>
+
+                                    </div>
+                                    
+                                    <div class="card-footer">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                            data-target="#modal-default" id="Save">Submit</button>
+                                        <button type="button" class="btn btn-warning" id="Update" value=""
+                                            style="display:none">Update</button>
+                                        <button type="button" class="btn btn-success" data-toggle="modal"
+                                            data-target="#r_modal-default" id="Reset" value="" style="display:none">Reset
+                                            Password</button>
+                                        <button type="button" class="btn btn-danger" data-toggle="modal"
+                                            data-target="#d_modal-default" id="Delete" value="" style="display:none">Delete
+                                            User</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="card">
+                                <div class="card-header new-color">
+                                    <h3 class="card-title">User lists</h3>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="card m-3">
+                                            <div class="card-body table-responsive p-0" style="height: 280px;"  id="load_user">
+                                                <!-- <table class="table table-hover text-nowrap">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Name</th>
+                                                            <th>Username</th>
+                                                            <th>Role</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="load_user">
+
+                                                    </tbody>
+                                                </table> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="items-sub" role="tabpanel">
+                <!-- categories content -->
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="preferences" role="tabpanel">
+        
+            <!-- Sub Tabs -->
+            <ul class="nav nav-tabs mb-3" id="preferences" role="tablist">
+                <li class="nav-item">
+                <a class="nav-link active" id="uom-sub-tab" data-toggle="tab" href="#uom-sub" role="tab">Unit of Measure</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" id="supp-sub-tab" data-toggle="tab" href="#supp-sub" role="tab">Supplier</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="client-sub-tab" data-toggle="tab" href="#client-sub" role="tab">Clients</a>
+                </li>
+            </ul>
+            
+             <!-- Sub Tab Content -->
+            <div class="tab-content" id="preferencesSubTabsContent">
+                <!-- UOM Tab -->
+                <div class="tab-pane fade show active" id="uom-sub" role="tabpanel">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6 col-sm-12">
+                            <div class="card">
+                                <div class="card-header new-color">
+                                    <h3 class="card-title">Unit Management:</h3>
+                                </div>
+                                <form>
+                                    <div class="card-body" style="height: 10.1rem;">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-group w-100">
+                                                    <label for="">Unit:</label>
+                                                    <input type="text" id="unit" class="form-control inpt" placeholder="Enter Unit">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <button type="button" class="btn btn-primary" id="save_unit">Submit</button>
+                                        <button type="button" class="btn btn-danger" id="delete_unit" style="display: none">Delete</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-8 col-md-6 col-sm-12">
+                            <div class="card">
+                                <div class="card-header new-color">
+                                    <h3 class="card-title">Current Units:</h3>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-4">
+                                        <!-- <div class="card m-3">
+                                            <div class="card-header">
+                                                <h3 class="card-title">
+                                                    <div id="unit_drop_down"></div>
+                                                </h3>
+                                            </div>
+                                        </div> -->
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="card m-3">
+                                            <div class="card-body table-responsive p-0" style="height: 12rem;"  id="load_units">
+                                                <!-- <table class="table table-hover text-nowrap">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Unit</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="load_units">
+
+                                                    </tbody>
+                                                </table> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!-- Supplier Tab -->
@@ -759,125 +894,6 @@ main_header(['list_management']);
                 </div>
             </div>
         </div>
-
-         <div class="tab-pane fade" id="accounts" role="tabpanel">
-        
-            <!-- Sub Tabs -->
-            <ul class="nav nav-tabs mb-3" id="accounts" role="tablist">
-                <li class="nav-item">
-                <a class="nav-link active" id="accounts-sub-tab" data-toggle="tab" href="#accounts-sub" role="tab">User Accounts</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" id="items-sub-tab" data-toggle="tab" href="#items-sub" role="tab">Role Based Access Control</a>
-                </li>
-            </ul>
-
-            <!-- Sub Tab Content -->
-            <div class="tab-content" id="accountsubTabsContent">
-                <div class="tab-pane fade show active" id="accounts-sub" role="tabpanel">
-                <!-- your table + search + button here -->
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-12">
-                            <!-- NEW CUSTOMER -->
-                            <div class="card">
-                                <div class="card-header new-color">
-                                    <h3 class="card-title">New User</h3>
-                                </div>
-                                <form>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <div class="form-group w-100">
-                                                    <label for="">Last Name</label>
-                                                    <input type="text" id="LName" class="form-control inpt" placeholder="Last Name">
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="form-group w-100">
-                                                    <label for="">First Name</label>
-                                                    <input type="text" id="FName" class="form-control inpt"
-                                                        placeholder="First Name">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <div class="form-group w-100">
-                                                    <label for="">Username</label>
-                                                    <input type="text" id="UName" class="form-control inpt" placeholder="Username">
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="form-group w-100">
-                                                    <label for="">User Role</label>
-                                                    <select class="form-control" style="width: 100%;" id="Role">
-                                                        <?php
-                                                        foreach ($user_role as $key => $value) { ?>
-                                                            <option data-id="<?= $value->id ?>" data-role="<?= $value->user_role ?>">
-                                                                <?= $value->user_role ?>
-                                                            </option>
-                                                        <?php }
-
-                                                        ?>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <small>Default Password: <cite>Password1234</cite></small>
-
-                                    </div>
-                                    
-                                    <div class="card-footer">
-                                        <button type="button" class="btn btn-primary" data-toggle="modal"
-                                            data-target="#modal-default" id="Save">Submit</button>
-                                        <button type="button" class="btn btn-warning" id="Update" value=""
-                                            style="display:none">Update</button>
-                                        <button type="button" class="btn btn-success" data-toggle="modal"
-                                            data-target="#r_modal-default" id="Reset" value="" style="display:none">Reset
-                                            Password</button>
-                                        <button type="button" class="btn btn-danger" data-toggle="modal"
-                                            data-target="#d_modal-default" id="Delete" value="" style="display:none">Delete
-                                            User</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-sm-12">
-                            <div class="card">
-                                <div class="card-header new-color">
-                                    <h3 class="card-title">User lists</h3>
-                                </div>
-                                
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="card m-3">
-                                            <div class="card-body table-responsive p-0" style="height: 280px;"  id="load_user">
-                                                <!-- <table class="table table-hover text-nowrap">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Name</th>
-                                                            <th>Username</th>
-                                                            <th>Role</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="load_user">
-
-                                                    </tbody>
-                                                </table> -->
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="items-sub" role="tabpanel">
-                <!-- categories content -->
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 
@@ -990,6 +1006,7 @@ main_footer();
             $('#save_item').show();
             $('#cancel').show();
             $('#update_item').hide();
+            $('#delete_item').hide();
             $('#new').hide();
 
         } else {
@@ -1019,6 +1036,7 @@ main_footer();
         $('#save_item').hide();
         $('#cancel').hide();
         $('#update_item').hide();
+        $('#delete_item').hide();
         $('.select_item').hide();
 
     });

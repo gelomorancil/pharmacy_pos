@@ -542,4 +542,29 @@ public function update_client()
     }
 }
 
+    public function delete_item()
+    {
+        try {
+            $data = array(
+                'delete' => '1',
+            );
+
+            $this->db->trans_start();
+
+            $this->db->where('id', $this->item_id);
+            $this->db->update($this->Table->items, $data);
+
+            $this->db->trans_complete();
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                throw new Exception(ERROR_PROCESSING, true);
+            } else {
+                $this->db->trans_commit();
+                return array('message' => DELETED_SUCCESSFUL, 'has_error' => false);
+            }
+        } catch (Exception $msg) {
+            return (array('message' => $msg->getMessage(), 'has_error' => true));
+        }
+    }
+
 }
