@@ -20,12 +20,23 @@ class Management_services_model extends CI_Model
     }
 
     public function save_list()
-    {
+    {   
+
+        $this->db->select('*');
+        $this->db->where('item_name', $this->item_name);
+        $this->db->where('short_name', $this->short_name);
+        $this->db->where('strenght', $this->strenght);
+        $check_duplicate = $this->db->get($this->Table->items)->row();
+
         try {
             if (
                 empty($this->item_name)
             ) {
                 throw new Exception(MISSING_DETAILS, true);
+            }
+            
+            if (!empty($check_duplicate)) {
+                throw new Exception(DUPLICATE_ITEM_FOUND, true);
             }
 
             $data = array(
@@ -125,13 +136,14 @@ class Management_services_model extends CI_Model
                 'item_code' => $this->item_code,
                 'description' => $this->description,
                 'short_name' => $this->short_name,
-                'item_expiry_date' => $this->item_expiry_date,
+                // 'item_expiry_date' => $this->item_expiry_date,
                 'active' => $this->status,
                 'Category' => $this->category,
                 'strenght' => $this->strenght,
                 'packaging' => $this->packaging,
                 'uom' => $this->uom,
                 'classification' => $this->classification,
+                'storage_condition' => $this->storage_condition,
                 'distributor' => $this->distributor,
                 // 'storage_condition' => $this->storage_condition,
                 // 'batch_no' => $this->batch_no,

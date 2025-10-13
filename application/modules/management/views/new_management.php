@@ -24,6 +24,21 @@ main_header(['list_management']);
     border-bottom: 3px solid #035863 !important;
     color: #000 !important;
   }
+
+  /* Change hover color to light gray */
+    .select2-results__option--highlighted {
+        background-color: #f2f2f2 !important; /* light gray background */
+        color: #000 !important; /* black text */
+    }
+
+    /* Optional: make the cursor consistent */
+    .select2-results__option {
+        cursor: pointer;
+    }
+
+    .select2-results__options {
+        max-height: 400px !important;  /* default is ~200px */
+    }
 </style>
 
 
@@ -431,9 +446,13 @@ main_header(['list_management']);
                                                         <label for="">UOM:</label>
                                                         <select class="form-control" style="width: 100%;" id="uom">
                                                             <option value="" selected disabled>-- Select UOM --</option>
-                                                            <option value="Capsule" >Capsule</option>
-                                                            <option value="Tablet">Tablet</option>
+                                                             <?php foreach ($units as $value) { ?>
+                                                                <option value="<?= $value->unit_of_measure ?>"><?= $value->unit_of_measure ?></option>
+                                                            <?php } ?>
+                                                            <!-- <option value="Capsule" >Capsule</option>
+                                                            <option value="Tablet">Tablet</option> -->
                                                         </select>
+                                                      
                                                     </div>
                                                 </div>
                                                 <div class="col-4">
@@ -872,6 +891,93 @@ main_footer();
 <script src="<?php echo base_url() ?>/assets/js/list/list.js"></script>
 <script src="<?php echo base_url() ?>/assets/js/item_profiling/item_profiling.js"></script>
 <script>
+    $('#select_item').select2({
+        width: '100%',
+        matcher: function(params, data) {
+            if ($.trim(params.term) === '') return data;
+
+            const term = params.term.toLowerCase();
+            const text = (data.text || '').toLowerCase();
+            let found = text.indexOf(term) > -1;
+
+            if (!found && data.element) {
+                const $option = $(data.element);
+                $.each($option.data(), function(key, value) {
+                    if (String(value).toLowerCase().indexOf(term) > -1) {
+                        found = true;
+                        return false;
+                    }
+                });
+            }
+            return found ? data : null;
+        },
+        templateResult: function(option) {
+            if (!option.id) return option.text;
+
+            const data = $(option.element).data();
+            const statusColor = data.status == 1 ? 'green' : 'red';
+
+            return `
+                <div class="p-1">
+                    <div class="d-flex justify-content-between align-items-start mb-1">
+                        <div>
+                            <div class="d-flex align-items-center">
+                                <span style="
+                                    display:inline-block;
+                                    width:10px;
+                                    height:10px;
+                                    border-radius:50%;
+                                    background:${statusColor};
+                                    margin-right:6px;
+                                "></span>
+                                <strong>${data.item_name || option.text}</strong>
+                            </div>
+                            <small class="text-muted d-block mt-1">
+                                <span class="text-danger">GENERIC NAME:</span> ${data.short_name || '-'}
+                            </small>
+                            <small class="text-muted d-block">
+                                <span class="text-danger">MANUFACTURER:</span> ${data.item_code || '-'}
+                            </small>
+                            <small class="text-muted d-block">
+                                <span class="text-danger">DISTRIBUTOR:</span> ${data.distributor || '-'}
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="border-top pt-1">
+                        <small class="text-muted d-block">
+                            <span class="text-primary">CATEGORY:</span> ${data.category || '-'}
+                        </small>
+                        <small class="text-muted d-block">
+                            <span class="text-primary">STRENGTH:</span> ${data.strenght || '-'}
+                        </small>
+                        <small class="text-muted d-block">
+                            <span class="text-primary">STORAGE:</span> ${data.storage_condition || '-'}
+                        </small>
+                        <small class="text-muted d-block">
+                            <span class="text-primary">UOM:</span> ${data.uom || '-'}
+                        </small>
+                        <small class="text-muted d-block">
+                            <span class="text-primary">PACKAGING:</span> ${data.packaging || '-'}
+                        </small>
+                        <small class="text-muted d-block">
+                            <span class="text-primary">DESCRIPTION:</span> ${data.description || '-'}
+                        </small>
+                        <small class="text-muted d-block">
+                            <span class="text-primary">CLASSIFICATION:</span> ${data.classification || '-'}
+                        </small>
+                    </div>
+                </div>
+            `;
+        },
+        templateSelection: function(option) {
+            if (!option.id) return option.text;
+            const data = $(option.element).data();
+            return data.item_name || option.text;
+        },
+        escapeMarkup: function(m) { return m; } // Allow HTML rendering
+    });
+
     $(document).on('click', '#new', function() {
         var item_type = $('#Category').val();
       

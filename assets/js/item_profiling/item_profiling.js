@@ -118,9 +118,9 @@ $('#update_item_profile').click(function () {
                                   $('#unit_price').val("");
                                   $('#threshold').val("");
 
-                                //   setTimeout(function () {
-                                //     window.location.reload();
-                                //   }, 500);
+                                  setTimeout(function () {
+                                    window.location.reload();
+                                  }, 500);
                             } else {
                                 $('#List').attr('class', 'form-control inpt is-invalid');
                                 toastr.error(e.message);

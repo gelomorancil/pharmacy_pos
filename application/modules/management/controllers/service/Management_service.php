@@ -88,12 +88,13 @@ class Management_service extends MY_Controller
 		$this->msModel->short_name = $this->input->post("short_name");
 		$this->msModel->description = $this->input->post("description");
 		$this->msModel->status = $this->input->post("status");
-		$this->msModel->item_expiry_date = $this->input->post("item_expiry_date");
+		// $this->msModel->item_expiry_date = $this->input->post("item_expiry_date");
 		$this->msModel->category = $this->input->post("category");
 		$this->msModel->strenght = $this->input->post("strenght");
 		$this->msModel->packaging = $this->input->post("packaging");
 		$this->msModel->uom = $this->input->post("uom");
 		$this->msModel->classification = $this->input->post("classification");
+		$this->msModel->storage_condition = $this->input->post("storage_condition");
 		$this->msModel->distributor = $this->input->post("distributor");
 		// $this->msModel->storage_condition = $this->input->post("storage_condition");
 		// $this->msModel->batch_no = $this->input->post("batch_no");

@@ -6,6 +6,7 @@
             <th>Pricing</th>
             <th>Item Category</th>
             <th>Strenght/Dosage</th>
+            <th>Storage Condition</th>
             <th>UOM</th>
             <th>Packaging</th>
             <th>Indication / Category</th>
@@ -33,6 +34,7 @@
             data-storage_condition="<?=$value->storage_condition?>"
             data-item_expiry_date="<?=$value->item_expiry_date?>"
             data-batch_no="<?=$value->batch_no?>"
+            data-storage_condition="<?=$value->storage_condition?>"
             >
 
 
@@ -97,6 +99,7 @@
 
                 <td><?= $value->Category ?></td>
                 <td><?= $value->strenght ?></td>
+                <td><?= $value->storage_condition ?></td>
                 <td><?= $value->uom ?></td>
                 <td><?= $value->packaging ?></td>
                 <td><?= $value->description ?></td>
