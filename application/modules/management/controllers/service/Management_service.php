@@ -159,5 +159,21 @@ public function update_client()
     echo json_encode($response);
 }
 
+public function save_rbac_access()
+{
+	$rawData = $this->input->post("user_access");
+    $userAccessData = json_decode($rawData, true);
+    if (!is_array($userAccessData) || empty($userAccessData)) {
+        echo json_encode(['status' => 'error', 'message' => 'No data received.']);
+        return;
+    }
+
+
+    $response = $this->msModel->save_rbac_access($userAccessData);
+
+    echo json_encode($response);
+}
+
+
 
 }
