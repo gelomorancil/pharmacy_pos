@@ -53,6 +53,7 @@ class Management_model extends CI_Model
         );
         $this->db->join($this->Table->item_profile . ' AS ip', 'ip.item_id = i.id', 'left');
         $this->db->from($this->Table->items.' AS i');
+        $this->db->where('i.delete', 0);
         $query = $this->db->get()->result();
         return $query;
     }
@@ -126,6 +127,21 @@ class Management_model extends CI_Model
         $this->db->where('ID', $this->buyer_id);
 
         $query = $this->db->get()->row();
+        return $query;
+    }
+
+    public function get_items_deleted(){
+        $this->db->select(
+            'i.*,'.
+            'ip.unit_price,'.
+            'ip.Walkin_price,'.
+            'ip.Wholesale_price,'.
+            'ip.threshold'
+        );
+        $this->db->join($this->Table->item_profile . ' AS ip', 'ip.item_id = i.id', 'left');
+        $this->db->from($this->Table->items.' AS i');
+        $this->db->where('i.delete', 1);
+        $query = $this->db->get()->result();
         return $query;
     }
 }

@@ -121,4 +121,11 @@ class Management extends MY_Controller
 		$response = $this->mModel->get_buyers_details();
 		echo json_encode($response);
 	}
+
+		public function load_items_deleted()
+	{
+		$this->data['items'] = $this->mModel->get_items_deleted();
+		$this->data['content'] = 'grid/items_deleted_grid';
+		$this->load->view('layout', $this->data);
+	}
 }

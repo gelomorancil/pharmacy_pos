@@ -85,10 +85,13 @@ main_header(['list_management']);
             <!-- Sub Tabs -->
             <ul class="nav nav-tabs mb-3" id="itemSubTabs" role="tablist">
                 <li class="nav-item">
-                <a class="nav-link active" id="profile-sub-tab" data-toggle="tab" href="#profile-sub" role="tab">Pricing</a>
+                    <a class="nav-link active" id="profile-sub-tab" data-toggle="tab" href="#profile-sub" role="tab">Pricing</a>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link" id="items-sub-tab" data-toggle="tab" href="#items-sub" role="tab">Item Profile</a>
+                    <a class="nav-link" id="items-sub-tab" data-toggle="tab" href="#items-sub" role="tab">Item Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="deleted-sub-tab" data-toggle="tab" href="#deleted-sub" role="tab">Deleted Items</a>
                 </li>
             </ul>
 
@@ -464,6 +467,26 @@ main_header(['list_management']);
                                 </div>
                             </div>
                         </div> -->
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="deleted-sub" role="tabpanel">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-6 col-sm-12">
+                            <div class="card">
+                                <div class="card-header new-color">
+                                    <h3 class="card-title">List of Deleted Items:</h3>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="card m-3">
+                                            <div class="card-body table-responsive p-0" style="height: 45rem;" id="load_items_deleted">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -7,6 +7,13 @@ var load_items = () => {
   });
 }
 
+var load_items_deleted = () => {
+  $(document).gmLoadPage({
+    url: 'management/load_items_deleted',
+    load_on: '#load_items_deleted'
+  });
+}
+
 var load_supplier = () => {
   $(document).gmLoadPage({
     url: 'management/load_suppliers',
@@ -70,12 +77,19 @@ $(document).ready(function () {
   load_supplier();
   load_units();
   load_clients();
-
+  // load_items_deleted();
+  
   load_items_drop_down();
   load_supplier_drop_down();
   load_unit_drop_down();
 });
 
+$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+  if (e.target.id === 'deleted-sub-tab') {
+    load_items_deleted();
+  }
+  
+});
 
 // <<=========================================>>ITEM MANAGEMENT<<=========================================>>
 

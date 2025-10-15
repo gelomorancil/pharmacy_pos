@@ -182,4 +182,11 @@ public function update_client()
 		echo json_encode($response);
 	}
 
+	public function retrieve_item(){
+		$this->msModel->item_id = $this->input->post("id");
+
+		$response = $this->msModel->retrieve_item();
+		echo json_encode($response);
+	}
+
 }
