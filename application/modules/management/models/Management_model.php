@@ -49,6 +49,10 @@ class Management_model extends CI_Model
             'ip.unit_price,'.
             'ip.Walkin_price,'.
             'ip.Wholesale_price,'.
+            'ip.regular_stub,'.
+            'ip.regular_box,'.
+            'ip.walkin_stub,'.
+            'ip.walkin_box,'.
             'ip.threshold'
         );
         $this->db->join($this->Table->item_profile . ' AS ip', 'ip.item_id = i.id', 'left');

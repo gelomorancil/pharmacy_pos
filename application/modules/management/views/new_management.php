@@ -222,56 +222,79 @@ main_header(['list_management']);
 
                                         <form id="pricingForm">
                                             <div class="modal-body">
-                                            <!-- <div class="row">
-                                                <div class="col-6">
-                                                <div class="form-group w-100">
-                                                    <label for="unit_id">Select Unit of Measure:</label>
-                                                    <select class="form-control" id="unit_id" style="width: 100%;">
-                                                    <?php foreach ($units as $value) { ?>
-                                                        <option value="<?= $value->id ?>"><?= $value->unit_of_measure ?></option>
-                                                    <?php } ?>
-                                                    </select>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <strong><h3><span class="" id="item_name_display"></span></h3></strong>
+                                                    </div>
                                                 </div>
-                                                </div>
-                                            </div> -->
-                                            
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <strong><h3><span class="" id="item_name_display"></span></h3></strong>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-6">
-                                                <div class="form-group w-100">
-                                                    <label for="unit_price">Regular Price:</label>
-                                                    <input type="number" id="unit_price" class="form-control inpt" placeholder="Enter Regular Price">
-                                                    <input type="hidden" id="item_profile_id">
-                                                </div>
+                                                <hr>
+                                                <h5 class="text-danger"><strong>Regular Customer Pricing</strong></h5>
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <div class="form-group w-100">
+                                                            <label for="unit_price">Pcs</label>
+                                                            <input type="number" id="unit_price" class="form-control inpt" placeholder="Enter Pcs Price">
+                                                            <input type="hidden" id="item_profile_id">
+                                                        </div>
+                                                    </div>
+                                                     <div class="col-4">
+                                                        <div class="form-group w-100">
+                                                            <label for="regular_stub_price">Stub</label>
+                                                            <input type="number" id="regular_stub_price" class="form-control inpt" placeholder="Enter Stub Price">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="form-group w-100">
+                                                            <label for="regular_box_price">Box</label>
+                                                            <input type="number" id="regular_box_price" class="form-control inpt" placeholder="Enter Box Price">
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- <div class="col-6">
+                                                        <div class="form-group w-100">
+                                                            <label for="walkin_price">Walk-in Price:</label>
+                                                            <input type="number" id="walkin_price" class="form-control inpt" placeholder="Enter Walk-in Price">
+                                                        </div>
+                                                    </div> -->
                                                 </div>
 
-                                                <div class="col-6">
-                                                <div class="form-group w-100">
-                                                    <label for="walkin_price">Walk-in Price:</label>
-                                                    <input type="number" id="walkin_price" class="form-control inpt" placeholder="Enter Walk-in Price">
+                                                <h5 class="text-danger"><strong>Walkin Customer Pricing</strong></h5>
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <div class="form-group w-100">
+                                                            <label for="walkin_price">Pcs</label>
+                                                            <input type="number" id="walkin_price" class="form-control inpt" placeholder="Enter Walk-in Price">
+                                                        </div>
+                                                    </div>
+                                                     <div class="col-4">
+                                                        <div class="form-group w-100">
+                                                            <label for="walkin_stub_price">Stub</label>
+                                                            <input type="number" id="walkin_stub_price" class="form-control inpt" placeholder="Enter Stub Price">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="form-group w-100">
+                                                            <label for="walkin_box_price">Box</label>
+                                                            <input type="number" id="walkin_box_price" class="form-control inpt" placeholder="Enter Box Price">
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                </div>
-                                            </div>
 
-                                            <div class="row">
-                                                <div class="col-6">
-                                                <div class="form-group w-100">
-                                                    <label for="wholesale_price">Wholesale Price:</label>
-                                                    <input type="number" id="wholesale_price" class="form-control inpt" placeholder="Enter Wholesale Price">
-                                                </div>
-                                                </div>
+                                                <div class="row">
+                                                    <!-- <div class="col-6">
+                                                        <div class="form-group w-100">
+                                                            <label for="wholesale_price">Wholesale Price:</label>
+                                                            <input type="number" id="wholesale_price" class="form-control inpt" placeholder="Enter Wholesale Price">
+                                                        </div>
+                                                    </div> -->
 
-                                                <div class="col-6">
-                                                <div class="form-group w-100">
-                                                    <label for="threshold">Threshold:</label>
-                                                    <input type="number" id="threshold" class="form-control inpt" placeholder="Enter Threshold">
+                                                    <div class="col-6">
+                                                        <div class="form-group w-100">
+                                                            <label for="threshold">Threshold (in pcs):</label>
+                                                            <input type="number" id="threshold" class="form-control inpt" placeholder="Enter Threshold">
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                </div>
-                                            </div>
                                             </div>
 
                                             <div class="modal-footer">

@@ -62,8 +62,12 @@ class Item_profiling_service_model extends CI_Model
                 // 'unit_id' => $this->unit_id,
                 'unit_price' => $this->unit_price,
                 'threshold' => $this->threshold,
-                 'Walkin_price' => $this->walkin_price,
-                'Wholesale_price' => $this->wholesale_price,
+                'Walkin_price' => $this->walkin_price,
+                'regular_stub' => $this->regular_stub_price,
+                'regular_box' => $this->regular_box_price,
+                'walkin_stub' => $this->walkin_stub_price,
+                'walkin_box' => $this->walkin_box_price,
+                // 'Wholesale_price' => $this->wholesale_price,
             );
             // $emptyFields = array_filter($data, function ($value) {
             //     // Only check for null or empty string, not other falsy values like '0' or 0

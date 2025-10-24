@@ -3,7 +3,8 @@
     <thead>
         <tr>
             <th>Brand Name</th>
-            <th>Pricing</th>
+            <th>Regular Pricing</th>
+            <th>Walkin Pricing</th>
             <th>Item Category</th>
             <th>Strenght/Dosage</th>
             <th>Storage Condition</th>
@@ -70,13 +71,28 @@
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <small class="text-muted d-block">
-                                <span class="text-success">REGULAR:</span> <?= $value->unit_price ?>
+                                <span class="text-success">PCS:</span> <?= $value->unit_price ?>
                             </small>
                             <small class="text-muted d-block">
-                                <span class="text-success">WALKIN:</span> <?= $value->Walkin_price ?>
+                                <span class="text-success">STUB:</span> <?= $value->regular_stub ?>
                             </small>
                             <small class="text-muted d-block">
-                                <span class="text-success">WHOLESALE:</span> <?= $value->Wholesale_price ?>
+                                <span class="text-success">BOX:</span> <?= $value->regular_box ?>
+                            </small>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <small class="text-muted d-block">
+                                <span class="text-success">PCS:</span> <?= $value->Walkin_price ?>
+                            </small>
+                            <small class="text-muted d-block">
+                                <span class="text-success">STUB:</span> <?= $value->walkin_stub ?>
+                            </small>
+                            <small class="text-muted d-block">
+                                <span class="text-success">BOX:</span> <?= $value->walkin_box ?>
                             </small>
                         </div>
                         <button 
@@ -90,6 +106,10 @@
                             data-wholesale="<?= $value->Wholesale_price ?>"
                             data-threshold="<?= $value->threshold ?>"
                             data-item_name="<?= $value->item_name ?>"
+                            data-regular_stub_price="<?=$value->regular_stub?>" 
+                            data-regular_box_price="<?=$value->regular_box?>" 
+                            data-walkin_stub_price="<?=$value->walkin_stub?>" 
+                            data-walkin_box_price="<?=$value->walkin_box?>" 
                         >
                             <i class="fas fa-edit"></i>
                         </button>
@@ -123,6 +143,10 @@ $(document).ready(function() {
         let unitPrice = $(this).data('unitprice');
         let walkinPrice = $(this).data('walkin');
         let wholesalePrice = $(this).data('wholesale');
+        let regular_stub_price = $(this).data('regular_stub_price');
+        let regular_box_price = $(this).data('regular_box_price');
+        let walkin_stub_price = $(this).data('walkin_stub_price');
+        let walkin_box_price = $(this).data('walkin_box_price');
         let threshold = $(this).data('threshold');
 
         // Fill the modal fields
@@ -132,6 +156,10 @@ $(document).ready(function() {
         $('#wholesale_price').val(wholesalePrice);
         $('#edit_item_id').val(itemId);
         $('#threshold').val(threshold);
+        $('#regular_stub_price').val(regular_stub_price);
+        $('#regular_box_price').val(regular_box_price);
+        $('#walkin_stub_price').val(walkin_stub_price);
+        $('#walkin_box_price').val(walkin_box_price);
         $('#item_name_display').text(item_name);
 
     });

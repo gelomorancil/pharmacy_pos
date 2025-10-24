@@ -22,6 +22,10 @@
                 data-unit_price="<?=$value->unit_price?>" 
                 data-walkin_price="<?=$value->Walkin_price?>" 
                 data-wholesale_price="<?=$value->Wholesale_price?>" 
+                data-regular_stub_price="<?=$value->regular_stub?>" 
+                data-regular_box_price="<?=$value->regular_box?>" 
+                data-walkin_stub_price="<?=$value->walkin_stub?>" 
+                data-walkin_box_price="<?=$value->walkin_box?>" 
                 data-threshold="<?=$value->threshold?>" 
                 >
 

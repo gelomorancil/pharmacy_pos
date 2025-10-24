@@ -18,7 +18,11 @@ var editProfile = (data) => {
     $('#unit_id').val(data.getAttribute('data-unit_id'));
     $('#unit_price').val(data.getAttribute('data-unit_price'));
     $('#walkin_price').val(data.getAttribute('data-walkin_price'));
-    $('#wholesale_price').val(data.getAttribute('data-unit_price'));
+    $('#regular_stub_price').val(data.getAttribute('data-regular_stub_price'));
+    $('#regular_box_price').val(data.getAttribute('data-regular_box_price'));
+    $('#walkin_stub_price').val(data.getAttribute('data-walkin_stub_price'));
+    $('#walkin_box_price').val(data.getAttribute('data-walkin_box_price'));
+    // $('#wholesale_price').val(data.getAttribute('data-unit_price'));
     $('#threshold').val(data.getAttribute('data-threshold'));
   
     $('#save_item_profile').hide();
@@ -104,7 +108,11 @@ $('#update_item_profile').click(function () {
                             // unit_id: $('#unit_id').val(),
                             unit_price: $('#unit_price').val(),
                             walkin_price: $('#walkin_price').val(),
-                            wholesale_price: $('#wholesale_price').val(),
+                            regular_stub_price: $('#regular_stub_price').val(),
+                            regular_box_price: $('#regular_box_price').val(),
+                            walkin_stub_price: $('#walkin_stub_price').val(),
+                            walkin_box_price: $('#walkin_box_price').val(),
+                            // wholesale_price: $('#wholesale_price').val(),
                             threshold: $('#threshold').val(),
                         },
                         success: function (e) {
