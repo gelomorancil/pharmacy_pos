@@ -27,6 +27,7 @@ class Management extends MY_Controller
 		$this->data['session'] =  $this->session;
 		$this->data['units'] = $this->ipModel->get_units();
 		$this->data['items'] = $this->ipModel->get_items();
+		$this->data['users'] = $this->mModel->get_user_list();
 		$this->data['content'] = 'new_management';
 		$this->load->view('layout', $this->data);
 	}

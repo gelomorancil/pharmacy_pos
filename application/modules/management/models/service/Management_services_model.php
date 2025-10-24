@@ -542,6 +542,55 @@ public function update_client()
     }
 }
 
+public function save_rbac_access($userAccessData)
+{
+    try {
+
+        if (!is_array($userAccessData) || empty($userAccessData)) {
+            throw new Exception(MISSING_DETAILS, true);
+        }
+
+        $this->db->trans_start();
+
+        foreach ($userAccessData as $access) {
+            $userID = $access['user_id'] ?? null;
+            $module = $access['module'] ?? null;
+            $granted = isset($access['granted']) ? (int)$access['granted'] : 0;
+        
+            if (!$userID || !$module) {
+                throw new Exception(MISSING_DETAILS, true);
+            }
+        
+            // Check if record exists
+            $exists = $this->db->get_where($this->Table->user_access, ['user_ID' => $userID])->num_rows();
+        
+            if ($exists) {
+                $this->db->set($module, $granted);
+                $this->db->where('user_ID', $userID);
+                $this->db->update($this->Table->user_access);
+            } else {
+                $data = [
+                    'user_ID' => $userID,
+                    $module => $granted
+                ];
+                $this->db->insert($this->Table->user_access, $data);
+            }
+        }
+        
+
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            throw new Exception(ERROR_PROCESSING, true);
+        } else {
+            $this->db->trans_commit();
+            return array('message' => SAVED_SUCCESSFUL, 'has_error' => false);
+        }
+    } catch (Exception $msg) {
+        return array('message' => $msg->getMessage(), 'has_error' => true);
+    }
+}
     public function delete_item()
     {
         try {

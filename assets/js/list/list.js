@@ -890,3 +890,66 @@ var editClient = (data) => {
   $('#save_client').hide();
   $('#update_client').show();
 }
+
+
+let modifiedData = [];
+
+$(document).on('change', '.role-checkbox', function () {
+  const userId = $(this).data('user-id');
+  const module = $(this).data('module');
+  const isChecked = $(this).is(':checked');
+
+  // Check if this user-module already exists in modifiedData
+  const existingIndex = modifiedData.findIndex(
+    item => item.user_id === userId && item.module === module
+  );
+
+  if (existingIndex !== -1) {
+    // Update existing record
+    modifiedData[existingIndex].granted = isChecked ? 1 : 0;
+  } else {
+    // Add new record
+    modifiedData.push({
+      user_id: userId,
+      module: module,
+      granted: isChecked ? 1 : 0
+    });
+  }
+});
+
+// Submit button click
+$('#saveRbacBtn').on('click', function (e) {
+  e.preventDefault();
+
+  if (modifiedData.length === 0) {
+    alert('No changes detected.');
+    return;
+  }
+  console.log(modifiedData);
+
+  $.ajax({
+    url: "management/service/Management_service/save_rbac_access",
+    type: 'POST',
+    dataType: 'json',
+    data: { user_access: JSON.stringify(modifiedData) },
+    beforeSend: function () {
+      $('#saveRbacBtn').prop('disabled', true).text('Saving...');
+    },
+    success: function (response) {
+      let response = (typeof response === 'object') ? response : JSON.parse(response);
+      if (response.success) {
+        alert('RBAC updated successfully!');
+        modifiedData = []; // Clear after save
+      } else {
+        alert('Error: ' + response.message);
+      }
+    },
+    error: function (xhr, status, error) {
+      console.error('AJAX Error:', error);
+      alert('An error occurred while saving.');
+    },
+    complete: function () {
+      $('#saveRbacBtn').prop('disabled', false).text('Submit');
+    }
+  });
+});

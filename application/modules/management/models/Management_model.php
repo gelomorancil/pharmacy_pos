@@ -134,6 +134,23 @@ class Management_model extends CI_Model
         return $query;
     }
 
+    public function get_user_list() {
+        $this->db->select('u.id as u_ID, u.FName, u.LName, u.Role_ID, rbac.*');
+        $this->db->from($this->Table->user . ' as u');
+        $this->db->join($this->Table->user_access . ' as rbac', 'u.id = rbac.user_ID');
+        $this->db->where('u.Active', 1);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_access($userID) {
+        $this->db->select('*');
+        $this->db->from($this->Table->user_access);
+        $this->db->where('user_ID', $userID );
+        $query = $this->db->get();
+        return $query->row();
+    }
+    
     public function get_items_deleted(){
         $this->db->select(
             'i.*,'.

@@ -12,33 +12,33 @@ function main_header($menubar = [])
     exit();
   }
 
-  // User Restriction By URL Route (MAXIMUM SECURITY)
-  $allowedUrls = [
-    3 => [
-      base_url() . 'cashiering',
-      base_url() . 'dashboard',
-      base_url() . 'inventory',
-      base_url() . 'quotation',
-      base_url() . 'report',
-      base_url() . 'expense',
-    ],
-    2 => [
-      base_url() . 'quotation',
-      base_url() . 'cashiering',
-      base_url() . 'inventory'
-    ],
-    1 => [
-      base_url() . 'expense',
-      base_url() . 'quotation',
-      base_url() . 'cashiering',
-      base_url() . 'inventory',
-      base_url() . 'dashboard',
-      base_url() . 'item_profiling',
-      base_url() . 'management',
-      base_url() . 'management/user_management',
-      base_url() . 'report'
-    ]
-  ];
+  // // User Restriction By URL Route (MAXIMUM SECURITY)
+  // $allowedUrls = [
+  //   3 => [
+  //     base_url() . 'cashiering',
+  //     base_url() . 'dashboard',
+  //     base_url() . 'inventory',
+  //     base_url() . 'quotation',
+  //     base_url() . 'report',
+  //     base_url() . 'expense',
+  //   ],
+  //   2 => [
+  //     base_url() . 'quotation',
+  //     base_url() . 'cashiering',
+  //     base_url() . 'inventory'
+  //   ],
+  //   1 => [
+  //     base_url() . 'expense',
+  //     base_url() . 'quotation',
+  //     base_url() . 'cashiering',
+  //     base_url() . 'inventory',
+  //     base_url() . 'dashboard',
+  //     base_url() . 'item_profiling',
+  //     base_url() . 'management',
+  //     base_url() . 'management/user_management',
+  //     base_url() . 'report'
+  //   ]
+  // ];
 
   $userRoleId = $session->Role_ID;
 
@@ -53,6 +53,53 @@ function main_header($menubar = [])
   //     exit;
   //   }
   // }
+
+// ============================
+// User Restriction By Access Control
+// ============================
+
+// Helper function
+function get_user_access($userID) {
+  $CI =& get_instance();
+  $CI->load->model('management/Management_model');
+  return $CI->Management_model->get_access($userID);
+}
+
+$userID  = $session->ID;
+$access  = get_user_access($userID);
+$current = current_url();
+
+// Define mapping between access columns and routes
+$modules = [
+  'dashboard'        => base_url('dashboard'),
+  'cashiering'       => base_url('cashiering'),
+  'quotation'        => base_url('quotation'),
+  'inventory'        => base_url('inventory'),
+  'item_profile'     => base_url('item_profiling'),
+  'management'       => base_url('management'),
+  'user_management'  => base_url('management/user_management'),
+  'reports'          => base_url('report'),
+];
+
+// Build allowed URLs dynamically based on granted modules
+$allowedUrls = [];
+foreach ($modules as $key => $url) {
+  if (isset($access->$key) && (int)$access->$key === 1) {
+      $allowedUrls[] = $url;
+  }
+}
+
+// If current URL is not in allowed list → redirect to first allowed module
+if (!in_array($current, $allowedUrls)) {
+  if (!empty($allowedUrls)) {
+      redirect($allowedUrls[0]);
+  } else {
+      // fallback: no access at all
+      show_error('Access Denied: You do not have permission to view this page.', 403, 'Forbidden');
+      redirect(base_url() . 'login/authentication', 'refresh');
+  }
+  exit;
+}
 
   function expiry_flag_status() {
     $CI =& get_instance();
