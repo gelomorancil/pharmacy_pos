@@ -28,7 +28,14 @@ class Management_service extends MY_Controller
 		$this->msModel->description = $this->input->post("description");
 		$this->msModel->category = $this->input->post("category");
 		$this->msModel->status = $this->input->post("status");
+		$this->msModel->strenght = $this->input->post("strenght");
+		$this->msModel->packaging = $this->input->post("packaging");
+		$this->msModel->uom = $this->input->post("uom");
+		$this->msModel->classification = $this->input->post("classification");
+		$this->msModel->storage_condition = $this->input->post("storage_condition");
+		$this->msModel->distributor = $this->input->post("distributor");
 		// $this->msModel->item_expiry_date = $this->input->post("item_expiry_date");
+		// $this->msModel->batch_no = $this->input->post("batch_no");
 
 		$response = $this->msModel->save_list();
 		echo json_encode($response);
@@ -82,6 +89,15 @@ class Management_service extends MY_Controller
 		$this->msModel->description = $this->input->post("description");
 		$this->msModel->status = $this->input->post("status");
 		// $this->msModel->item_expiry_date = $this->input->post("item_expiry_date");
+		$this->msModel->category = $this->input->post("category");
+		$this->msModel->strenght = $this->input->post("strenght");
+		$this->msModel->packaging = $this->input->post("packaging");
+		$this->msModel->uom = $this->input->post("uom");
+		$this->msModel->classification = $this->input->post("classification");
+		$this->msModel->storage_condition = $this->input->post("storage_condition");
+		$this->msModel->distributor = $this->input->post("distributor");
+		// $this->msModel->storage_condition = $this->input->post("storage_condition");
+		// $this->msModel->batch_no = $this->input->post("batch_no");
 
 		$response = $this->msModel->update_item();
 		echo json_encode($response);
@@ -175,5 +191,18 @@ public function save_rbac_access()
 }
 
 
+	public function delete_item(){
+		$this->msModel->item_id = $this->input->post("id");
+
+		$response = $this->msModel->delete_item();
+		echo json_encode($response);
+	}
+
+	public function retrieve_item(){
+		$this->msModel->item_id = $this->input->post("id");
+
+		$response = $this->msModel->retrieve_item();
+		echo json_encode($response);
+	}
 
 }

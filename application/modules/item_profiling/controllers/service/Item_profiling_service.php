@@ -21,8 +21,8 @@ class Item_profiling_service extends MY_Controller
 	}
 
 	public function save_item_profile(){
-		$this->ipsModel->item_id = $this->input->post('item_id');
-		$this->ipsModel->unit_id = $this->input->post('unit_id');
+		// $this->ipsModel->item_id = $this->input->post('item_id');
+		// $this->ipsModel->unit_id = $this->input->post('unit_id');
 		$this->ipsModel->unit_price = $this->input->post('unit_price');
 		$this->ipsModel->threshold = $this->input->post('threshold');
 		$this->ipsModel->walkin_price = $this->input->post('walkin_price');
@@ -36,12 +36,16 @@ class Item_profiling_service extends MY_Controller
 	public function update_item_profile(){
 		$this->ipsModel->id = $this->input->post('id');
 
-		$this->ipsModel->item_id = $this->input->post('item_id');
-		$this->ipsModel->unit_id = $this->input->post('unit_id');
+		// $this->ipsModel->item_id = $this->input->post('item_id');
+		// $this->ipsModel->unit_id = $this->input->post('unit_id');
 		$this->ipsModel->unit_price = $this->input->post('unit_price');
 		$this->ipsModel->threshold = $this->input->post('threshold');
 		$this->ipsModel->walkin_price = $this->input->post('walkin_price');
-		$this->ipsModel->wholesale_price = $this->input->post('wholesale_price');
+		$this->ipsModel->regular_stub_price = $this->input->post('regular_stub_price');
+		$this->ipsModel->regular_box_price = $this->input->post('regular_box_price');
+		$this->ipsModel->walkin_stub_price = $this->input->post('walkin_stub_price');
+		$this->ipsModel->walkin_box_price = $this->input->post('walkin_box_price');
+		// $this->ipsModel->wholesale_price = $this->input->post('wholesale_price');
 
 		$response = $this->ipsModel->update_item_profile();
 		echo json_encode($response);

@@ -31,6 +31,7 @@ define('VERIFIED', 'Online Payment has been Verified');
 define('CANCELLED', 'Order has been Cancelled');
 define('VOID_EXP', 'Expense has been Voided');
 define('MOBILE_DEVICE', 'You are not permitted to login in any mobile devices.');
+define('DUPLICATE_ITEM_FOUND', 'Duplicated Item name found in the system, please try again.');
 
 /** user messages */
 define('DEFAULT_PASSWORD', 'Do not use the default password. Please create new password.');

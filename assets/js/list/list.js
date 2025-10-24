@@ -7,6 +7,13 @@ var load_items = () => {
   });
 }
 
+var load_items_deleted = () => {
+  $(document).gmLoadPage({
+    url: 'management/load_items_deleted',
+    load_on: '#load_items_deleted'
+  });
+}
+
 var load_supplier = () => {
   $(document).gmLoadPage({
     url: 'management/load_suppliers',
@@ -70,12 +77,19 @@ $(document).ready(function () {
   load_supplier();
   load_units();
   load_clients();
-
+  // load_items_deleted();
+  
   load_items_drop_down();
   load_supplier_drop_down();
   load_unit_drop_down();
 });
 
+$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+  if (e.target.id === 'deleted-sub-tab') {
+    load_items_deleted();
+  }
+  
+});
 
 // <<=========================================>>ITEM MANAGEMENT<<=========================================>>
 
@@ -98,7 +112,14 @@ $('#save_item').click(function () {
               description: $('#item_description').val(),
               category: $('#Category').val(),
               status: $('#item_status').val(),
-              // w: $('#item_expiry_date').val(),
+              strenght: $('#strenght').val(),
+              packaging: $('#packaging').val(),
+              uom: $('#uom').val(),
+              classification: $('#classification').val(),
+              storage_condition: $('#storage_condition').val(),
+              distributor: $('#distributor').val(),
+              // batch_no: $('#batch_no').val(),
+              // item_expiry_date: $('#item_expiry_date').val(),
             },
             success: function (e) {
               var e = JSON.parse(e);
@@ -113,6 +134,14 @@ $('#save_item').click(function () {
                 $('#item_status').val("1");
                 $('#item_description').val("");
                 $('#Category').val("");
+                $('#strenght').val();
+                $('#packaging').val("");
+                $('#uom').val("");
+                $('#classification').val("");
+                $('#storage_condition').val("");
+                $('#distributor').val("");
+                // $('#item_expiry_date').val("");
+                // $('#batch_no').val("");
                 // setTimeout(function () {
                 //   window.location.reload();
                 // }, 2000);
@@ -148,13 +177,21 @@ $('#update_item').click(function () {
             url: 'management/service/Management_service/update_item',
             // selector: '.form-control',
             data: {
-              id: $('#item_id').val(),
+              id: $('#select_item').val(),
               item_name: $('#item_name').val(),
               item_code: $('#code').val(),
               short_name: $('#short_name').val(),
               description: $('#item_description').val(),
               status: $('#item_status').val(),
               category: $('#Category').val(),
+              strenght: $('#strenght').val(),
+              packaging: $('#packaging').val(),
+              uom: $('#uom').val(),
+              classification: $('#classification').val(),
+              storage_condition: $('#storage_condition').val(),
+              distributor: $('#distributor').val(),
+              // item_expiry_date: $('#item_expiry_date').val(),
+              // batch_no: $('#batch_no').val(),
             },
             success: function (e) {
               var e = JSON.parse(e);
@@ -169,6 +206,14 @@ $('#update_item').click(function () {
                 $('#item_status').val("1");
                 $('#item_description').val("");
                 $('#Category').val("");
+                $('#strenght').val("");
+                $('#packaging').val("");
+                $('#uom').val("");
+                $('#classification').val("");
+                $('#storage_condition').val("");
+                $('#distributor').val("");
+                // $('#item_expiry_date').val("");
+                // $('#batch_no').val("");
                 setTimeout(function () {
                   window.location.reload();
                 }, 500);
@@ -178,6 +223,46 @@ $('#update_item').click(function () {
               }
             },
           })
+        },
+      },
+      cancel: {
+        text: 'Cancel',
+        btnClass: 'btn-danger',
+        action: function () {
+        },
+      },
+    },
+  });
+});
+
+$('#delete_item').click(function () {
+  $.confirm({
+    title: 'Confirmation',
+    icon: 'fa fa-question-circle',
+    content: 'Are you sure you want to delete this item?',
+    buttons: {
+      confirm: {
+        text: 'Confirm',
+        btnClass: 'btn-success',
+        action: function () {
+          $.post({
+            url: 'management/service/Management_service/delete_item',
+            data: {
+              id: $('#select_item').val(),
+            },
+            success: function (e) {
+              var e = JSON.parse(e);
+              if (!e.has_error) {
+                toastr.success(e.message);
+              
+                setTimeout(function () {
+                  window.location.reload();
+                }, 500);
+              } else {
+                toastr.error(e.message);
+              }
+            },
+          });
         },
       },
       cancel: {
@@ -200,11 +285,50 @@ var editItem = (data) => {
   $('#item_status').val(data.getAttribute('data-status'));
   $('#item_description').val(data.getAttribute('data-description'));
   $('#Category').val(data.getAttribute('data-category'));
+  $('#strenght').val(data.getAttribute('data-strenght'));
+  $('#packaging').val(data.getAttribute('data-packaging'));
+  $('#uom').val(data.getAttribute('data-uom'));
+  $('#classification').val(data.getAttribute('data-classification'));
+  $('#storage_condition').val(data.getAttribute('data-storage_condition'));
+  $('#distributor').val(data.getAttribute('data-distributor'));
+  // $('#item_expiry_date').val(data.getAttribute('data-item_expiry_date'));
+  // $('#batch_no').val(data.getAttribute('data-batch_no'));
 
 
   $('#save_item').hide();
   $('#update_item').show();
+  $('#delete_item').show();
 }
+
+
+$('#select_item').change(function () {
+
+  $('#medicine').show();
+  $('#medicine input').attr('required', true);
+  $('#medicine select').attr('required', true);
+  $('#save_item').hide();
+  $('#cancel').show();
+  $('#update_item').show();
+  $('#delete_item').show();
+
+  var selectedOption = $(this).find('option:selected');
+
+  var dataId = selectedOption.data('id'); 
+  $('#item_id').val(selectedOption.data('id'));
+  $('#item_name').val(selectedOption.data('item_name'));
+  $('#code').val(selectedOption.data('item_code'));
+  $('#short_name').val(selectedOption.data('short_name'));
+  $('#item_status').val(selectedOption.data('status'));
+  $('#item_description').val(selectedOption.data('description'));
+  $('#Category').val(selectedOption.data('category'));
+  $('#strenght').val(selectedOption.data('strenght'));
+  $('#packaging').val(selectedOption.data('packaging'));
+  $('#uom').val(selectedOption.data('uom'));
+  $('#classification').val(selectedOption.data('classification'));
+  $('#storage_condition').val(selectedOption.data('storage_condition'));
+  $('#distributor').val(selectedOption.data('distributor'));
+
+});
 
 // <<=========================================>>UNIT MANAGEMENT<<=========================================>>
 

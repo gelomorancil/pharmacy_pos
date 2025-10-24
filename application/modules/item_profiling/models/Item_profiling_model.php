@@ -18,6 +18,7 @@ class Item_profiling_model extends CI_Model
         $this->db->select('*');
         $this->db->where('Active', '1');
         $this->db->from($this->Table->items);
+        // $this->db->where('delete', 0);
         $this->db->order_by('item_name', 'asc');
         $query = $this->db->get()->result();
         return $query;

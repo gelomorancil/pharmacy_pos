@@ -1,17 +1,17 @@
 <?php load_table_css();?>
-  <table class="table table-hover text-nowrap datatable" id="itemTable">
+  <table class="table table-hover text-nowrap datatable" id="itemDeletedTable">
     <thead>
         <tr>
             <th>Brand Name</th>
-            <th>Regular Pricing</th>
-            <th>Walkin Pricing</th>
+            <th>Pricing</th>
             <th>Item Category</th>
             <th>Strenght/Dosage</th>
             <th>Storage Condition</th>
             <th>UOM</th>
             <th>Packaging</th>
-            <th>Indication / Category</th>
+            <th>Indication</th>
             <th>Classification</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -71,49 +71,15 @@
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <small class="text-muted d-block">
-                                <span class="text-success">PCS:</span> <?= $value->unit_price ?>
+                                <span class="text-success">REGULAR:</span> <?= $value->unit_price ?>
                             </small>
                             <small class="text-muted d-block">
-                                <span class="text-success">STUB:</span> <?= $value->regular_stub ?>
+                                <span class="text-success">WALKIN:</span> <?= $value->Walkin_price ?>
                             </small>
                             <small class="text-muted d-block">
-                                <span class="text-success">BOX:</span> <?= $value->regular_box ?>
+                                <span class="text-success">WHOLESALE:</span> <?= $value->Wholesale_price ?>
                             </small>
                         </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <small class="text-muted d-block">
-                                <span class="text-success">PCS:</span> <?= $value->Walkin_price ?>
-                            </small>
-                            <small class="text-muted d-block">
-                                <span class="text-success">STUB:</span> <?= $value->walkin_stub ?>
-                            </small>
-                            <small class="text-muted d-block">
-                                <span class="text-success">BOX:</span> <?= $value->walkin_box ?>
-                            </small>
-                        </div>
-                        <button 
-                            class="btn btn-sm btn-outline-primary ms-2 p-1 edit-price-btn" 
-                            title="Edit Prices" 
-                            data-toggle="modal" 
-                            data-target="#pricingModal"
-                            data-id="<?= $value->id ?>"
-                            data-unitprice="<?= $value->unit_price ?>"
-                            data-walkin="<?= $value->Walkin_price ?>"
-                            data-wholesale="<?= $value->Wholesale_price ?>"
-                            data-threshold="<?= $value->threshold ?>"
-                            data-item_name="<?= $value->item_name ?>"
-                            data-regular_stub_price="<?=$value->regular_stub?>" 
-                            data-regular_box_price="<?=$value->regular_box?>" 
-                            data-walkin_stub_price="<?=$value->walkin_stub?>" 
-                            data-walkin_box_price="<?=$value->walkin_box?>" 
-                        >
-                            <i class="fas fa-edit"></i>
-                        </button>
-
                     </div>
                 </td>
 
@@ -124,6 +90,7 @@
                 <td><?= $value->packaging ?></td>
                 <td><?= $value->description ?></td>
                 <td><?= $value->classification ?></td>
+                <td><button class="btn btn-default btn-sm btn_retrieve" value="<?=$value->id?>">Retrieve</button></td>
             </tr>
         <?php
         }
@@ -143,10 +110,6 @@ $(document).ready(function() {
         let unitPrice = $(this).data('unitprice');
         let walkinPrice = $(this).data('walkin');
         let wholesalePrice = $(this).data('wholesale');
-        let regular_stub_price = $(this).data('regular_stub_price');
-        let regular_box_price = $(this).data('regular_box_price');
-        let walkin_stub_price = $(this).data('walkin_stub_price');
-        let walkin_box_price = $(this).data('walkin_box_price');
         let threshold = $(this).data('threshold');
 
         // Fill the modal fields
@@ -156,12 +119,48 @@ $(document).ready(function() {
         $('#wholesale_price').val(wholesalePrice);
         $('#edit_item_id').val(itemId);
         $('#threshold').val(threshold);
-        $('#regular_stub_price').val(regular_stub_price);
-        $('#regular_box_price').val(regular_box_price);
-        $('#walkin_stub_price').val(walkin_stub_price);
-        $('#walkin_box_price').val(walkin_box_price);
         $('#item_name_display').text(item_name);
 
     });
+});
+
+$('.btn_retrieve').click(function () {
+  $.confirm({
+    title: 'Confirmation',
+    icon: 'fa fa-question-circle',
+    content: 'Are you sure you want to retrieve this item?',
+    buttons: {
+      confirm: {
+        text: 'Confirm',
+        btnClass: 'btn-success',
+        action: function () {
+          $.post({
+            url: base_url+ 'management/service/Management_service/retrieve_item',
+            data: {
+              id: $('.btn_retrieve').val()
+            },
+            success: function (e) {
+              var e = JSON.parse(e);
+              if (!e.has_error) {
+                toastr.success(e.message);
+              
+                setTimeout(function () {
+                  window.location.reload();
+                }, 500);
+              } else {
+                toastr.error(e.message);
+              }
+            },
+          });
+        },
+      },
+      cancel: {
+        text: 'Cancel',
+        btnClass: 'btn-danger',
+        action: function () {
+        },
+      },
+    },
+  });
 });
 </script>
