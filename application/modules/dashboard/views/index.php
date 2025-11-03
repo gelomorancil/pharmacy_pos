@@ -58,7 +58,10 @@ main_header(['dashboard']);
       <!-- Top 10 Selling Items -->
       <div class="col-lg-6 mb-4 d-flex">
         <div class="card w-100 h-100">
-          <div class="card-header new-color"> Top 10 Selling Items </div>
+          <div class="card-header new-color">
+            <span>Top 10 Selling Items</span>
+            <a href="<?=base_url()?>top_items" class="btn btn-warning btn-xs" style="float:right">View all</a>
+          </div>
           <div class="card-body p-0">
             <table class="table table-hover mb-0">
               <thead class="thead-light">
@@ -78,13 +81,16 @@ main_header(['dashboard']);
       <!-- Top 10 Buyers -->
       <div class="col-lg-6 mb-4 d-flex">
         <div class="card w-100 h-100">
-          <div class="card-header new-color">Top 10 Buyers</div>
+         <div class="card-header new-color">
+          <span>Top 10 Buyers</span>
+          <a href="<?=base_url()?>top_buyers" class="btn btn-warning btn-xs" style="float:right">View all</a>
+        </div>
           <div class="card-body p-0">
             <table class="table table-hover mb-0">
               <thead class="thead-light">
                 <tr>
+                  <th>Rank</th>
                   <th>Buyer Name</th>
-                  <th>Name</th>
                   <th>Total Purchases</th>
                 </tr>
               </thead>
@@ -100,7 +106,10 @@ main_header(['dashboard']);
       <!-- Low Stock Items -->
       <div class="col-lg-6 mb-4 d-flex">
         <div class="card w-100 h-100">
-          <div class="card-header new-color">Items Low on Stock</div>
+          <div class="card-header new-color">
+          <span>Items Low on Stock</span>
+          <a href="<?=base_url()?>inventory" class="btn btn-warning btn-xs" style="float:right">View Inventory</a>
+        </div>
           <div class="card-body p-0">
             <div class="scrollable-table">
               <table class="table table-hover mb-0">
@@ -131,18 +140,23 @@ main_header(['dashboard']);
       <!-- Monthly Sales -->
       <div class="col-lg-6 mb-4 d-flex">
         <div class="card w-100 h-100">
-          <div class="card-header new-color d-flex justify-content-between align-items-center">
-            <span>Running Monthly Sales</span>
-            <form>
-              <select class="form-control" style="width: 100%;" id="sales_year">
-                    <?php $date = date('Y'); ?>
-                    <option selected="selected" value="<?= $date ?>"><?= $date ?></option>
-                    <option value="<?= $date - 1 ?>"><?= $date - 1 ?></option>
-                    <option value="<?= $date - 2 ?>"><?= $date - 2 ?></option>
-                    <option value="<?= $date - 3 ?>"><?= $date - 3 ?></option>
+         <div class="card-header new-color d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-2">
+              <span>Running Monthly Sales</span>
+              <form class="ml-4">
+                <select class="form-control form-control-sm" id="sales_year">
+                  <?php $date = date('Y'); ?>
+                  <option selected="selected" value="<?= $date ?>"><?= $date ?></option>
+                  <option value="<?= $date - 1 ?>"><?= $date - 1 ?></option>
+                  <option value="<?= $date - 2 ?>"><?= $date - 2 ?></option>
+                  <option value="<?= $date - 3 ?>"><?= $date - 3 ?></option>
                 </select>
-            </form>
+              </form>
+            </div>
+
+            <a href="<?= base_url() ?>inventory" class="btn btn-warning btn-xs" style="float: right">View Inventory</a>
           </div>
+
           <div class="card-body p-0">
             <table class="table table-hover mb-0">
               <thead class="thead-light">
