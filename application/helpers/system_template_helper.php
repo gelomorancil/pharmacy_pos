@@ -418,6 +418,31 @@ function check_low_stocks() {
                 <a href="#" class="nav-link">
                   <!-- <i class="nav-icon fas fa-file"></i> -->
                   <p>
+                    Rankings
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="<?= base_url() ?>top_buyers"
+                      class="nav-link <?= (sidebar($menubar, ['top_buyers'])) ? 'active' : '' ?>">
+                      <i class="fas fa-chart-line nav-icon"></i>
+                      <p>Top Buyers</p>
+                    </a>
+                  </li>
+                   <li class="nav-item">
+                    <a href="<?= base_url() ?>top_items"
+                      class="nav-link <?= (sidebar($menubar, ['top_items'])) ? 'active' : '' ?>">
+                      <i class="fas fa-chart-line nav-icon"></i>
+                      <p>Top Items</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li class="nav-item menu-open" style="display: <?= $userRoleId == 1 || $userRoleId == 3 ? '' : 'none' ?>">
+                <a href="#" class="nav-link">
+                  <!-- <i class="nav-icon fas fa-file"></i> -->
+                  <p>
                     Reports
                     <i class="right fas fa-angle-left"></i>
                   </p>
