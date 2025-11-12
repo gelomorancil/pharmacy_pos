@@ -45,7 +45,7 @@ $session = (object) get_userdata(USER);
     }
 
     .stock-low { background: #fff3cd; color: #856404; }
-    .btn-add {
+    /* .btn-add {
       background: #035863;
       color: #fff;
       border-radius: 50%;
@@ -57,8 +57,8 @@ $session = (object) get_userdata(USER);
       position: absolute;
       bottom: 10px;
       right: 10px;
-    }
-    .btn-add:hover { background: #035863; }
+    }*/
+    .btn-add:hover { background: #9b9d9e2f; } 
     .cart-panel {
       background: #fff;
       border-radius: 10px;
@@ -122,27 +122,78 @@ $session = (object) get_userdata(USER);
                 <!-- Product Grid -->
                 <div class="row mt-3" id="productList">
                     <?php foreach($items as $item => $i){ ?>
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-12 product-card">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-12 product-card">
                         <div class="card p-3">
                             <small class="card-text text-muted mb-1"><?=strtoupper($i->Category)?></small>
                             <h6 class="card-title mb-1"><?=$i->item_name?></h6>
                             <span class="<?=$i->current_stock == 0 ? 'stock-label-zero' : 'stock-label'?>">Stock: <?=$i->current_stock?></span>
-                            <p class="card-text text-muted mb-1"><?=$i->description?></p>
+                            <p class="card-text text-muted mb-1 desc-text"><?=$i->description?></p>
                             <small class="card-text text-muted mb-1"><?=$i->item_code?></small>
-                            <div class="font-weight-bold">
-                                <span class="price-label">WI</span> ₱<?=number_format($i->Walkin_price,2)?>   <br>
-                                <span class="price-label">R </span> ₱<?=number_format($i->unit_price,2)?> <br>
-                                <span class="price-label">WS</span> ₱<?=number_format($i->Wholesale_price,2)?>
+                             <div class="font-weight-bold d-flex gap-3">
+                                <button class="price-label btn-add" 
+                                    data-name="<?=$i->item_name?>"
+                                    data-name2="<?=$i->item_name." (RP)"?>"
+                                    data-item_profile_id="<?=$i->item_profile_id?>" 
+                                    data-price="<?=$i->RP?>" 
+                                >RP ₱<?=number_format($i->RP,2)?>
+                                </button><br>
+                                <button class="price-label btn-add" 
+                                    data-name="<?=$i->item_name?>"
+                                    data-name2="<?=$i->item_name." (RS)"?>"
+                                    data-item_profile_id="<?=$i->item_profile_id?>" 
+                                    data-price="<?=$i->RS?>" 
+                                >RS ₱<?=number_format($i->RS,2)?>
+                                 </button>  <br>
+                                <button class="price-label btn-add" 
+                                    data-name="<?=$i->item_name?>"
+                                    data-name2="<?=$i->item_name." (RB)"?>"
+                                    data-item_profile_id="<?=$i->item_profile_id?>" 
+                                    data-price="<?=$i->RB?>" 
+                                >RB ₱<?=number_format($i->RB,2)?>
+                                </button> 
                             </div>
-                            <button class="btn btn-add" 
+                            <div class="font-weight-bold d-flex gap-3 mt-1">
+                                <button class="price-label btn-add" 
+                                    data-name="<?=$i->item_name?>"
+                                    data-name2="<?=$i->item_name." (WP)"?>"
+                                    data-item_profile_id="<?=$i->item_profile_id?>" 
+                                    data-price="<?=$i->WP?>" 
+                                >WP ₱<?=number_format($i->WP,2)?>
+                                </button>    <br>
+                                <button class="price-label btn-add" 
+                                    data-name="<?=$i->item_name?>"
+                                    data-name2="<?=$i->item_name." (WS)"?>"
+                                    data-item_profile_id="<?=$i->item_profile_id?>" 
+                                    data-price="<?=$i->WS?>" 
+                                >WS ₱<?=number_format($i->WS,2)?>
+                                 </button>  <br>
+                                <button class="price-label btn-add" 
+                                    data-name="<?=$i->item_name?>"
+                                    data-name2="<?=$i->item_name." (WB)"?>"
+                                    data-item_profile_id="<?=$i->item_profile_id?>" 
+                                    data-price="<?=$i->WB?>" 
+                                >WB ₱<?=number_format($i->WB,2)?>
+                                </button> 
+                            </div>
+                            <!-- <div class="font-weight-bold d-flex gap-3">
+                                <span class="price-label">RP</span> ₱<?=number_format($i->RP,2)?>   <br>
+                                <span class="price-label">RS </span> ₱<?=number_format($i->RS,2)?> <br>
+                                <span class="price-label">RB</span> ₱<?=number_format($i->RB,2)?>
+                            </div>
+                            <div class="font-weight-bold d-flex gap-3 mt-1">
+                                <span class="price-label">WP</span> ₱<?=number_format($i->WP,2)?>   <br>
+                                <span class="price-label">WS </span> ₱<?=number_format($i->WS,2)?> <br>
+                                <span class="price-label">WB</span> ₱<?=number_format($i->WB,2)?>
+                            </div> -->
+                            <!-- <button class="btn btn-add" 
                                     data-name="<?=$i->item_name?>" 
-                                    data-price="<?=$i->unit_price?>"
-                                    data-walkin="<?=$i->Walkin_price?>"
+                                    data-price="<?=$i->RP?>"
+                                    data-walkin="<?=$i->WP?>"
                                     data-wholesaler="<?=$i->Wholesale_price?>"
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
                                     <?=$i->current_stock == 0 ? 'disabled' : ''?>>
                                 <span class="fas fa-plus"></span>
-                            </button>
+                            </button> -->
                         </div>
                     </div>
                     <?php } ?>
@@ -176,7 +227,7 @@ $session = (object) get_userdata(USER);
                           <select name="" id="buyer_type" class="form-control form-control-sm"  style="width: 200px;" >
                                 <option value="WALKIN" selected>WALKIN</option>
                                 <option value="REGULAR">REGULAR</option>
-                                <option value="WHOLESALER">WHOLESALER</option>
+                                <!-- <option value="WHOLESALER">WHOLESALER</option> -->
                             </select>
                         </span>
                     </p>
@@ -467,7 +518,7 @@ function renderCart() {
 
     return `
       <div class="cart-item mb-3 pb-2 border-bottom" data-index="${i}" data-item_profile_id="${item.item_profile_id}">
-        <div><strong>${item.name}</strong></div>
+        <div><strong>${item.name2}</strong></div>
         <input type="text" hidden value="${item.item_profile_id}">
         <div class="d-flex justify-content-between align-items-center">
           <div>
@@ -553,6 +604,7 @@ document.querySelectorAll(".btn-add").forEach(btn => {
   btn.addEventListener("click", () => {
     let name = btn.dataset.name;
     let item_profile_id = btn.dataset.item_profile_id;
+    let name2 = btn.dataset.name2;
 
     // store all prices in the cart item
     let walkin = parseFloat(btn.dataset.walkin);
@@ -561,17 +613,20 @@ document.querySelectorAll(".btn-add").forEach(btn => {
 
     // decide active price based on buyer_type
     let b_type = $('#buyer_type').val();
-    let price = (b_type === "WALKIN") ? walkin 
-              : (b_type === "REGULAR") ? regular 
-              : wholesaler;
+    //let price = (b_type === "WALKIN") ? walkin 
+      //        : (b_type === "REGULAR") ? regular 
+        //      : wholesaler;
+    let price = regular;
 
-    let existing = cart.find(i => i.item_profile_id === item_profile_id);
+    // let existing = cart.find(i => i.item_profile_id === item_profile_id);
+    let existing = cart.find(i => i.name2 === name2);
     if (existing) {
       existing.qty++;
     } else {
       cart.push({ 
         item_profile_id, 
         name, 
+        name2,
         walkin, 
         regular, 
         wholesaler, 
@@ -622,7 +677,7 @@ $("#buyer_type").on("change", function () {
 </script>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    const itemsPerPage = 16;
+    const itemsPerPage = 8;
     const pagination = document.getElementById("pagination");
     let currentPage = 1;
     let searchValue = "";
@@ -691,5 +746,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Initialize
     showPage(1);
+});
+</script>
+
+<!-- For see more feature -->
+<script>
+document.querySelectorAll('.desc-text').forEach(p => {
+  const fullText = p.textContent.trim();
+  const limit = 50;
+
+  if (fullText.length > limit) {
+    const shortText = fullText.substring(0, limit) + '...';
+    p.innerHTML = `
+      <span class="short-text">${shortText}</span>
+      <span class="full-text d-none">${fullText}</span>
+      <button class="btn btn-link p-0 text-primary see-more" type="button">See more</button>
+    `;
+  }
+});
+
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('see-more')) {
+    const btn = e.target;
+    const parent = btn.closest('.desc-text');
+    parent.querySelector('.short-text').classList.toggle('d-none');
+    parent.querySelector('.full-text').classList.toggle('d-none');
+    btn.textContent = btn.textContent === 'See more' ? 'See less' : 'See more';
+  }
 });
 </script>
