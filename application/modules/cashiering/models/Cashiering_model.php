@@ -17,8 +17,12 @@ class Cashiering_model extends CI_Model
     {
         $this->db->select('
             i.*, 
-            ip.unit_price,
-            ip.Walkin_price,
+            ip.unit_price AS RP, 
+            ip.regular_stub AS RS, 
+            ip.regular_box AS RB, 
+            ip.Walkin_price AS WP,
+            ip.walkin_stub AS WS,
+            ip.walkin_box AS WB,
             ip.Wholesale_price,
             ip.id AS item_profile_id,
             u.unit_of_measure
