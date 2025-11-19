@@ -1,4 +1,4 @@
-<?php
+ <?php
 main_header(['inventory']);
 $session = (object) get_userdata(USER);
 
@@ -40,11 +40,11 @@ $session = (object) get_userdata(USER);
                 <div class="card">
                     <div class="card-body table-responsive table-smp-0" style="font-size: 12px;">
                         <div class="row">
-                            <div class="col-12 mb-2">
-                                <!-- <button type="button" class="btn btn-success" id="stock_in">Stock-In</button> -->
+                            <!-- <div class="col-12 mb-2">
+                                <button type="button" class="btn btn-success" id="stock_in">Stock-In</button>
                                 <button type="button" class="btn btn-success" id="stock_in_purchase">Purchase
                                     Order</button>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="row">
                             <div class="col-12">
@@ -55,7 +55,7 @@ $session = (object) get_userdata(USER);
                 </div>
             </div>
         </div>
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-lg-12 col-md-6 col-sm-12">
                 <div class="card">
                     <div class="card-header">
@@ -70,7 +70,7 @@ $session = (object) get_userdata(USER);
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </section>
 

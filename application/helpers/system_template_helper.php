@@ -79,24 +79,34 @@ $modules = [
   'management'       => base_url('management'),
   'user_management'  => base_url('management/user_management'),
   'reports'          => base_url('report'),
+  'purchase_order'   => base_url('purchase_order'),
+  'delivery'         => base_url('delivery'),
 ];
 
-// Build allowed URLs dynamically based on granted modules
-$allowedUrls = [];
+// Build allowed base URLs dynamically based on granted modules
+$allowedBases = [];
 foreach ($modules as $key => $url) {
   if (isset($access->$key) && (int)$access->$key === 1) {
-      $allowedUrls[] = $url;
+      $allowedBases[] = rtrim($url, '/'); // ensure no trailing slash
   }
 }
 
-// If current URL is not in allowed list → redirect to first allowed module
-if (!in_array($current, $allowedUrls)) {
-  if (!empty($allowedUrls)) {
-      redirect($allowedUrls[0]);
+// Check if current URL starts with any allowed base URL
+$hasAccess = false;
+foreach ($allowedBases as $baseUrl) {
+  if (strpos($current, $baseUrl) === 0) {
+      $hasAccess = true;
+      break;
+  }
+}
+
+// If not allowed, redirect or deny access
+if (!$hasAccess) {
+  if (!empty($allowedBases)) {
+      redirect($allowedBases[0]);
   } else {
-      // fallback: no access at all
       show_error('Access Denied: You do not have permission to view this page.', 403, 'Forbidden');
-      redirect(base_url() . 'login/authentication', 'refresh');
+      redirect(base_url('login/authentication'), 'refresh');
   }
   exit;
 }
@@ -319,6 +329,24 @@ function check_low_stocks() {
                         <span class="badge bg-danger ml-1">Low Stock Item(s)</span>
                       <?php endif; ?>
                       </p>
+                    </a>
+                  </li>
+                </ul>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="<?= base_url() ?>purchase_order"
+                      class="nav-link <?= (sidebar($menubar, ['purchase_order'])) ? 'active' : '' ?>">
+                      <i class="fa fa-store nav-icon"></i>
+                      <p>Purchase Order</p>
+                    </a>
+                  </li>
+                </ul>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="<?= base_url() ?>delivery"
+                      class="nav-link <?= (sidebar($menubar, ['delivery'])) ? 'active' : '' ?>">
+                      <i class="fa fa-envelope nav-icon"></i>
+                      <p>Delivery</p>
                     </a>
                   </li>
                 </ul>
