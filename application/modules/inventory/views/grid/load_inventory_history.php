@@ -21,7 +21,7 @@
                 <td><?= $value->supplier_name ?></td>
                 <td><?= $value->unit_of_measure=="box" ? intval($value->qty * $value->pcs) : $value->qty ?></td>
                 <td><?= $value->received_by ?></td>
-                <td><?= date('M d, Y h:i A', strtotime(@$value->date_approved)) ?></td>
+                <td><?= date('M d, Y h:i A', strtotime($value->date_approved)) ?></td>
 
             </tr>
             <?php
