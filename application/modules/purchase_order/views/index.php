@@ -31,7 +31,7 @@ $session = (object) get_userdata(USER);
 
 
 <div class="modal fade" id="modal-stock-in-purchase">
-    <div class="modal-dialog modal-lg" style="max-width: 1200px;">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Purchase Order</h3>
@@ -47,7 +47,7 @@ $session = (object) get_userdata(USER);
                     </div>
                     <div class="col-sm-4">
                         <label for="">Date Purchased:</label>
-                        <input type="date" id="date_in" class="form-control inpt">
+                        <input type="date" id="date_in" class="form-control inpt" value="<?= date('Y-m-d') ?>">
                     </div>
                     <div class="col-sm-4">
                         <label for="">Select Supplier:</label>
@@ -78,7 +78,7 @@ $session = (object) get_userdata(USER);
                             ?>
                         </select>
                     </div>
-                    <div class="col-sm-2">
+                    <!-- <div class="col-sm-2">
                         <div class="form-group w-100">
                             <label for="">Unit of Measure:</label>
                             <select class="form-control" style="width: 100%;" id="unit_id" disabled>
@@ -91,39 +91,40 @@ $session = (object) get_userdata(USER);
                                 ?>
                             </select>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-sm-2">
                         <label for="">Quantity:</label>
                         <input type="number" id="quantity_po" class="form-control inpt" placeholder="Enter quantity">
                     </div>
-                    <div class="col-sm-2">
+                    <!-- <div class="col-sm-2">
                         <label for="">Pcs:</label>
                         <input type="number" id="po-pcs" class="form-control inpt" placeholder="Enter pcs" disabled>
-                    </div>
+                    </div> -->
                     <div class="col-sm-2">
                         <label for="">Unit Price:</label>
                         <input type="number" id="unit_price" class="form-control inpt" placeholder="Enter Unit Price">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-5">
-                        <label for="">Item Description:</label>
-                        <input type="text" id="item_desc" class="form-control inpt" placeholder="Item Description">
-                    </div>
-                    <!-- <div class="col-sm-3">
-                        <label for="">Threshold:</label>
-                        <input type="number" id="threshold" class="form-control inpt" placeholder="Enter Threshold">
-                    </div> -->
-                    <div class="col-sm-4">
-                        <label for="">Date Expiry:</label>
-                        <input type="date" id="date_expiry" class="form-control inpt">
                     </div>
                     <div class="col-sm-4">
                         <label for="">Recieved By:</label>
                         <input type="text" id="recieved_by" class="form-control inpt" placeholder="User Full Name Here"
                             disabled value="<?= $session->LName . ", " . $session->FName ?>">
                     </div>
+                </div>
+
+                <div class="row">
+                    <!-- <div class="col-sm-5">
+                        <label for="">Item Description:</label>
+                        <input type="text" id="item_desc" class="form-control inpt" placeholder="Item Description">
+                    </div> -->
+                    <!-- <div class="col-sm-3">
+                        <label for="">Threshold:</label>
+                        <input type="number" id="threshold" class="form-control inpt" placeholder="Enter Threshold">
+                    </div> -->
+                    <!-- <div class="col-sm-4">
+                        <label for="">Date Expiry:</label>
+                        <input type="date" id="date_expiry" class="form-control inpt" value="<?= date('Y-m-d') ?>">
+                    </div> -->
+
 
                     <div class="col-sm-12 text-right mt-2">
                         <button type="button" class="btn btn-primary btn-sm" id="add_to_table">+ Add Item</button>
@@ -136,13 +137,13 @@ $session = (object) get_userdata(USER);
                 <table class="table table-bordered table-sm" id="order_table">
                     <thead>
                         <tr>
-                            <th>Unit</th>
+                            <!-- <th>Unit</th> -->
                             <th>Qty</th>
-                            <th>Pcs</th>
+                            <!-- <th>Pcs</th> -->
                             <th>Item</th>
                             <th>Unit Price</th>
-                            <th>Description</th>
-                            <th>Date Expiry</th>
+                            <!-- <th>Description</th> -->
+                            <!-- <th>Date Expiry</th> -->
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -202,19 +203,19 @@ $session = (object) get_userdata(USER);
                         </select>
                     </div>
                     <div class="col-sm-2">
-                        <div class="form-group w-100">
+                        <!-- <div class="form-group w-100">
                             <label for="">Unit of Measure:</label>
                             <select class="form-control" id="e-unit_id">
                                 <?php foreach ($units as $value): ?>
                                     <option value="<?= $value->id ?>"><?= $value->unit_of_measure ?></option>
                                 <?php endforeach; ?>
                             </select>
-                        </div>
+                        </div> -->
                     </div>
-                    <div class="col-sm-2">
+                    <!-- <div class="col-sm-2">
                         <label for="">Pcs:</label>
                         <input type="number" id="e-po-pcs" class="form-control inpt" placeholder="Enter pcs" disabled>
-                    </div>
+                    </div> -->
                     <div class="col-sm-3">
                         <label for="">Quantity:</label>
                         <input type="number" id="e-quantity_po" class="form-control inpt" placeholder="Enter quantity">
@@ -223,23 +224,23 @@ $session = (object) get_userdata(USER);
                         <label for="">Unit Price:</label>
                         <input type="number" id="e-unit_price" class="form-control inpt" placeholder="Enter Unit Price">
                     </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-5">
-                        <label for="">Item Description:</label>
-                        <input type="text" id="e-item_desc" class="form-control inpt" placeholder="Item Description">
-                    </div>
-                    <!-- <div class="col-sm-3">
-                        <label for="">Threshold:</label>
-                        <input type="number" id="e-threshold" class="form-control inpt" placeholder="Enter Threshold">
-                    </div> -->
                     <div class="col-sm-4">
                         <label for="">Recieved By:</label>
                         <input type="text" id="e-recieved_by" class="form-control inpt"
                             placeholder="User Full Name Here" disabled
                             value="<?= $session->LName . ", " . $session->FName ?>">
                     </div>
+                </div>
+
+                <div class="row">
+                    <!-- <div class="col-sm-5">
+                        <label for="">Item Description:</label>
+                        <input type="text" id="e-item_desc" class="form-control inpt" placeholder="Item Description">
+                    </div> -->
+                    <!-- <div class="col-sm-3">
+                        <label for="">Threshold:</label>
+                        <input type="number" id="e-threshold" class="form-control inpt" placeholder="Enter Threshold">
+                    </div> -->
 
                     <div class="col-sm-12 text-right mt-2">
                         <button type="button" class="btn btn-primary btn-sm" id="e-add_to_table">+ Add Item</button>
@@ -251,13 +252,13 @@ $session = (object) get_userdata(USER);
                 <table class="table table-bordered table-sm" id="e-order_table">
                     <thead>
                         <tr>
-                            <th>Unit</th>
+                            <!-- <th>Unit</th> -->
                             <th>Qty</th>
-                            <th>Pcs</th>
+                            <!-- <th>Pcs</th> -->
                             <th>Brand</th>
                             <th>Unit Price</th>
-                            <th>Description</th>
-                            <th>Date Expiry</th>
+                            <!-- <th>Description</th> -->
+                            <!-- <th>Date Expiry</th> -->
                             <!-- <th>Threshold</th> -->
                             <th>Action</th>
                         </tr>
@@ -280,4 +281,7 @@ $session = (object) get_userdata(USER);
 <?php
 main_footer();
 ?>
+<script>
+    
+</script>
 <script src="<?php echo base_url() ?>/assets/js/inventory/po.js"></script>
