@@ -238,6 +238,6 @@ public function update_po_with_items($data)
                          ->where('item_id', $itemID)
                          ->get()
                          ->row();
-        return $unit ? $unit->unit_name : null;
+        return $unit ? $unit->unit_id : null;
     }
 }

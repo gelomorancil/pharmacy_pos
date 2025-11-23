@@ -244,13 +244,9 @@ $("#add_to_table").on("click", function () {
     // Append to table
     let row = `
         <tr>
-            <td>${unit_text}</td>
-            <td>${qty}</td>
-            
+            <td>${qty}</td>            
             <td>${item_text}</td>
             <td>${unit_price}</td>
-            
-            
             <td><button class="btn btn-danger btn-sm remove-item">Remove</button></td>
         </tr>`;
     $("#order_table tbody").append(row);

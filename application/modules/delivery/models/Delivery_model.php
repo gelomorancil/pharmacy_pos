@@ -31,8 +31,8 @@ class Delivery_model extends CI_Model
 
     
     public function insert_delivery_header($data,$po_num) {
-        $this->db->update($this->Table->purchase_order, $data);
         $this->db->where('po_num', $po_num);
+        $this->db->update($this->Table->purchase_order, $data);
 
         $this->db->select('ID');
         $this->db->from($this->Table->purchase_order);
