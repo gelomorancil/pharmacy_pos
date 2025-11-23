@@ -75,7 +75,6 @@ class Inventory_services_model extends CI_Model
         if (!empty($emptyFields)) {
             throw new Exception(MISSING_DETAILS, true);
         }
-
         
         $this->db->trans_start();
         // Insert Purchase Order
@@ -88,7 +87,8 @@ class Inventory_services_model extends CI_Model
         }
 
         foreach($this->items as $val){
-
+            
+            $unitID = $this->get_unit($val['item_id']);
             // if( $val['pcs']!=null && $val['pcs'] > 0 ){
             // $itemRow = [
             //     'date_expiry' => $val['date_expiry'],
@@ -105,9 +105,9 @@ class Inventory_services_model extends CI_Model
                 // 'date_expiry' => $val['date_expiry'],
                 'item_ID'     => $val['item_id'],
                 'unit_price'  => $val['unit_price'],
-                // 'unit_ID'     => $val['unit_id'],
+                'unit_ID'     => $unitID,
                 // 'po_descr'   => $val['desc'],
-                // 'qty'   => $val['qty'],
+                'qty'   => $val['qty'],
                 'po_ID'    => $po_id,
             ];
             // }
@@ -173,6 +173,7 @@ public function update_po_with_items($data)
 
     // Insert new items
     foreach ($data['items'] as $val) {
+        $unitID = $this->get_unit($val['item_id']);
         // if( $val['pcs']!=null && $val['pcs'] > 0 ){
         //     $itemRow = [
                 // 'date_expiry' => $val['date_expiry'],
@@ -189,9 +190,9 @@ public function update_po_with_items($data)
                 // 'date_expiry' => $val['date_expiry'],
                 'item_ID'     => $val['item_id'],
                 'unit_price'  => $val['unit_price'],
-                // 'unit_ID'     => $val['unit_id'],
+                'unit_ID'     => $unitID,
                 // 'po_descr'   => $val['desc'],
-                // 'qty'   => $val['qty'],
+                'qty'   => $val['qty'],
                 'po_ID'    => $poID,
             ];
             // }
@@ -229,5 +230,14 @@ public function update_po_with_items($data)
             'message'   => SAVED_SUCCESSFUL,
             'has_error' => false,
         ];
+    }
+
+    public function get_unit($itemID){
+        $unit = $this->db->select('unit_id')
+                         ->from('tbl_item_profile')
+                         ->where('item_id', $itemID)
+                         ->get()
+                         ->row();
+        return $unit ? $unit->unit_name : null;
     }
 }

@@ -5,11 +5,17 @@ $session = (object) get_userdata(USER);
 // var_dump($session->FName);
 ?>
 
+<style>
+    #approve-delivery-modal .modal-dialog {
+    max-width: 80% !important;
+}
+</style>
+
 <div class="row">
     <div class="col-lg-12 col-md-6 col-sm-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="m-0">Purchase Order List</h1>
+                <h3 class="m-0">Delivery</h1>
             </div>
             <div class="card-body table-responsive table-smp-0" style="font-size: 12px;">
                 <div class="row">
@@ -26,7 +32,7 @@ $session = (object) get_userdata(USER);
     </div>
 </div>
 
-<div class="row">
+<!-- <div class="row">
     <div class="col-lg-12 col-md-6 col-sm-12">
         <div class="card">
             <div class="card-header">
@@ -45,7 +51,7 @@ $session = (object) get_userdata(USER);
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 
 <div class="modal fade" id="modal-stock-in-purchase">
@@ -143,7 +149,7 @@ $session = (object) get_userdata(USER);
                     </div>
                     <div class="col-sm-4">
                         <label for="">Date Purchased:</label>
-                        <input type="date" id="e-date_in" class="form-control inpt">
+                        <input type="date" id="e-date_in" class="form-control inpt" disabled>
                     </div>
                     <div class="col-sm-4">
                         <label for="">Supplier:</label>
@@ -174,15 +180,13 @@ $session = (object) get_userdata(USER);
                 <table class="table table-bordered table-sm" id="e-order_table">
                     <thead>
                         <tr>
-                            <th>Unit</th>
                             <th>Qty</th>
                             <th>Pcs</th>
-                            <th>Brand</th>
+                            <!-- <th>Brand</th>  -->
                             <th>Unit Price</th>
                             <th>Date Expiry</th>
-                            <th>Received Qty</th>
-                            <th>Received Pcs</th>
-                            <th>Damaged Pcs/Qty</th>
+                            <th>Recieved Qty</th>
+                            <th>Damaged Qty</th>
                             <th>Batch_Number</th>
                         </tr>
                     </thead>
