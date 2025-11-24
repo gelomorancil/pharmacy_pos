@@ -104,7 +104,7 @@ class Inventory_services_model extends CI_Model
             $itemRow = [
                 // 'date_expiry' => $val['date_expiry'],
                 'item_ID'     => $val['item_id'],
-                'unit_price'  => $val['unit_price'],
+                // 'unit_price'  => $val['unit_price'],
                 'unit_ID'     => $unitID,
                 // 'po_descr'   => $val['desc'],
                 'qty'   => $val['qty'],
