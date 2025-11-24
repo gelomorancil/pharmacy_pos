@@ -936,13 +936,15 @@ $('#saveRbacBtn').on('click', function (e) {
       $('#saveRbacBtn').prop('disabled', true).text('Saving...');
     },
     success: function (response) {
-      let response = (typeof response === 'object') ? response : JSON.parse(response);
-      if (response.success) {
+      let res = (typeof response === 'object') ? response : JSON.parse(response);
+
+      if (res.success) {
         alert('RBAC updated successfully!');
-        modifiedData = []; // Clear after save
+        modifiedData = [];
       } else {
-        alert('Error: ' + response.message);
+        alert('Error: ' + res.message);
       }
+
     },
     error: function (xhr, status, error) {
       console.error('AJAX Error:', error);
