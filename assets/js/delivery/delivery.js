@@ -59,7 +59,10 @@ var approve_delivery = (btn) => {
                             <tr>
                                 <td>${row.qty ?? ''}</td>
                                 <td data-item-id="${row.po_item_id}">${row.item_name ?? ''}</td>
-                                <td>${row.unit_price ?? ''}</td>
+                                 <td>
+                                    <input type="number" class="form-control form-control-xs unit-price" 
+                                        min="0" value="0">
+                                </td>
                                 <td>
                                     <input type="date" class="form-control form-control-sm item-expiry"
                                         value="${row.date_expiry ? row.date_expiry.split(' ')[0] : ''}">
@@ -101,7 +104,8 @@ $('#approve-delivery').click(function () {
             qty: $tr.find('td').eq(1).text().trim(),
             item_id: $tr.find('td[data-item-id]').data('item-id') || null,
             item_name: $tr.find('td[data-item-id]').text().trim(),
-            unit_price: $tr.find('td').eq(4).text().trim(),
+            // unit_price: $tr.find('td').eq(4).text().trim(),
+            unit_price: $tr.find('.unit-price').val() || 0,
             date_expiry: $tr.find('td').eq(5).text().trim(),
             received_qty: $tr.find('.received-qty').val() || 0,
             // received_pcs: $tr.find('.received-pcs').val() || 0,

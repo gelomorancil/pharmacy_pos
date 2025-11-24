@@ -100,10 +100,10 @@ $session = (object) get_userdata(USER);
                         <label for="">Pcs:</label>
                         <input type="number" id="po-pcs" class="form-control inpt" placeholder="Enter pcs" disabled>
                     </div> -->
-                    <div class="col-sm-2">
+                    <!-- <div class="col-sm-2">
                         <label for="">Unit Price:</label>
                         <input type="number" id="unit_price" class="form-control inpt" placeholder="Enter Unit Price">
-                    </div>
+                    </div> -->
                     <div class="col-sm-4">
                         <label for="">Recieved By:</label>
                         <input type="text" id="recieved_by" class="form-control inpt" placeholder="User Full Name Here"
@@ -141,7 +141,7 @@ $session = (object) get_userdata(USER);
                             <th>Qty</th>
                             <!-- <th>Pcs</th> -->
                             <th>Item</th>
-                            <th>Unit Price</th>
+                            <!-- <th>Unit Price</th> -->
                             <!-- <th>Description</th> -->
                             <!-- <th>Date Expiry</th> -->
                             <th>Action</th>
@@ -220,10 +220,10 @@ $session = (object) get_userdata(USER);
                         <label for="">Quantity:</label>
                         <input type="number" id="e-quantity_po" class="form-control inpt" placeholder="Enter quantity">
                     </div>
-                    <div class="col-sm-3">
+                    <!-- <div class="col-sm-3">
                         <label for="">Unit Price:</label>
                         <input type="number" id="e-unit_price" class="form-control inpt" placeholder="Enter Unit Price">
-                    </div>
+                    </div> -->
                     <div class="col-sm-4">
                         <label for="">Recieved By:</label>
                         <input type="text" id="e-recieved_by" class="form-control inpt"

@@ -79,6 +79,7 @@ class Delivery extends MY_Controller
 				//   'received_pcs'  => $item['received_pcs'],
 				  'damaged_pcs'   => $item['damaged_pcs'],
 				  'batch_no'  => $item['batch_number'],
+				  'unit_price'  => $item['unit_price'],
 			  ];
   
 			  $this->dModel->update_po_item($item_data);

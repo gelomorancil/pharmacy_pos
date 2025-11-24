@@ -184,7 +184,6 @@ var edit_po = (btn) => {
                                 <td>${row.qty ?? ''}</td>
                                 
                                 <td data-item-id="${row.po_item_id}">${row.item_name ?? ''}</td>
-                                <td>${row.unit_price ?? ''}</td>
                                 
                                 
 
@@ -207,15 +206,16 @@ $("#add_to_table").on("click", function () {
     let qty = $("#quantity_po").val();
     let item_id = $("#item").val();
     let item_text = $("#item option:selected").text();
-    let unit_price = $("#unit_price").val();
+    // let unit_price = $("#unit_price").val();
     // let desc = $("#item_desc").val();
     // let date_expiry = $("#date_expiry").val();
     // let pcs = $("#po-pcs").val();
     // let threshold = $("#threshold").val();
 
-    console.log(qty, item_id, unit_price);
-    if (!qty || !item_id || !unit_price) {
-        alert("Quantity, Item, and Unit Price are required!");
+    // console.log(qty, item_id, unit_price);
+    // if (!qty || !item_id || !unit_price) {
+    if (!qty || !item_id) {
+        alert("Quantity and Item are required!");
         return;
     }
 
@@ -226,7 +226,7 @@ $("#add_to_table").on("click", function () {
         qty,
         item_id,
         item_text,
-        unit_price,
+        // unit_price,
         // desc,
         // date_expiry,
         // pcs
@@ -246,14 +246,13 @@ $("#add_to_table").on("click", function () {
         <tr>
             <td>${qty}</td>            
             <td>${item_text}</td>
-            <td>${unit_price}</td>
             <td><button class="btn btn-danger btn-sm remove-item">Remove</button></td>
         </tr>`;
     $("#order_table tbody").append(row);
 
     // Clear fields after add <td>${desc}</td>
     $("#quantity").val("");
-    $("#unit_price").val("");
+    // $("#unit_price").val("");
     // $("#item_desc").val("");
     // $("#threshold").val("");
     // $("#branded_flag").prop("checked", false);
