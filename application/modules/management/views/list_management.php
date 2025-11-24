@@ -27,6 +27,8 @@ main_header(['list_management']);
 
 <section class="content">
     <div class="container-fluid">
+        
+        <!-- Unit -->
         <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-12">
                 <div class="card card-purple">
@@ -138,6 +140,13 @@ main_header(['list_management']);
                                 </div>
 
                             </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <label for="">Expiration Date:</label>
+                                    <input type="date" id="item_expiry_date" class="form-control inpt">
+                                </div>
+
+                            </div>
                         </div>
                         <div class="card-footer">
                             <button type="button" class="btn btn-primary" id="save_item">Submit</button>
@@ -172,6 +181,7 @@ main_header(['list_management']);
                                                 <th>Item Name</th>
                                                 <th>Item Code</th>
                                                 <th>Status</th>
+                                                <th>Expiration Date</th>
                                             </tr>
                                         </thead>
                                         <tbody id="load_items">
@@ -185,7 +195,7 @@ main_header(['list_management']);
                 </div>
             </div>
         </div>
-
+        <!-- Supploer -->
         <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-12">
                 <div class="card card-success">

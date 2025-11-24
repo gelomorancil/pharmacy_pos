@@ -6,10 +6,12 @@ if (!empty($monthly)) {
             <td>
                 <div data-sales="<?= $value->total ?>"></div>
                 <div data-expenses=""></div>
-                <div data-profit=""></div>
+                <div data-profit="<?=$value->total - 0?>"></div>
                 <?= date('F', strtotime($value->month_year)) ?>
             </td>
             <td>&#8369 <?= number_format($value->total, 2) ?></td>
+            <td></td>
+            <td>&#8369 <?=number_format($value->total - 0,2)?></td>
         </tr>
     <?php }
 } else {

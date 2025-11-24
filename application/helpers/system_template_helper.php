@@ -12,41 +12,128 @@ function main_header($menubar = [])
     exit();
   }
 
-  // User Restriction By URL Route (MAXIMUM SECURITY)
-  $allowedUrls = [
-    3 => [
-      base_url() . 'cashiering',
-      base_url() . 'dashboard',
-      base_url() . 'inventory',
-      base_url() . 'report'
-    ],
-    2 => [
-      base_url() . 'cashiering',
-      base_url() . 'inventory'
-    ],
-    1 => [
-      base_url() . 'cashiering',
-      base_url() . 'inventory',
-      base_url() . 'dashboard',
-      base_url() . 'item_profiling',
-      base_url() . 'management',
-      base_url() . 'management/user_management',
-      base_url() . 'report'
-    ]
-  ];
+  // // User Restriction By URL Route (MAXIMUM SECURITY)
+  // $allowedUrls = [
+  //   3 => [
+  //     base_url() . 'cashiering',
+  //     base_url() . 'dashboard',
+  //     base_url() . 'inventory',
+  //     base_url() . 'quotation',
+  //     base_url() . 'report',
+  //     base_url() . 'expense',
+  //   ],
+  //   2 => [
+  //     base_url() . 'quotation',
+  //     base_url() . 'cashiering',
+  //     base_url() . 'inventory'
+  //   ],
+  //   1 => [
+  //     base_url() . 'expense',
+  //     base_url() . 'quotation',
+  //     base_url() . 'cashiering',
+  //     base_url() . 'inventory',
+  //     base_url() . 'dashboard',
+  //     base_url() . 'item_profiling',
+  //     base_url() . 'management',
+  //     base_url() . 'management/user_management',
+  //     base_url() . 'report'
+  //   ]
+  // ];
 
   $userRoleId = $session->Role_ID;
 
-  if (isset($allowedUrls[$userRoleId])) {
-    $currentUrl = current_url();
 
-    if (!in_array($currentUrl, $allowedUrls[$userRoleId])) {
-      $redirectUrl = $allowedUrls[$userRoleId][array_rand($allowedUrls[$userRoleId])];
+  // if (isset($allowedUrls[$userRoleId])) {
+  //   $currentUrl = current_url();
 
-      redirect($redirectUrl);
-      exit;
-    }
+  //   if (!in_array($currentUrl, $allowedUrls[$userRoleId])) {
+  //     $redirectUrl = $allowedUrls[$userRoleId][array_rand($allowedUrls[$userRoleId])];
+
+  //     redirect($redirectUrl);
+  //     exit;
+  //   }
+  // }
+
+// ============================
+// User Restriction By Access Control
+// ============================
+
+// Helper function
+function get_user_access($userID) {
+  $CI =& get_instance();
+  $CI->load->model('management/Management_model');
+  return $CI->Management_model->get_access($userID);
+}
+
+$userID  = $session->ID;
+$access  = get_user_access($userID);
+$current = current_url();
+
+// Define mapping between access columns and routes
+$modules = [
+  'dashboard'        => base_url('dashboard'),
+  'cashiering'       => base_url('cashiering'),
+  'quotation'        => base_url('quotation'),
+  'inventory'        => base_url('inventory'),
+  'item_profile'     => base_url('item_profiling'),
+  'management'       => base_url('management'),
+  'user_management'  => base_url('management/user_management'),
+  'reports'          => base_url('report'),
+  'purchase_order'   => base_url('purchase_order'),
+  'delivery'         => base_url('delivery'),
+  'top_buyers'         => base_url('top_buyers'),
+  'top_items'         => base_url('top_items'),
+  'purchase_order'         => base_url('purchase_order'),
+  'expense'         => base_url('expense'),
+];
+
+// Build allowed base URLs dynamically based on granted modules
+$allowedBases = [];
+foreach ($modules as $key => $url) {
+  if (isset($access->$key) && (int)$access->$key === 1) {
+      $allowedBases[] = rtrim($url, '/'); // ensure no trailing slash
   }
+}
+
+// Check if current URL starts with any allowed base URL
+$hasAccess = false;
+foreach ($allowedBases as $baseUrl) {
+  if (strpos($current, $baseUrl) === 0) {
+      $hasAccess = true;
+      break;
+  }
+}
+
+// If not allowed, redirect or deny access
+if (!$hasAccess) {
+  if (!empty($allowedBases)) {
+      redirect($allowedBases[0]);
+  } else {
+      show_error('Access Denied: You do not have permission to view this page.', 403, 'Forbidden');
+      redirect(base_url('login/authentication'), 'refresh');
+  }
+  exit;
+}
+
+  function expiry_flag_status() {
+    $CI =& get_instance();
+    $CI->load->model('management/Management_model');
+    return $CI->Management_model->check_nearly_expired_stocks();
+  }
+
+function get_image() {
+    $CI =& get_instance();
+    $CI->load->model('user_profile/User_profile_model');
+    
+    return $CI->User_profile_model->get_image();
+}
+
+function check_low_stocks() {
+  $CI =& get_instance();
+  $CI->load->model('inventory/Inventory_model');
+  
+  return $CI->Inventory_model->check_low_stocks();
+}
 
   ?>
   <!DOCTYPE html>
@@ -58,7 +145,7 @@ function main_header($menubar = [])
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= SYSTEM_MODULE ?></title>
-    <link rel="icon" href="<?= base_url() ?>assets/images/Logo/payment.png" type="image/x-icon">
+    <link rel="icon" href="<?= base_url() ?>assets/images/Logo/zana-logo-green-bg.png" type="image/x-icon">
 
     <!-- Google Font: Source Sans Pro -->
     <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"> -->
@@ -97,6 +184,33 @@ function main_header($menubar = [])
     <!-- Added Confirmation Jquery Modal Type -->
     <link rel="stylesheet" href="<?= base_url() ?>assets/theme/jquery-confirm/dist/jquery-confirm.min.css">
 
+    <style>
+      .nav-link.active {
+        background: #023C43 !important;
+        color: #fff;
+      }
+      .nav-link {
+        color: #fff !important;
+      }
+      .nav-link:hover {
+        background: #0000000b !important;
+      }
+      .new-color{
+        background: #035863;
+        color: white;
+      }
+      /* For Chrome, Safari, Edge, Opera */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* For Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
   </head>
 
   <body class="hold-transition light-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
@@ -109,35 +223,47 @@ function main_header($menubar = [])
       </div> -->
 
       <!-- Navbar -->
-      <nav class="main-header navbar navbar-expand navbar-dark">
+      <nav class="main-header navbar navbar-expand ">
         <!-- Left navbar links -->
-        <ul class="navbar-nav">
+        <ul class="navbar-nav new-color">
           <li class="nav-item">
             <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
           </li>
         </ul>
 
         <!-- Right navbar links -->
-        <ul class="navbar-nav ml-auto">
-          <!-- <li class="nav-item">
-            <h5 class="text-white"><b><?= date('M d, Y - h:i A'); ?></b></h5>
-          </li> -->
-          <li class="nav-item">
-            <a class="nav-link" id="signout" role="button">
-              <i class="fas fa-power-off"></i>
-            </a>
+       <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button"
+              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+              <!-- Replace icon with image -->
+              <img id="profileImage"
+                class="rounded-circle"
+                src="<?= !empty(get_image()) ? base_url().'/assets/images/Users/'.get_image() : base_url().'/assets/images/Users/default-avatar.avif' ?>"
+                alt="User profile picture"
+                style="width: 35px; height: 35px; object-fit: cover;">
+    </a>
+
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                 <a class="dropdown-item" href="<?=base_url()?>/user_profile">  <?= $session->Username ?></a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" id="signout" role="button">Logout</a>
+            </div>
           </li>
         </ul>
+
       </nav>
       <!-- /.navbar -->
 
       <!-- Main Sidebar Container -->
-      <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <aside class="main-sidebar elevation-4 new-color">
+      <!-- <aside class="main-sidebar sidebar-dark-primary elevation-4"> -->
         <!-- Brand Logo -->
-        <a href="index3.html" class="brand-link">
-          <img src="<?= base_url() ?>assets/images/Logo/payment.png" alt="AdminLTE Logo"
-            class="brand-image img-circle" style="opacity: .8">
-          <span class="brand-text font-weight-light"><?= SYSTEM_MODULE ?></span>
+        <a href="<?= base_url() ?>dashboard" class="brand-link">
+          <img src="<?= base_url() ?>assets/images/Logo/logo-alone.png" alt="AdminLTE Logo"
+            class="brand-image img-circle" style="opacity:1">
+          <span class="brand-text font-weight-light" style="color: #fff"><?= SYSTEM_MODULE ?></span>
         </a>
 
         <!-- Sidebar -->
@@ -148,13 +274,14 @@ function main_header($menubar = [])
           <img src="<?= base_url() ?>assets/theme/adminlte/adminLTE/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div> -->
             <div class="info text-wrap">
+              <!-- <?= '<b>' . ucfirst($session->Role) . ":</b> " . ucfirst($session->FName) . " " . ucfirst($session->LName) ?> -->
               <a href="<?= base_url() ?>/user_profile/index/<?= $session->U_ID ?>"
-                class="d-block"><?= '<b>' . ucfirst($session->Role) . ":</b> " . ucfirst($session->FName) . " " . ucfirst($session->LName) ?></a>
+                style="color: #fff" class="d-block"><?= '<b>' . ucfirst($session->Role) . ":</b> " . ucfirst($session->FName) . " " . ucfirst($session->LName) ?></a>
             </div>
           </div>
           <!-- <button class="btn btn-sm btn-flat btn-primary" id="change" value="Cebu">Change</button> -->
           <!-- SidebarSearch Form -->
-          <div class="form-inline">
+          <!-- <div class="form-inline">
             <div class="input-group" data-widget="sidebar-search">
               <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
               <div class="input-group-append">
@@ -163,7 +290,7 @@ function main_header($menubar = [])
                 </button>
               </div>
             </div>
-          </div>
+          </div> -->
 
           <!-- Sidebar Menu -->
           <nav class="mt-2">
@@ -201,15 +328,67 @@ function main_header($menubar = [])
                     <a href="<?= base_url() ?>inventory"
                       class="nav-link <?= (sidebar($menubar, ['inventory'])) ? 'active' : '' ?>">
                       <i class="fa fa-box nav-icon"></i>
-                      <p>Inventory</p>
+                      <p>Inventory
+                      <?php if (check_low_stocks() === true): ?>
+                        <span class="badge bg-danger ml-1">Low Stock Item(s)</span>
+                      <?php endif; ?>
+                      </p>
+                    </a>
+                  </li>
+                </ul>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="<?= base_url() ?>purchase_order"
+                      class="nav-link <?= (sidebar($menubar, ['purchase_order'])) ? 'active' : '' ?>">
+                      <i class="fa fa-store nav-icon"></i>
+                      <p>Purchase Order</p>
+                    </a>
+                  </li>
+                </ul>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="<?= base_url() ?>delivery"
+                      class="nav-link <?= (sidebar($menubar, ['delivery'])) ? 'active' : '' ?>">
+                      <i class="fa fa-envelope nav-icon"></i>
+                      <p>Delivery</p>
+                    </a>
+                  </li>
+                </ul>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="<?= base_url() ?>expense"
+                      class="nav-link <?= (sidebar($menubar, ['expense'])) ? 'active' : '' ?>">
+                      <i class="fa fa-box nav-icon"></i>
+                      <p>Expense</p>
+                    </a>
+                  </li>
+                </ul>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="<?= base_url() ?>quotation"
+                      class="nav-link <?= (sidebar($menubar, ['quotation'])) ? 'active' : '' ?>">
+                      <i class="fa fa-book nav-icon"></i>
+                      <p>Quotation</p>
+                    </a>
+                  </li>
+                </ul>
+                 <ul class="nav nav-treeview">
+                   <li class="nav-item">
+                    <a href="<?= base_url() ?>management"
+                      class="nav-link <?= (sidebar($menubar, ['list_management'])) ? 'active' : '' ?>">
+                      <i class="fas fa-list nav-icon"></i>
+                      <p>Management</p>
+                      <!-- <?php
+                      // if (expiry_flag_status()): ?> -->
+                        <!-- <span style="display:inline-block; width:8px; height:8px; background:red; border-radius:50%; margin-left:5px;"></span> -->
+                      <?php 
+                    //endif; ?>
                     </a>
                   </li>
                 </ul>
               </li>
-              <li class="nav-item menu-open" style="display: <?= $userRoleId == 1 ? '' : 'none' ?>">
+              <!-- <li class="nav-item menu-open" style="display: <?= $userRoleId == 1 ? '' : 'none' ?>">
                 <a href="#" class="nav-link">
-                  <!-- <i class="nav-icon fas fa-cog"></i> -->
-
                   <p>
                     Management
                     <i class="right fas fa-angle-left"></i>
@@ -235,6 +414,31 @@ function main_header($menubar = [])
                       class="nav-link <?= (sidebar($menubar, ['user_management'])) ? 'active' : '' ?>">
                       <i class="fas fa-user nav-icon"></i>
                       <p>User Management</p>
+                    </a>
+                  </li>
+                </ul>
+              </li> -->
+              <li class="nav-item menu-open" style="display: <?= $userRoleId == 1 || $userRoleId == 3 ? '' : 'none' ?>">
+                <a href="#" class="nav-link">
+                  <!-- <i class="nav-icon fas fa-file"></i> -->
+                  <p>
+                    Rankings
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="<?= base_url() ?>top_buyers"
+                      class="nav-link <?= (sidebar($menubar, ['top_buyers'])) ? 'active' : '' ?>">
+                      <i class="fas fa-chart-line nav-icon"></i>
+                      <p>Top Buyers</p>
+                    </a>
+                  </li>
+                   <li class="nav-item">
+                    <a href="<?= base_url() ?>top_items"
+                      class="nav-link <?= (sidebar($menubar, ['top_items'])) ? 'active' : '' ?>">
+                      <i class="fas fa-chart-line nav-icon"></i>
+                      <p>Top Items</p>
                     </a>
                   </li>
                 </ul>
@@ -426,7 +630,14 @@ function main_footer()
       var base_url = <?php echo json_encode(base_url()) ?>;
 
       $('#signout').on('click', function () {
-        window.location = base_url + "login/authentication";
+        // window.location = base_url + "login/authentication";
+            $.ajax({
+              url: base_url + "login/authentication",
+              type: "POST",
+              success: function () {
+                  window.location = base_url; // redirect anywhere you want
+              }
+          });
       })
 
       $(function () {
@@ -504,6 +715,51 @@ function main_footer()
         "responsive": true,
       });
     });
+
+$(function () {
+  $(".datatable").each(function () {
+    let table = $(this);
+
+    // prevent reinit
+    if ($.fn.DataTable.isDataTable(table)) {
+      table.DataTable().destroy();
+    }
+
+    let dt = table.DataTable({
+      destroy: true, // allows safe reinit
+      paging: true,
+      lengthChange: false,
+      searching: true,
+      ordering: true,
+      info: true,
+      autoWidth: false,
+      responsive: true,
+     buttons: [
+  {
+    extend: 'excelHtml5',
+    text: '<i class="fas fa-file-excel"></i> Excel',
+    className: 'btn btn-success btn-sm mr-1'
+  },
+  {
+    extend: 'pdfHtml5',
+    text: '<i class="fas fa-file-pdf"></i> PDF',
+    className: 'btn btn-danger btn-sm mr-1'
+  },
+  {
+    extend: 'print',
+    text: '<i class="fas fa-print"></i> Print',
+    className: 'btn btn-primary btn-sm'
+  }
+]
+    });
+
+    // move buttons after init
+    dt.buttons().container()
+      .appendTo(table.closest('.dataTables_wrapper').find('.col-md-6:eq(0)'));
+  });
+});
+
+
 
     $(function () {
       /* ChartJS

@@ -31,14 +31,14 @@ class Login_model extends CI_Model
                 throw new Exception(DISABLED_ACCOUNT, true);
             }
             
-            if(empty($query->Branch)){
-                $userAgent = $_SERVER['HTTP_USER_AGENT'];
+            // if(empty($query->Branch)){
+            //     $userAgent = $_SERVER['HTTP_USER_AGENT'];
 
-                if (strpos($userAgent, 'Mobile') !== false || strpos($userAgent, 'Android') !== false || strpos($userAgent, 'iPhone') !== false || strpos($userAgent, 'Tablet') !== false || strpos($userAgent, 'iPad') !== false) {
-                    // It's a mobile device
-                    throw new Exception(MOBILE_DEVICE);
-                } 
-            }
+            //     if (strpos($userAgent, 'Mobile') !== false || strpos($userAgent, 'Android') !== false || strpos($userAgent, 'iPhone') !== false || strpos($userAgent, 'Tablet') !== false || strpos($userAgent, 'iPad') !== false) {
+            //         // It's a mobile device
+            //         throw new Exception(MOBILE_DEVICE);
+            //     } 
+            // }
 
             if(empty($query)){
                 throw new Exception(NO_ACCOUNT, true);

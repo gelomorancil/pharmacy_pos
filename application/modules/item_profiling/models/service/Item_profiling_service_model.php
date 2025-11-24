@@ -20,9 +20,11 @@ class Item_profiling_service_model extends CI_Model
     {
         try {
             $data = array(
-                'item_id' => $this->item_id,
-                'unit_id' => $this->unit_id,
+                // 'item_id' => $this->item_id,
+                // 'unit_id' => $this->unit_id,
                 'unit_price' => $this->unit_price,
+                'Walkin_price' => $this->walkin_price,
+                'Wholesale_price' => $this->wholesale_price,
                 'threshold' => $this->threshold,
             );
             $emptyFields = array_filter($data, function ($value) {
@@ -56,24 +58,30 @@ class Item_profiling_service_model extends CI_Model
     {
         try {
             $data = array(
-                'item_id' => $this->item_id,
-                'unit_id' => $this->unit_id,
+                // 'item_id' => $this->item_id,
+                // 'unit_id' => $this->unit_id,
                 'unit_price' => $this->unit_price,
                 'threshold' => $this->threshold,
+                'Walkin_price' => $this->walkin_price,
+                'regular_stub' => $this->regular_stub_price,
+                'regular_box' => $this->regular_box_price,
+                'walkin_stub' => $this->walkin_stub_price,
+                'walkin_box' => $this->walkin_box_price,
+                // 'Wholesale_price' => $this->wholesale_price,
             );
-            $emptyFields = array_filter($data, function ($value) {
-                // Only check for null or empty string, not other falsy values like '0' or 0
-                return $value === null || $value === '';
-            });
+            // $emptyFields = array_filter($data, function ($value) {
+            //     // Only check for null or empty string, not other falsy values like '0' or 0
+            //     return $value === null || $value === '';
+            // });
 
-            if (!empty($emptyFields)) {
-                throw new Exception(MISSING_DETAILS, true);
-            }
+            // if (!empty($emptyFields)) {
+            //     throw new Exception(MISSING_DETAILS, true);
+            // }
 
 
             $this->db->trans_start();
             
-            $this->db->where('id', $this->id);
+            $this->db->where('item_id', $this->id);
             $this->db->update($this->Table->item_profile, $data);
 
             $this->db->trans_complete();

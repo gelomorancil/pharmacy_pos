@@ -74,12 +74,35 @@ $active_group = 'default';
 $query_builder = TRUE;
 
 // For Local
+$db['default'] = array(
+	'dsn' => '',
+	'hostname' => '127.0.0.1',
+	'username' => 'root',
+	'password' => '',
+	'database' => 'pharmacy_pos',
+	'dbdriver' => 'mysqli',
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => (ENVIRONMENT !== 'production'),
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_general_ci',
+	'swap_pre' => '',
+	'encrypt' => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => TRUE
+);
+
+// For itsmegelo.com DB
 // $db['default'] = array(
 // 	'dsn' => '',
-// 	'hostname' => '127.0.0.1',
-// 	'username' => 'root',
-// 	'password' => '',
-// 	'database' => 'custom_pos_db',
+// 	'hostname' => 'itsmegelo.com',
+// 	'username' => 'u304487904_pos',
+// 	'password' => 'm?^CXw7Q$',
+// 	'database' => 'u304487904_pos',
 // 	'dbdriver' => 'mysqli',
 // 	'dbprefix' => '',
 // 	'pconnect' => FALSE,
@@ -96,25 +119,25 @@ $query_builder = TRUE;
 // 	'save_queries' => TRUE
 // );
 
-// For Deployment
-$db['default'] = array(
-	'dsn' => '',
-	'hostname' => 'itsmegelo.com',
-	'username' => 'u304487904_pos',
-	'password' => 'm?^CXw7Q$',
-	'database' => 'u304487904_pos',
-	'dbdriver' => 'mysqli',
-	'dbprefix' => '',
-	'pconnect' => FALSE,
-	'db_debug' => (ENVIRONMENT !== 'production'),
-	'cache_on' => FALSE,
-	'cachedir' => '',
-	'char_set' => 'utf8',
-	'dbcollat' => 'utf8_general_ci',
-	'swap_pre' => '',
-	'encrypt' => FALSE,
-	'compress' => FALSE,
-	'stricton' => FALSE,
-	'failover' => array(),
-	'save_queries' => TRUE
-);
+// For zanna.itsmegelo.com DB
+// $db['default'] = array(
+// 	'dsn' => '',
+// 	'hostname' => '127.0.0.1',
+// 	'username' => 'u304487904_zanna',
+// 	'password' => 'MCVxgQ1@?6Vq',
+// 	'database' => 'u304487904_zanna',
+// 	'dbdriver' => 'mysqli',
+// 	'dbprefix' => '',
+// 	'pconnect' => FALSE,
+// 	'db_debug' => (ENVIRONMENT !== 'production'),
+// 	'cache_on' => FALSE,
+// 	'cachedir' => '',
+// 	'char_set' => 'utf8',
+// 	'dbcollat' => 'utf8_general_ci',
+// 	'swap_pre' => '',
+// 	'encrypt' => FALSE,
+// 	'compress' => FALSE,
+// 	'stricton' => FALSE,
+// 	'failover' => array(),
+// 	'save_queries' => TRUE
+// );

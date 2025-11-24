@@ -31,6 +31,7 @@ define('VERIFIED', 'Online Payment has been Verified');
 define('CANCELLED', 'Order has been Cancelled');
 define('VOID_EXP', 'Expense has been Voided');
 define('MOBILE_DEVICE', 'You are not permitted to login in any mobile devices.');
+define('DUPLICATE_ITEM_FOUND', 'Duplicated Item name found in the system, please try again.');
 
 /** user messages */
 define('DEFAULT_PASSWORD', 'Do not use the default password. Please create new password.');
@@ -42,16 +43,17 @@ define('DEFAULT_LOGIN_PASSWORD', 'password1234*');
 define('CHAR_SET', 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$11<>?!@#$%^&*()~\/.');
 define('USER', '');
 define('SAMPLE', '');
-define('SYSTEM_NAME', 'POS');
+define('SYSTEM_NAME', 'ZANNA POS');
 define('SYSTEM_ALT', '');
 define('FOOTER_NAME', '');
 define('FOOTER_YEAR', '');
-define('SYSTEM_MODULE', 'POS');
+define('SYSTEM_MODULE', 'ZANNA POS');
 define('MB', 1048576);
 $array = array(
     'items' => 'tbl_items',
     'user' => 'tbl_user',
     'inventory' => 'tbl_inventory',
+    'expenses' => 'tbl_expenses',
 
     'role' => 'tbl_user_role',
     'supplier' => 'tbl_supplier',
@@ -61,7 +63,12 @@ $array = array(
     'payment_parent' => 'tbl_payment_parent',
     'payment_child' => 'tbl_payment_child',
     'proof' => 'tbl_proof',
-
+    'client_list' => 'tbl_client_list',
+    'purchase_order' => 'tbl_purchase_order',
+    'purchase_order_items' => 'tbl_purchase_order_items',
+    'buyers' => 'tbl_buyers',
+    'u_image' => 'tbl_user_image',
+    'user_access' => 'tbl_user_access',
 
 
 );

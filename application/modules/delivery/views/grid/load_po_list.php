@@ -1,0 +1,46 @@
+<table id="example10" class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th style="width:15%;">Purchase Order</th>
+            <th style="width:25%;">Date Added</th>
+            <th style="width:25%;">Supplier</th>
+            <th style="width:15%;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        $prevCat = '';
+        foreach ($purchase_order as $key => $value) {
+            ?>
+            <tr>
+
+                <td class="text-center" style="color: red; font-weight: bolder;">PO-<?= $value->po_num ?></td>
+                <td class="text-center"><?=  date('Y-m-d',strtotime(@$value->date_added ))?></td>
+                <td class="text-center"><?= @$value->supplier_name??"<span style='color:red;font-weight:bold;'>UPDATE TO ADD SUPPLIER</span>"?></td>
+                <td class="text-center">
+
+                    <!-- Approve Button -->
+                    <button type="button" 
+                            class="btn btn-sm btn-success" 
+                            data-PO="<?= $value->po_num ?>" 
+                            onclick="approve_delivery(this)">
+                        <i class="fa fa-check"></i> Approve Delivery
+                    </button>
+                </td>
+
+            </tr>
+            <?php
+        }
+        ?>
+    </tbody>
+</table>
+
+<script>
+    $("#example10").DataTable({
+        // "responsive": false,
+        "lengthChange": false,
+        // "autoWidth": false,
+        // "buttons": ["copy", "csv", "excel", "pdf", "print"],
+        "pageLength": 15,
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+</script>

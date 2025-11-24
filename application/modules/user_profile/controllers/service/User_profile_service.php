@@ -4,11 +4,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class User_profile_service extends MY_Controller
 {
 	private $data = [];
-	protected $session;
+	protected $userSession;
 	public function __construct()
 	{
 		parent::__construct();
-		$this->session = (object)get_userdata(USER);
+		 $this->userSession = (object)get_userdata(USER);
+
 
 		// if(is_empty_object($this->session)){
 		// 	redirect(base_url().'login/authentication', 'refresh');
@@ -34,6 +35,27 @@ class User_profile_service extends MY_Controller
 		$this->upsModel->new = $this->input->post("new");
 		$this->upsModel->r_new = $this->input->post("r_new");
 		$response = $this->upsModel->change_pass();
+		echo json_encode($response);
+	}
+
+	public function update_profile_image()
+	{
+		$response = $this->upsModel->update_profile_image();
+
+		if (!$response['has_error']) {
+			// Remove old profile image session
+			$this->session->unset_userdata('Image');
+
+			// Set new profile image
+			$this->session->set_userdata('Image', $response['new_image']);
+
+			// Refresh your cached user session object
+			$this->userSession = (object)$this->session->userdata(USER);
+
+			// Send back updated image to frontend
+			$response['new_image'] = $this->session->userdata('Image');
+		}
+
 		echo json_encode($response);
 	}
 

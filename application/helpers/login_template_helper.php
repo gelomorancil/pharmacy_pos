@@ -23,7 +23,7 @@ function login_header()
     <link rel="stylesheet" href="<?= base_url() ?>assets/theme/adminlte/AdminLTE/dist/css/adminlte.min.css">
     <!-- Toastr -->
     <link rel="stylesheet" href="<?= base_url() ?>assets/theme/adminlte/AdminLTE/plugins/toastr/toastr.min.css">
-    <link rel="icon" href="<?= base_url() ?>assets/images/Logo/pharmacy-logo2.png">
+    <link rel="icon" href="<?= base_url() ?>assets/images/Logo/zana-logo-green-bg.png">
 
   </head>
 

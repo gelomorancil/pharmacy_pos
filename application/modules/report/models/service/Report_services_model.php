@@ -44,4 +44,42 @@ class Report_services_model extends CI_Model
         return (array('message'=>$msg->getMessage(), 'has_error'=>true));
     }
    }
+
+   public function verify_void(){
+        try{
+            if (empty($this->username) || empty($this->password)) {
+                throw new Exception(REQUIRED_FIELD);
+            }
+            $from = 'admin';
+            $this->db->select('*');
+            $this->db->from($this->Table->user);
+            $this->db->where('Username', $this->username);
+            $query = $this->db->get()->row();
+            
+            if($query->Active == 0){
+                throw new Exception(DISABLED_ACCOUNT, true);
+            }
+            
+            if(empty($query->Branch)){
+                $userAgent = $_SERVER['HTTP_USER_AGENT'];
+
+                if (strpos($userAgent, 'Mobile') !== false || strpos($userAgent, 'Android') !== false || strpos($userAgent, 'iPhone') !== false || strpos($userAgent, 'Tablet') !== false || strpos($userAgent, 'iPad') !== false) {
+                    // It's a mobile device
+                    throw new Exception(MOBILE_DEVICE);
+                } 
+            }
+
+            if(empty($query)){
+                throw new Exception(NO_ACCOUNT, true);
+            }
+            if($query->Password !== sha1(password_generator($this->password,$query->Locker)) ){
+                throw new Exception(NOT_MATCH, true);
+            }
+
+            return array('has_error' => false, 'message' => 'User Verified');
+        } catch (Exception $ex) {
+        }catch(Exception$msg){
+            return (array('message'=>$msg->getMessage(), 'has_error'=>true));
+        }
+    }
 }

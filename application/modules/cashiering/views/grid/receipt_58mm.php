@@ -116,6 +116,14 @@
                     <span style="font-size: 100%;"><?= $discount_type ?></span>
                 </div>
             </div>
+            <div class="row" style="display: flex; margin-left: -5px; margin-right: -5px; margin-top: 5px">
+                <div class="col-12" style="flex: 1; text-align: left;">
+                    <span style="font-size: 100%;">Remarks:</span>
+                </div>
+                <div class="col-6" style="flex: 1; text-align: right;">
+                    <span style="font-size: 100%;"><?= $remarks ?></span>
+                </div>
+            </div>
 
         </div>
 

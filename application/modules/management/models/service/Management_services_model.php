@@ -20,12 +20,23 @@ class Management_services_model extends CI_Model
     }
 
     public function save_list()
-    {
+    {   
+
+        $this->db->select('*');
+        $this->db->where('item_name', $this->item_name);
+        $this->db->where('short_name', $this->short_name);
+        $this->db->where('strenght', $this->strenght);
+        $check_duplicate = $this->db->get($this->Table->items)->row();
+
         try {
             if (
                 empty($this->item_name)
             ) {
                 throw new Exception(MISSING_DETAILS, true);
+            }
+            
+            if (!empty($check_duplicate)) {
+                throw new Exception(DUPLICATE_ITEM_FOUND, true);
             }
 
             $data = array(
@@ -33,13 +44,27 @@ class Management_services_model extends CI_Model
                 'item_code' => $this->item_code,
                 'short_name' => $this->short_name,
                 'description' => $this->description,
+                'Category' => $this->category,
+                // 'item_expiry_date' => $this->item_expiry_date,
                 'active' => $this->status,
+                'strenght' => $this->strenght,
+                'packaging' => $this->packaging,
+                'uom' => $this->uom,
+                'classification' => $this->classification,
+                'storage_condition' => $this->storage_condition,
+                'distributor' => $this->distributor,
+                // 'batch_no' => $this->batch_no,
+
             );
 
             $this->db->trans_start();
 
             $this->db->insert($this->Table->items, $data);
+    
+            $item_last_id = $this->db->insert_id();
 
+            $this->db->insert($this->Table->item_profile, ['item_id' => $item_last_id]);
+            
             $this->db->trans_complete();
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
@@ -109,9 +134,19 @@ class Management_services_model extends CI_Model
             $data = array(
                 'item_name' => $this->item_name,
                 'item_code' => $this->item_code,
-                'short_name' => $this->short_name,
                 'description' => $this->description,
+                'short_name' => $this->short_name,
+                // 'item_expiry_date' => $this->item_expiry_date,
                 'active' => $this->status,
+                'Category' => $this->category,
+                'strenght' => $this->strenght,
+                'packaging' => $this->packaging,
+                'uom' => $this->uom,
+                'classification' => $this->classification,
+                'storage_condition' => $this->storage_condition,
+                'distributor' => $this->distributor,
+                // 'storage_condition' => $this->storage_condition,
+                // 'batch_no' => $this->batch_no,
             );
 
             $this->db->trans_start();
@@ -415,4 +450,195 @@ class Management_services_model extends CI_Model
             return (array('message' => $msg->getMessage(), 'has_error' => true));
         }
     }
+
+    public function save_client()
+{
+    try {
+        // map incoming model properties to DB columns
+        $data = array(
+            'name'     => $this->client_name,
+            'affiliate'=> $this->client_company_aff,
+            'cnum'     => $this->client_cn,
+            'email'    => $this->client_email,
+            'active'   => $this->client_status,
+            'lto'   => $this->client_lto,
+        );
+
+        // required fields: name and cnum (affiliate/email are nullable in schema)
+        $required = array(
+            'name' => $data['name'],
+            'cnum' => $data['cnum'],
+        );
+
+        $emptyFields = array_filter($required, function ($value) {
+            // Only treat NULL or empty string as missing (not '0' or 0)
+            return $value === null || $value === '';
+        });
+
+        if (!empty($emptyFields)) {
+            throw new Exception(MISSING_DETAILS, true);
+        }
+
+        $this->db->trans_start();
+
+        $this->db->insert($this->Table->buyers, $data);
+
+        $this->db->trans_complete();
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            throw new Exception(ERROR_PROCESSING, true);
+        } else {
+            $this->db->trans_commit();
+            return array('message' => SAVED_SUCCESSFUL, 'has_error' => false);
+        }
+    } catch (Exception $msg) {
+        return (array('message' => $msg->getMessage(), 'has_error' => true));
+    }
+}
+
+public function update_client()
+{
+    try {
+
+        $data = array(
+            'name'     => $this->client_name,
+            'affiliate'=> $this->client_company_aff,
+            'cnum'     => $this->client_cn,
+            'email'    => $this->client_email,
+            'active'   => $this->client_status,
+            'lto'   => $this->client_lto,
+        );
+
+        // required fields: name and cnum
+        $required = array(
+            'name' => $data['name'],
+            'cnum' => $data['cnum'],
+        );
+
+        $emptyFields = array_filter($required, function ($value) {
+            return $value === null || $value === '';
+        });
+
+        if (!empty($emptyFields)) {
+            throw new Exception(MISSING_DETAILS, true);
+        }
+
+        $this->db->trans_start();
+
+        // use ID because CREATE TABLE shows `ID` as the PK
+        $this->db->where('ID', $this->client_id);
+        $this->db->update($this->Table->buyers, $data);
+
+        $this->db->trans_complete();
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            throw new Exception(ERROR_PROCESSING, true);
+        } else {
+            $this->db->trans_commit();
+            return array('message' => SAVED_SUCCESSFUL, 'has_error' => false);
+        }
+    } catch (Exception $msg) {
+        return (array('message' => $msg->getMessage(), 'has_error' => true));
+    }
+}
+
+public function save_rbac_access($userAccessData)
+{
+    try {
+
+        if (!is_array($userAccessData) || empty($userAccessData)) {
+            throw new Exception(MISSING_DETAILS, true);
+        }
+
+        $this->db->trans_start();
+
+        foreach ($userAccessData as $access) {
+            $userID = $access['user_id'] ?? null;
+            $module = $access['module'] ?? null;
+            $granted = isset($access['granted']) ? (int)$access['granted'] : 0;
+        
+            if (!$userID || !$module) {
+                throw new Exception(MISSING_DETAILS, true);
+            }
+        
+            // Check if record exists
+            $exists = $this->db->get_where($this->Table->user_access, ['user_ID' => $userID])->num_rows();
+        
+            if ($exists) {
+                $this->db->set($module, $granted);
+                $this->db->where('user_ID', $userID);
+                $this->db->update($this->Table->user_access);
+            } else {
+                $data = [
+                    'user_ID' => $userID,
+                    $module => $granted
+                ];
+                $this->db->insert($this->Table->user_access, $data);
+            }
+        }
+        
+
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            throw new Exception(ERROR_PROCESSING, true);
+        } else {
+            $this->db->trans_commit();
+            return array('message' => SAVED_SUCCESSFUL, 'has_error' => false);
+        }
+    } catch (Exception $msg) {
+        return array('message' => $msg->getMessage(), 'has_error' => true);
+    }
+}
+    public function delete_item()
+    {
+        try {
+            $data = array(
+                'delete' => '1',
+            );
+
+            $this->db->trans_start();
+
+            $this->db->where('id', $this->item_id);
+            $this->db->update($this->Table->items, $data);
+
+            $this->db->trans_complete();
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                throw new Exception(ERROR_PROCESSING, true);
+            } else {
+                $this->db->trans_commit();
+                return array('message' => DELETED_SUCCESSFUL, 'has_error' => false);
+            }
+        } catch (Exception $msg) {
+            return (array('message' => $msg->getMessage(), 'has_error' => true));
+        }
+    }
+
+    public function retrieve_item()
+    {
+        try {
+            $data = array(
+                'delete' => '0',
+            );
+
+            $this->db->trans_start();
+
+            $this->db->where('id', $this->item_id);
+            $this->db->update($this->Table->items, $data);
+
+            $this->db->trans_complete();
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                throw new Exception(ERROR_PROCESSING, true);
+            } else {
+                $this->db->trans_commit();
+                return array('message' => SAVED_SUCCESSFUL, 'has_error' => false);
+            }
+        } catch (Exception $msg) {
+            return (array('message' => $msg->getMessage(), 'has_error' => true));
+        }
+    }
+
 }

@@ -128,21 +128,7 @@ $('#void_sale').click(function () {
                 text: 'Confirm',
                 btnClass: 'btn-danger',
                 action: function () {
-                    $.ajax({
-                        url: 'report/service/Report_service/void_transaction',
-                        type: 'POST',
-                        data: {
-                            pParentID: $('#parent_id').val(),
-                        },
-                        success: function (response) {
-                            toastr.success("Transaction Voided");
-                            $('#view-individual-item').modal('hide');
-                            load_sales_report($('.date_range').val(), $('#data_type_to_load').val());
-                        },
-                        error: function (xhr, status, error) {
-                            console.error("Error loading sales:", error);
-                        }
-                    });
+                    $('#verify-void').modal('show');
                 },
             },
             Cancel: {
@@ -154,6 +140,54 @@ $('#void_sale').click(function () {
         },
     });
 });
+
+$('#verify_void').click(function () {
+    const username = $('#void_username').val();
+    const password = $('#void_password').val();
+    if (password === '') {
+        toastr.error("Please enter your password to proceed");
+        return;
+    }
+
+    $.ajax({
+        url: 'report/service/Report_service/verify_void',
+        type: 'POST',
+        data: {
+            username: username,
+            password: password,
+        },
+        success: function (response) {
+            let data = JSON.parse(response);
+            if (data.has_error === false) {
+                void_sale();
+            } else {
+                toastr.error("Incorrect Password, Please try again");
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error verifying void password:", error);
+        }
+    });
+})
+
+void_sale = function () {
+    $.ajax({
+        url: 'report/service/Report_service/void_transaction',
+        type: 'POST',
+        data: {
+            pParentID: $('#parent_id').val(),
+        },
+        success: function (response) {
+            toastr.success("Transaction Voided");
+            $('#view-individual-item').modal('hide');
+            $('#verify-void').modal('hide');
+            load_sales_report($('.date_range').val(), $('#data_type_to_load').val());
+        },
+        error: function (xhr, status, error) {
+            console.error("Error loading sales:", error);
+        }
+    });
+}
 
 $('#reprint_receipt').click(function () {
     $.post({

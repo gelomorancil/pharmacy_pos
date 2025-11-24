@@ -1,4 +1,3 @@
-// alert();
 var load_suppliers = () => {
     $(document).gmLoadPage({
         url: 'item_profiling/load_item_profiles',
@@ -18,6 +17,12 @@ var editProfile = (data) => {
     $('#item_id').val(data.getAttribute('data-item_id'));
     $('#unit_id').val(data.getAttribute('data-unit_id'));
     $('#unit_price').val(data.getAttribute('data-unit_price'));
+    $('#walkin_price').val(data.getAttribute('data-walkin_price'));
+    $('#regular_stub_price').val(data.getAttribute('data-regular_stub_price'));
+    $('#regular_box_price').val(data.getAttribute('data-regular_box_price'));
+    $('#walkin_stub_price').val(data.getAttribute('data-walkin_stub_price'));
+    $('#walkin_box_price').val(data.getAttribute('data-walkin_box_price'));
+    // $('#wholesale_price').val(data.getAttribute('data-unit_price'));
     $('#threshold').val(data.getAttribute('data-threshold'));
   
     $('#save_item_profile').hide();
@@ -25,7 +30,8 @@ var editProfile = (data) => {
   }
 
 $('#save_item_profile').click(function () {
-    // alert($('#unit_id').val());
+    // alert($('#item_id_prof').val());
+    // return;
     $.confirm({
         title: 'Confirmation',
         icon: 'fa fa-question-circle',
@@ -42,6 +48,8 @@ $('#save_item_profile').click(function () {
                             item_id: $('#item_id').val(),
                             unit_id: $('#unit_id').val(),
                             unit_price: $('#unit_price').val(),
+                            walkin_price: $('#walkin_price').val(),
+                            wholesale_price: $('#wholesale_price').val(),
                             threshold: $('#threshold').val(),
                         },
                         success: function (e) {
@@ -53,6 +61,8 @@ $('#save_item_profile').click(function () {
                                   $('#item_id').val("1");
                                   $('#unit_id').val("1");
                                   $('#unit_price').val("");
+                                  $('#walkin_price').val("");
+                                  $('#wholesale_price').val("");
                                   $('#threshold').val("");
 
                                 //   setTimeout(function () {
@@ -78,8 +88,6 @@ $('#save_item_profile').click(function () {
 
 
 $('#update_item_profile').click(function () {
-    // alert($('#item_profile_id').val());
-    // return;
 
     $.confirm({
         title: 'Confirmation',
@@ -96,9 +104,15 @@ $('#update_item_profile').click(function () {
                         data: {
                             id: $('#item_profile_id').val(),
 
-                            item_id: $('#item_id').val(),
-                            unit_id: $('#unit_id').val(),
+                            // item_id: $('#item_id').val(),
+                            // unit_id: $('#unit_id').val(),
                             unit_price: $('#unit_price').val(),
+                            walkin_price: $('#walkin_price').val(),
+                            regular_stub_price: $('#regular_stub_price').val(),
+                            regular_box_price: $('#regular_box_price').val(),
+                            walkin_stub_price: $('#walkin_stub_price').val(),
+                            walkin_box_price: $('#walkin_box_price').val(),
+                            // wholesale_price: $('#wholesale_price').val(),
                             threshold: $('#threshold').val(),
                         },
                         success: function (e) {
@@ -112,9 +126,9 @@ $('#update_item_profile').click(function () {
                                   $('#unit_price').val("");
                                   $('#threshold').val("");
 
-                                //   setTimeout(function () {
-                                //     window.location.reload();
-                                //   }, 500);
+                                  setTimeout(function () {
+                                    window.location.reload();
+                                  }, 500);
                             } else {
                                 $('#List').attr('class', 'form-control inpt is-invalid');
                                 toastr.error(e.message);

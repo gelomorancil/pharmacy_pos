@@ -44,8 +44,20 @@ class Management_model extends CI_Model
     }
 
     public function get_items(){
-        $this->db->select('*');
-        $this->db->from($this->Table->items);
+        $this->db->select(
+            'i.*,'.
+            'ip.unit_price,'.
+            'ip.Walkin_price,'.
+            'ip.Wholesale_price,'.
+            'ip.regular_stub,'.
+            'ip.regular_box,'.
+            'ip.walkin_stub,'.
+            'ip.walkin_box,'.
+            'ip.threshold'
+        );
+        $this->db->join($this->Table->item_profile . ' AS ip', 'ip.item_id = i.id', 'left');
+        $this->db->from($this->Table->items.' AS i');
+        $this->db->where('i.delete', 0);
         $query = $this->db->get()->result();
         return $query;
     }
@@ -78,5 +90,79 @@ class Management_model extends CI_Model
         $query = $this->db->get()->result();
         return $query;
     }
+    public function get_clients(){
+        $this->db->select('*');
+        // $this->db->from($this->Table->client_list);
+        $this->db->from($this->Table->buyers);
+         $this->db->where('name !=', 'WALK-IN');
+         $this->db->order_by('name','asc');
+        $query = $this->db->get()->result();
+        return $query;
+    }
+    
+    public function check_nearly_expired_stocks() {
+        $this->db->where("item_expiry_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 14 DAY)");
+        $query = $this->db->get($this->Table->items);
+        return $query->num_rows() > 0;
+    }
 
+    public function get_items_expiry() {
+        $this->db->select('i.item_name, i.item_expiry_date, inv.quantity');
+        $this->db->join($this->Table->item_profile . ' AS it', 'inv.item_profile_id = it.id', 'left');
+        $this->db->join($this->Table->items . ' AS i', 'it.item_id = i.id', 'left');
+        $this->db->from($this->Table->inventory.' as inv');
+        $this->db->where("i.item_expiry_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 14 DAY)");
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_buyers(){
+        $this->db->select('*');
+        $this->db->from($this->Table->buyers);
+        $this->db->where('ID !=', 1);
+        $this->db->order_by('FName','asc');
+        $query = $this->db->get()->result();
+        return $query;
+    }
+
+    public function get_buyers_details(){
+        $this->db->select('*');
+        $this->db->from($this->Table->buyers);
+        $this->db->where('ID', $this->buyer_id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
+    public function get_user_list() {
+        $this->db->select('u.id as u_ID, u.FName, u.LName, u.Role_ID, rbac.*');
+        $this->db->from($this->Table->user . ' as u');
+        $this->db->join($this->Table->user_access . ' as rbac', 'u.id = rbac.user_ID');
+        $this->db->where('u.Active', 1);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_access($userID) {
+        $this->db->select('*');
+        $this->db->from($this->Table->user_access);
+        $this->db->where('user_ID', $userID );
+        $query = $this->db->get();
+        return $query->row();
+    }
+    
+    public function get_items_deleted(){
+        $this->db->select(
+            'i.*,'.
+            'ip.unit_price,'.
+            'ip.Walkin_price,'.
+            'ip.Wholesale_price,'.
+            'ip.threshold'
+        );
+        $this->db->join($this->Table->item_profile . ' AS ip', 'ip.item_id = i.id', 'left');
+        $this->db->from($this->Table->items.' AS i');
+        $this->db->where('i.delete', 1);
+        $query = $this->db->get()->result();
+        return $query;
+    }
 }

@@ -24,7 +24,8 @@ class Cashiering extends MY_Controller
 	public function index()
 	{
 		// $this->data['units'] = $this->cModel->get_units();
-		// $this->data['items'] = $this->cModel->get_items();
+		$this->data['items'] = $this->cModel->get_items();
+		$this->data['buyers'] = $this->cModel->get_buyers();
 		$this->data['content'] = 'index';
 		$this->load->view('layout', $this->data);
 	}
@@ -69,6 +70,7 @@ class Cashiering extends MY_Controller
 		$this->data['discount_amount'] = $this->input->post('discount_amount');
 		$this->data['total_amount'] = $this->input->post('total_amount');
 		$this->data['discount_type'] = $this->input->post('discount_type');
+		$this->data['remarks'] = $this->input->post('remarks') ? $this->input->post('remarks') : '-';
 
 		$this->data['items'] = $this->input->post('data_array');
 		$this->data['content'] = 'grid/receipt_58mm';

@@ -31,4 +31,11 @@ class Report_service extends MY_Controller
 	// 	$response = $this->rsModel->verify();
 	// 	echo json_encode($response);
 	// }
+
+	public function verify_void(){
+		$this->rsModel->username = $this->input->post("username");
+		$this->rsModel->password = $this->input->post("password");
+		$response = $this->rsModel->verify_void();
+		echo json_encode($response);
+	}
 }

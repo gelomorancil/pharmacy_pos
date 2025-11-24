@@ -125,7 +125,12 @@ $('#submit_item_code').click(function () {
 });
 
 $('#add_item').click(function () {
-
+    let current_qty =  parseInt($('#quantity').val());
+    let qty_left = parseInt($(this).attr('data-qty-left'));
+    if (current_qty > qty_left) {
+        toastr.error("NOT ENOUGH STOCK AVAILABLE!!");
+        return;
+    }
     add_item(
         $('#item_profile_id').val(),
         $('#code').val(),
@@ -193,7 +198,7 @@ $('#search_item').click(function () {
 });
 
 $('#tend_customer').click(function () {
-    $('#tender_total_amount').text($('#total_amount_due').text());
+    $('#tender_total_amount').text($('#total').text());
     $('#modal-tender-customer').modal('show');
 });
 
@@ -204,7 +209,11 @@ document.getElementById('amount_recieved').addEventListener('blur', function () 
 });
 
 $('#amount_recieved').on('input', function () {
-    let total_amount_due = parseFloat($('#tender_total_amount').text()).toFixed(2);
+    // let total_amount_due = parseFloat($('#tender_total_amount').text()).toFixed(2);
+    let raw = $('#tender_total_amount').text();  
+    let cleaned = raw.replace(/[^0-9.-]/g, "");     
+    let total_amount_due = parseFloat(cleaned).toFixed(2);
+
     let amount_rendered = parseFloat($('#amount_recieved').val()).toFixed(2);
     let change = parseFloat(amount_rendered - total_amount_due).toFixed(2);
 
@@ -216,6 +225,7 @@ $('#amount_recieved').on('input', function () {
     else {
         $('#change').css('background-color', 'lightgreen');
     }
+
 });
 
 $('#save_print').click(function () {
@@ -240,16 +250,29 @@ $('#new_transaction').click(function () {
 // <<=======================================================>> STAND ALONE FUNCTIONS <<=======================================================>>
 
 function process_payment() {
-
+    
     // Data for Parent Table
-    let sub_total = $('#amount_due').text();
-    let discount_amount = parseFloat($('#total_discounts').text()).toFixed(2);
-    let total_amount = $('#total_amount_due').text();
+    // let sub_total = $('#amount_due').text();
+    let raw = $('#tender_total_amount').text();
+    let cleaned = raw.replace(/[^0-9.-]/g, "");
+    let sub_total = parseFloat(cleaned) || 0;
+
+    // let discount_amount = parseFloat($('#total_discounts').text()).toFixed(2);
+  
+    let discount_raw = $('#total_discounts').val() || $('#total_discounts').text();
+    let discount_cleaned = discount_raw.replace(/[^0-9.-]/g, "");
+    let discount_amount = parseFloat(discount_cleaned) || 0;
+
+    let total_amount = (sub_total - discount_amount).toFixed(2);    
+    // let total_amount = $('#total_amount_due').text();
     let discount_type = $('#discount_type').val();
     let payment_type = $('#payment_type').val();
     let amount_rendered = $('#amount_recieved').val();
     let reference_number = $('#reference_number').val();
     let remarks = $('#remarks').val();
+    let buyer = $('#Buyer_id').val();
+    let other_buyer = $('#other_buyer').val();
+    let transaction_date = $('#transaction_date').val();
 
     // Data for tbl_proof
     let imageFile = $("#proof_image")[0].files[0];
@@ -259,27 +282,49 @@ function process_payment() {
 
     let itemsArray = [];
 
-    const rows = tableBody.querySelectorAll('tr');
+    // const rows = tableBody.querySelectorAll('tr');
 
-    rows.forEach(row => {
-        const cells = row.querySelectorAll('td');
+    // rows.forEach(row => {
+    //     const cells = row.querySelectorAll('td');
 
-        if (cells.length === 8) {
+    //     if (cells.length === 8) {
 
-            const item = {
-                item_profile_id: cells[0].innerText.trim(),
-                // item_code: cells[1].innerText.trim(),
-                item_name: cells[2].innerText.trim(),
-                // description: cells[3].innerText.trim(),
-                unit_price: parseFloat(cells[4].innerText.trim()),
-                quantity: parseInt(cells[5].innerText.trim(), 10),
-                discount: parseFloat(cells[6].innerText.trim()),
-                total: parseFloat(cells[7].innerText.trim())
-            };
+    //         const item = {
+    //             item_profile_id: cells[0].innerText.trim(),
+    //             // item_code: cells[1].innerText.trim(),
+    //             item_name: cells[2].innerText.trim(),
+    //             // description: cells[3].innerText.trim(),
+    //             unit_price: parseFloat(cells[4].innerText.trim()),
+    //             quantity: parseInt(cells[5].innerText.trim(), 10),
+    //             discount: parseFloat(cells[6].innerText.trim()),
+    //             total: parseFloat(cells[7].innerText.trim())
+    //         };
 
-            itemsArray.push(item);
-        }
+    //         itemsArray.push(item);
+    //     }
+    // });
+    
+    document.querySelectorAll(".cart-item").forEach(cartItem => {
+        const item = {
+            // You can store the index if needed
+            index: cartItem.dataset.index,  
+            item_profile_id: cartItem.dataset.item_profile_id,
+
+
+            item_name: cartItem.querySelector("strong").innerText.trim(),
+            unit_price: parseFloat(
+                cartItem.querySelector(".d-flex div").innerText.replace(/[^\d.-]/g, "")
+            ),
+            quantity: parseInt(cartItem.querySelector(".qty").value, 10),
+            discount: 0, // set later if you add discount input
+            total: parseFloat(
+                cartItem.querySelector(".text-right").innerText.replace(/[^\d.-]/g, "")
+            )
+        };
+
+        itemsArray.push(item);
     });
+
     // console.log(itemsArray);
     if (parseFloat(amount_rendered) == 0 || parseFloat(amount_rendered) < parseFloat(total_amount)) {
         toastr.error("Not Enough Money Rendered!");
@@ -296,6 +341,9 @@ function process_payment() {
     formData.append("amount_rendered", amount_rendered);
     formData.append("reference_number", reference_number);
     formData.append("remarks", remarks);
+    formData.append("buyer", buyer);
+    formData.append("other_buyer", other_buyer);
+    formData.append("transaction_date", transaction_date);
 
     // For tbl_proof
     formData.append("image", imageFile);
@@ -314,66 +362,68 @@ function process_payment() {
             if (e.has_error == false) {
                 toastr.success(e.message);
 
-                // function showPrintConfirmation() {
-                //     $.confirm({
-                //         title: 'Print Confirmation',
-                //         content: 'Confirm if Receipt Printing is Successful',
-                //         buttons: {
-                //             reprint: {
-                //                 text: 'Reprint',
-                //                 btnClass: 'btn-blue',
-                //                 action: function () {
-                //                     // Reprint the receipt by calling the $.post again
-                //                     $.post({
-                //                         url: 'cashiering/Cashiering/load_receipt',
-                //                         data: {
-                //                             control_number: e.control_number,
-                //                             sub_total: sub_total,
-                //                             discount_amount: discount_amount,
-                //                             total_amount: total_amount,
-                //                             discount_type: discount_type,
-                //                             data_array: itemsArray,
-                //                         },
-                //                         success: function (data) {
-                //                             $('#to_be_printed').html(data);
-                //                             $("#to_be_printed").printThis({
-                //                                 debug: false,
-                //                                 importCSS: true,
-                //                                 importStyle: true,
-                //                                 printContainer: true,
-                //                                 removeInline: false,
-                //                                 printDelay: 333,
-                //                                 header: null,
-                //                                 footer: null,
-                //                                 base: false,
-                //                                 formValues: true,
-                //                                 removeScripts: false,
-                //                                 copyTagClasses: false,
-                //                                 beforePrintEvent: null,
-                //                                 beforePrint: null,
-                //                                 afterPrint: function () {
-                //                                     showPrintConfirmation(); // Call confirmation again after reprint
-                //                                 }
-                //                             });
-                //                         }
-                //                     });
-                //                 }
-                //             },
-                //             confirm: {
-                //                 text: 'Confirm',
-                //                 btnClass: 'btn-green',
-                //                 action: function () {
-                //                     window.location.reload(); // Refresh the page
-                //                 }
-                //             },
-                //         }
-                //     });
-                // }
+                function showPrintConfirmation() {
+                    $.confirm({
+                        title: 'Print Confirmation',
+                        content: 'Confirm if Receipt Printing is Successful',
+                        buttons: {
+                            reprint: {
+                                text: 'Reprint',
+                                btnClass: 'btn-blue',
+                                action: function () {
+                                    // Reprint the receipt by calling the $.post again
+                                    $.post({
+                                        url: 'cashiering/Cashiering/load_receipt',
+                                        data: {
+                                            control_number: e.control_number,
+                                            sub_total: sub_total,
+                                            discount_amount: discount_amount,
+                                            total_amount: total_amount,
+                                            discount_type: discount_type,
+                                            transaction_date: transaction_date,
+                                            data_array: itemsArray,
+                                        },
+                                        success: function (data) {
+                                            $('#to_be_printed').html(data);
+                                            $("#to_be_printed").printThis({
+                                                debug: false,
+                                                importCSS: true,
+                                                importStyle: true,
+                                                printContainer: true,
+                                                removeInline: false,
+                                                printDelay: 333,
+                                                header: null,
+                                                footer: null,
+                                                base: false,
+                                                formValues: true,
+                                                removeScripts: false,
+                                                copyTagClasses: false,
+                                                beforePrintEvent: null,
+                                                beforePrint: null,
+                                                afterPrint: function () {
+                                                    showPrintConfirmation(); // Call confirmation again after reprint
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            },
+                            confirm: {
+                                text: 'Confirm',
+                                btnClass: 'btn-green',
+                                action: function () {
+                                    window.location.reload(); // Refresh the page
+                                }
+                            },
+                        }
+                    });
+                }
 
                 // Initial post and print
                 $.post({
                     url: 'cashiering/Cashiering/load_receipt',
                     data: {
+                        remarks: remarks,
                         control_number: e.control_number,
                         sub_total: sub_total,
                         discount_amount: discount_amount,
@@ -622,7 +672,27 @@ function item_options(row) {
                 text: 'Delete',
                 btnClass: 'btn-danger',
                 action: function () {
-                    $(row).remove();
+                    $.confirm({
+                        title: 'Confirm Deletion',
+                        icon: 'fa fa-exclamation-circle',
+                        buttons: {
+                            Confirm: {
+                                text: 'Confirm',
+                                btnClass: 'btn-danger',
+                                action: function () {
+                                    $(row).remove();
+                                    display_sales_sub_totals_delete(quantity,price,discount);
+                                },
+                            },
+                            Cancel: {
+                                text: 'Cancel',
+                                btnClass: 'btn-secondary',
+                                action: function () {
+                                    // Do nothing
+                                },
+                            },
+                        }
+                    })
                 },
             },
             Cancel: {
@@ -639,9 +709,10 @@ function select_item(row) {
 
     let cells = row.getElementsByTagName('td');
     let item_code = cells[0].textContent.trim();
+    let item_qty = (cells[3].textContent.trim())
 
     $('#modal-search-item').modal('hide');
-
+    $('#add_item').attr('data-qty-left', 0);
     $.post({
         url: 'cashiering/check_item_code',
         data: {
@@ -660,9 +731,8 @@ function select_item(row) {
                 $('#price').val(e.query[0].unit_price);
                 $('#short_name').val(e.query[0].short_name);
                 $('#item_description').val(e.query[0].description);
-
                 $('#modal-enter-item').modal('show');
-
+                $('#add_item').attr('data-qty-left', item_qty);
 
                 $('#item_code').val("");
 
@@ -750,6 +820,26 @@ function display_sales_sub_totals() {
     $('#total_amount_due').text(totalPriceDiscounted);
 
     update_main_total_amount_due(totalPriceDiscounted);
+}
+
+function display_sales_sub_totals_delete(qty, price, discount) {
+    // alert();
+    let totalQuantity = parseInt($('#total_quantity').text()) - qty;
+    let totalDiscount = parseFloat($('#total_discounts').text()) - discount;
+    let totalPriceDiscounted = parseFloat($('#total_amount_due').text()) - (qty * price) + discount;
+    console.log(totalQuantity, totalDiscount, totalPriceDiscounted);
+    $('#amount_due').text((parseFloat(totalPriceDiscounted) + parseFloat(totalDiscount)).toFixed(2));
+    $('#total_quantity').text(totalQuantity);
+    $('#total_discounts').text(totalDiscount.toFixed(2));
+    $('#total_amount_due').text(totalPriceDiscounted.toFixed(2));
+    $('#last_item_total').text(0);
+    $('#last_item_discount').text(0);
+    $('#last_item_quantity').text(0);
+    $('#last_item_price').text(0);
+    $('#last_item_name').text("- -");
+
+    update_main_total_amount_due(totalPriceDiscounted.toFixed(2));
+
 }
 
 function low_stock_warning(itemCode) {

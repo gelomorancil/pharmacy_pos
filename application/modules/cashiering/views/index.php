@@ -4,6 +4,86 @@ $session = (object) get_userdata(USER);
 
 // var_dump($items);
 ?>
+<style>
+    body { background: #f9f9f9; }
+    .card {
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: relative;
+      height: 180px;
+    }
+    .stock-label {
+      background: #eafaf1;
+      color: #2a9d47;
+      font-size: 12px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+
+    .price-label {
+      background: #eafaf1;
+      color: #005fc4ff;
+      font-size: 12px;
+      padding: 1px 10px;
+      border-radius: 20px;
+      margin-left: 5px;
+    }
+
+    .stock-label-zero {
+      background: #ff0d003a;
+      color: #ff0000ff;
+      font-size: 12px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+
+    .stock-low { background: #fff3cd; color: #856404; }
+    /* .btn-add {
+      background: #035863;
+      color: #fff;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+    }*/
+    .btn-add:hover { background: #9b9d9e2f; } 
+    .cart-panel {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .cart-header { font-size: 18px; font-weight: bold; }
+    .cart-item { border-bottom: 1px solid #eee; padding: 10px 0; }
+    .cart-total { font-weight: bold; font-size: 18px; }
+    .btn-checkout {
+      width: 100%;
+      background: #035863;
+      color: #fff;
+      font-size: 16px;
+      margin-top: 15px;
+    }
+    .btn-checkout:hover { background: #035863; }
+    .cart-item .btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+}
+
+    
+  </style>
 <!-- ############ PAGE START-->
 <input hidden id="created_by" value="<?= $session->ID ?>">
 <input hidden id="item_profile_id" value="">
@@ -25,382 +105,157 @@ $session = (object) get_userdata(USER);
 </div>
 
 <section class="content">
-
-    <div class="row">
-        <div class="col-lg-8 col-md-6 col-sm-12">
-            <div class="card card-gray-dark" style="height: 50rem;">
-                <div class="card-header">
-                    <h3 class="card-title">CASHIER :
-                        <?= strtoupper($session->LName) . ", " . strtoupper($session->FName) ?>
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-1">
-                            <button class="btn btn-dark form-control" disabled style="font-size: 0.7vw;">CODE:</button>
-                        </div>
-                        <div class="col-9">
-                            <input type="text" id="item_code" class="form-control text-center"
-                                style="font-size: 20px; font-weight: bold;" placeholder="Enter Item Code" autofocus>
-                        </div>
-                        <div class="col-1">
-                            <button class="btn btn-secondary form-control" id="submit_item_code"
-                                style="font-size: 0.6vw;"><b>ENTER</b></button>
-                        </div>
-                        <div class="col-1">
-                            <button class="btn btn-primary form-control" id="search_item"><i
-                                    class="fa fa-search"></i></button>
-                        </div>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Left side: Products -->
+            <div class="col-lg-8 col-md-7 col-sm-12" style="background-color: white;">
+                
+                <!-- Search Box -->
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <form class="form-inline">
+                            <input class="form-control mr-sm-2 w-100" type="search" placeholder="Search products..." aria-label="Search" id="productSearch">
+                        </form>
                     </div>
-                    <div class="row mt-3">
-                        <div class="col-12">
-                            <div id="load_items">
-                                <!-- Scanned Items Table Loaded Here Via JS -->
-                                <div style="max-height: 40rem; overflow-y: auto; overflow-x: hidden;">
-                                    <table id="example2" class="table table-bordered table-striped table-hover"
-                                        style="border-collapse: collapse;">
-                                        <thead>
-                                            <tr>
-                                                <th style="width:15%;">Item Code</th>
-                                                <th style="width:15%;">Item Name</th>
-                                                <th style="width:30%;">Description</th>
-                                                <th style="width:10%;">Price</th>
-                                                <th style="width:10%;">Quantity</th>
-                                                <th style="width:10%;">Discount</th>
-                                                <th style="width:10%;">Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="scanned_items">
-                                            <!-- <tr>
-                                            <td colspan="7" class="text-center">No Available Data</td>
-                                        </tr> -->
-                                        </tbody>
-                                    </table>
-                                </div>
+                </div>
 
+                <!-- Product Grid -->
+                <div class="row mt-3" id="productList">
+                    <?php foreach($items as $item => $i){ ?>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-12 product-card">
+                        <div class="card p-3">
+                            <small class="card-text text-muted mb-1"><?=strtoupper($i->Category)?></small>
+                            <h6 class="card-title mb-1"><?=$i->item_name?></h6>
+                            <span class="<?=$i->current_stock == 0 ? 'stock-label-zero' : 'stock-label'?>">Stock: <?=$i->current_stock?></span>
+                            <p class="card-text text-muted mb-1 desc-text"><?=$i->description?></p>
+                            <small class="card-text text-muted mb-1"><?=$i->item_code?></small>
+                             <div class="font-weight-bold d-flex gap-3">
+                                <button class="price-label btn-add" 
+                                    data-name="<?=$i->item_name?>"
+                                    data-name2="<?=$i->item_name." (RP)"?>"
+                                    data-item_profile_id="<?=$i->item_profile_id?>" 
+                                    data-price="<?=$i->RP?>" 
+                                >RP ₱<?=number_format($i->RP,2)?>
+                                </button><br>
+                                <button class="price-label btn-add" 
+                                    data-name="<?=$i->item_name?>"
+                                    data-name2="<?=$i->item_name." (RS)"?>"
+                                    data-item_profile_id="<?=$i->item_profile_id?>" 
+                                    data-price="<?=$i->RS?>" 
+                                >RS ₱<?=number_format($i->RS,2)?>
+                                 </button>  <br>
+                                <button class="price-label btn-add" 
+                                    data-name="<?=$i->item_name?>"
+                                    data-name2="<?=$i->item_name." (RB)"?>"
+                                    data-item_profile_id="<?=$i->item_profile_id?>" 
+                                    data-price="<?=$i->RB?>" 
+                                >RB ₱<?=number_format($i->RB,2)?>
+                                </button> 
                             </div>
+                            <div class="font-weight-bold d-flex gap-3 mt-1">
+                                <button class="price-label btn-add" 
+                                    data-name="<?=$i->item_name?>"
+                                    data-name2="<?=$i->item_name." (WP)"?>"
+                                    data-item_profile_id="<?=$i->item_profile_id?>" 
+                                    data-price="<?=$i->WP?>" 
+                                >WP ₱<?=number_format($i->WP,2)?>
+                                </button>    <br>
+                                <button class="price-label btn-add" 
+                                    data-name="<?=$i->item_name?>"
+                                    data-name2="<?=$i->item_name." (WS)"?>"
+                                    data-item_profile_id="<?=$i->item_profile_id?>" 
+                                    data-price="<?=$i->WS?>" 
+                                >WS ₱<?=number_format($i->WS,2)?>
+                                 </button>  <br>
+                                <button class="price-label btn-add" 
+                                    data-name="<?=$i->item_name?>"
+                                    data-name2="<?=$i->item_name." (WB)"?>"
+                                    data-item_profile_id="<?=$i->item_profile_id?>" 
+                                    data-price="<?=$i->WB?>" 
+                                >WB ₱<?=number_format($i->WB,2)?>
+                                </button> 
+                            </div>
+                            <!-- <div class="font-weight-bold d-flex gap-3">
+                                <span class="price-label">RP</span> ₱<?=number_format($i->RP,2)?>   <br>
+                                <span class="price-label">RS </span> ₱<?=number_format($i->RS,2)?> <br>
+                                <span class="price-label">RB</span> ₱<?=number_format($i->RB,2)?>
+                            </div>
+                            <div class="font-weight-bold d-flex gap-3 mt-1">
+                                <span class="price-label">WP</span> ₱<?=number_format($i->WP,2)?>   <br>
+                                <span class="price-label">WS </span> ₱<?=number_format($i->WS,2)?> <br>
+                                <span class="price-label">WB</span> ₱<?=number_format($i->WB,2)?>
+                            </div> -->
+                            <!-- <button class="btn btn-add" 
+                                    data-name="<?=$i->item_name?>" 
+                                    data-price="<?=$i->RP?>"
+                                    data-walkin="<?=$i->WP?>"
+                                    data-wholesaler="<?=$i->Wholesale_price?>"
+                                    data-item_profile_id="<?=$i->item_profile_id?>" 
+                                    <?=$i->current_stock == 0 ? 'disabled' : ''?>>
+                                <span class="fas fa-plus"></span>
+                            </button> -->
                         </div>
                     </div>
+                    <?php } ?>
                 </div>
-                <div class="card-footer">
+
+                <!-- Pagination controls -->
+                <div class="d-flex justify-content-center mt-3">
+                    <nav>
+                        <ul class="pagination" id="pagination"></ul>
+                    </nav>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-12">
-            <div class="row">
-                <div class="col-12">
-                    <div class="small-box bg-success">
-                        <div class="inner">
-                            <b style="font-size: 3rem; font-weight: bold;">
-                                <cont style="font-size: 3rem">Php</cont>
-                                <totalAmount id="main_total_amount_due">0.00</totalAmount>
-                            </b>
-
-                            <p>Total Amount Due</p>
-                        </div>
-                        <div class="icon">
-                            <i class="fa fa-money-bill"></i>
-                        </div>
-                        <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
+            <!-- Right side: Cart -->
+            <div class="col-lg-4 col-md-5 col-sm-12">
+                <div class="cart-panel">
+                    <div class="cart-header">
+                        Current Sale <a href="#" id="clear-cart" class="float-right text-danger">Clear All</a>
                     </div>
-                </div>
-            </div>
+                    <hr>
+                     <p class="cart-total">Transaction Date:
+                        <span class="float-right">
+                          <input type="date" class="form-control form-control-sm" id="transaction_date" value="<?= date('Y-m-d') ?>" style="width: 200px;">
+                        </span>
+                    </p>
+                    <!-- Cart items will load here -->
+                    <div id="cart-items"></div>
 
-            <div class="card card-gray-dark" style="height: 40.25rem;">
-                <div class="card-header">
-                    <h3 class="card-title">Sales Information:</h3>
-                </div>
-                <div class="card-body">
-                    <div class="card p-3" style="background-color:#696D79">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="row mx-1">
-                                    <div class="col-12 d-flex justify-content-center">
-                                        <cont id="last_item_name" style="font-size:110%; font-weight:bold; color:white">
-                                            -
-                                            - - - - - - - - -
-                                        </cont>
-                                    </div>
-                                </div>
-                                <div class="row mx-1">
-                                    <div class="col-6 d-flex justify-content-start">
-                                        <cont style="font-size:100%; font-weight:bold; color:white">Price:</cont>
-                                    </div>
-                                    <div class="col-6 d-flex justify-content-end">
-                                        <cont id="last_item_price"
-                                            style="font-size:100%; font-weight:bold; color:white">----</cont>
-                                    </div>
-                                </div>
-                                <div class="row mx-1">
-                                    <div class="col-6 d-flex justify-content-start">
-                                        <cont style="font-size:100%; font-weight:bold; color:white">Quantity:</cont>
-                                    </div>
-                                    <div class="col-6 d-flex justify-content-end">
-                                        <cont id="last_item_quantity"
-                                            style="font-size:100%; font-weight:bold; color:white">----
-                                        </cont>
-                                    </div>
-                                </div>
-                                <div class="row mx-1">
-                                    <div class="col-6 d-flex justify-content-start">
-                                        <cont style="font-size:100%; font-weight:bold; color:white">Discount:</cont>
-                                    </div>
-                                    <div class="col-6 d-flex justify-content-end">
-                                        <cont id="last_item_discount"
-                                            style="font-size:100%; font-weight:bold; color:white">----
-                                        </cont>
-                                    </div>
-                                </div>
-                                <div class="row mx-1">
-                                    <div class="col-6 d-flex justify-content-start">
-                                        <cont style="font-size:100%; font-weight:bold; color:white">Total:</cont>
-                                    </div>
-                                    <div class="col-6 d-flex justify-content-end">
-                                        <cont id="last_item_total"
-                                            style="font-size:100%; font-weight:bold; color:white">----</cont>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card p-3 pb-5" style="background-color:#696D79">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="row mx-1">
-                                    <div class="col-12 d-flex justify-content-center">
-                                        <cont style="font-size:110%; font-weight:bold; color:white">
-                                            SALES SUB TOTALS
-                                        </cont>
-                                    </div>
-                                </div>
-                                <div class="row mx-1">
-                                    <div class="col-6 d-flex justify-content-start">
-                                        <cont style="font-size:100%; font-weight:bold; color:white">Sub Total:</cont>
-                                    </div>
-                                    <div class="col-6 d-flex justify-content-end">
-                                        <cont id="amount_due" style="font-size:100%; font-weight:bold; color:white">----
-                                        </cont>
-                                    </div>
-                                </div>
-                                <div class="row mx-1">
-                                    <div class="col-6 d-flex justify-content-start">
-                                        <cont style="font-size:100%; font-weight:bold; color:white">Total Quantity:
-                                        </cont>
-                                    </div>
-                                    <div class="col-6 d-flex justify-content-end">
-                                        <cont id="total_quantity" style="font-size:100%; font-weight:bold; color:white">
-                                            ----
-                                        </cont>
-                                    </div>
-                                </div>
-                                <div class="row mx-1">
-                                    <div class="col-6 d-flex justify-content-start">
-                                        <cont style="font-size:100%; font-weight:bold; color:white">Total Discounts:
-                                        </cont>
-                                    </div>
-                                    <div class="col-6 d-flex justify-content-end">
-                                        <cont id="total_discounts"
-                                            style="font-size:100%; font-weight:bold; color:white">----
-                                        </cont>
-                                    </div>
-                                </div>
-                                <div class="row mx-1">
-                                    <div class="col-6 d-flex justify-content-start">
-                                        <cont style="font-size:100%; font-weight:bold; color:white">Total Amount Due:
-                                        </cont>
-                                    </div>
-                                    <div class="col-6 d-flex justify-content-end">
-                                        <cont id="total_amount_due"
-                                            style="font-size:100%; font-weight:bold; color:white">----</cont>
-                                    </div>
-                                </div>
+                    <hr>
+                     <p class="cart-total">Buyer type:
+                        <span class="float-right">
+                          <select name="" id="buyer_type" class="form-control form-control-sm"  style="width: 200px;" >
+                                <option value="WALKIN" selected>WALKIN</option>
+                                <option value="REGULAR">REGULAR</option>
+                                <!-- <option value="WHOLESALER">WHOLESALER</option> -->
+                            </select>
+                        </span>
+                    </p>
+                    <p class="cart-total">Buyer: 
+                        <span class="float-right">
+                          <select name="" id="Buyer_id" class="form-control form-control-sm"  style="width: 200px;" >
+                                <option value="" disabled selected>-- Select Buyer --</option>
+                                <?php
+                                    foreach($buyers as $b){ ?>
+                                        <option value="<?= $b->ID ?>"><?= ucfirst($b->name)?></option>
 
-                                <br>
-                                <br>
-                                <br>
-
-                                <div class="row mx-1">
-                                    <div class="col-6 d-flex justify-content-start">
-                                        <cont style="font-size:100%; font-weight:bold; color:white">Last S.O. Number:
-                                        </cont>
-                                    </div>
-                                    <div class="col-6 d-flex justify-content-end">
-                                        <cont id="last_SO_number" style="font-size:100%; font-weight:bold; color:white">
-                                            ----</cont>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <!-- <div class="col-6">
-                            <button class="btn btn-primary form-control" id="retrieve_SO"><b>RETRIEVE S.O.
-                                    DATA</b></button>
-                        </div> -->
-                        <div class="col-12">
-                            <button class="btn btn-success form-control" id="tend_customer"><b>PROCESS
-                                    PAYMENT</b></button>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="card-footer">
+                                <?php   }
+                                ?>
+                                <option value="112">WALK-IN</option>
+                                <option value="0">OTHERS</option>
+                            </select>
+                            <input type="text" class="form-control form-control-sm" id="other_buyer"  style="width: 200px;" placeholder="Enter buyer..." hidden>
+                        </span>
+                    </p>
+                    <br>
+                    <p class="cart-total mt-5">Discount: <span class="float-right"><input type="number" class="form-control form-control-sm" id="total_discounts"  style="width: 200px;"  placeholder="Enter discount..." ></span></p>
+                    <p class="cart-total">Total: <span class="float-right" id="total">₱0.00</span></p>
+                    <button class="btn btn-checkout" id="tend_customer">Proceed to Payment</button>
                 </div>
             </div>
         </div>
     </div>
-
 </section>
-
-<!-- Modals -->
-
-<!-- Enter Item Modal -->
-<div class="modal fade" id="modal-enter-item" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Add Item: <cont id="display_item_name" style="color: red"></cont>
-                </h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <input type="text" hidden disabled id="item_profile_id">
-                <div class="row">
-                    <div class="col-4">
-                        <div class="form-group w-100">
-                            <label for="">Item Name:</label>
-                            <input type="text" id="item_name" class="form-control inpt" placeholder="Item Name"
-                                disabled>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group w-100">
-                            <label for="">Code:</label>
-                            <input type="text" id="code" class="form-control inpt" placeholder="Item Code" disabled>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group w-100">
-                            <label for="">Unit Price:</label>
-                            <input type="text" id="price" class="form-control inpt" placeholder="Item Price" disabled>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-4">
-                        <div class="form-group w-100">
-                            <label for="">Short Name:</label>
-                            <input type="text" id="short_name" class="form-control inpt" placeholder="Item Short Name"
-                                disabled>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group w-100">
-                            <label for="">Quantity:</label>
-                            <input type="number" id="quantity" class="form-control inpt" placeholder="Enter Quantity">
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group w-100">
-                            <label for="">Discount:</label>
-                            <input type="number" id="discount" class="form-control inpt" placeholder="Enter Percentage"
-                                value="0">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <label for="">Description:</label>
-                        <textarea id="item_description" class="form-control" rows="3" disabled
-                            placeholder="Item Description"></textarea>
-                    </div>
-
-                </div>
-            </div>
-            <div class="modal-footer">
-                <div class="justify-content-between">
-                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-sm btn-success" id="add_item">Add Item</button>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div>
-
-<!-- Search Item Modal -->
-<div class="modal fade" id="modal-search-item" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Search Item: <cont id="display_item_name" style="color: red"></cont>
-                </h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-12">
-                        <div id="load_item_table">
-                            <!-- Table Loaded Here Via JS -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <div class="justify-content-between">
-                    <!-- <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-sm btn-success" id="add_item">Add Item</button> -->
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div>
-
-<!-- Update Item Modal -->
-<div class="modal fade" id="modal-update-item" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Update Item: <cont id="display_item_name_update" style="color: red"></cont>
-                </h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-
-                <div class="row">
-                    <div class="col-6">
-                        <div class="form-group w-100">
-                            <label for="">Quantity:</label>
-                            <input type="number" id="update_quantity" class="form-control inpt" placeholder="Quantity">
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group w-100">
-                            <label for="">Discount:</label>
-                            <input type="number" id="update_discount" class="form-control inpt" placeholder="Discount">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <div class="justify-content-between">
-                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-sm btn-primary" id="update_item">Update Item</button>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div>
 
 <!-- Tend Customer Modal -->
 <div class="modal fade" id="modal-tender-customer" data-backdrop="static" data-keyboard="false">
@@ -534,6 +389,7 @@ $session = (object) get_userdata(USER);
     </div>
 </div>
 
+
 <!-- Online Payment Details Modal -->
 <div class="modal fade" id="modal-online-payment-details" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-md">
@@ -642,14 +498,280 @@ $session = (object) get_userdata(USER);
 <?php
 main_footer();
 ?>
-<script>
-    // $("#example2").DataTable({
-    //     "responsive": false,
-    //     "lengthChange": false,
-    //     "autoWidth": false,
-    //     "searching": false,
-    //     // "buttons": ["copy", "csv", "excel", "pdf", "print"],
-    //     "pageLength": 10,
-    // }).buttons().container();
-</script>
 <script src="<?php echo base_url() ?>/assets/js/cashiering/cashiering.js"></script>
+<script>
+  let cart = [];
+
+function renderCart() {
+  let cartItemsDiv = document.getElementById("cart-items");
+  let total = 0;
+  // Save focus state
+  let activeElement = document.activeElement;
+  let activeIndex = activeElement && activeElement.classList.contains("qty")
+    ? activeElement.closest(".cart-item").dataset.index
+    : null;
+
+  cartItemsDiv.innerHTML = cart.map((item, i) => {
+    let qty = item.qty === "" ? "" : item.qty; // allow empty while typing
+    let itemTotal = (item.qty && !isNaN(item.qty) ? item.qty : 0) * item.price;
+    total += itemTotal;
+
+    return `
+      <div class="cart-item mb-3 pb-2 border-bottom" data-index="${i}" data-item_profile_id="${item.item_profile_id}">
+        <div><strong>${item.name2}</strong></div>
+        <input type="text" hidden value="${item.item_profile_id}">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            ₱${item.price.toLocaleString("en-PH", { minimumFractionDigits: 2 })} each
+          </div>
+          <div class="d-flex align-items-center">
+            <button class="btn btn-sm btn-outline-secondary minus">-</button>
+            <input type="text" class="form-control form-control-sm text-center mx-1 qty" 
+                  value="${qty}" style="width:60px;">
+            <button class="btn btn-sm btn-outline-secondary plus">+</button>
+          </div>
+        </div>
+        <div class="text-right mt-1">= ₱${itemTotal.toLocaleString("en-PH", { minimumFractionDigits: 2 })}</div>
+      </div>
+    `;
+  }).join("");
+
+  document.getElementById("total").innerText =
+    "₱" + total.toLocaleString("en-PH", { minimumFractionDigits: 2 });
+
+  // Restore focus + caret
+  if (activeIndex !== null) {
+    let newInput = cartItemsDiv.querySelector(`.cart-item[data-index="${activeIndex}"] .qty`);
+    if (newInput) {
+      newInput.focus();
+      let length = newInput.value.length;
+      newInput.setSelectionRange(length, length);
+    }
+  }
+}
+
+// Handle plus/minus buttons
+document.getElementById("cart-items").addEventListener("click", e => {
+  let parent = e.target.closest(".cart-item");
+  if (!parent) return;
+  let index = parent.dataset.index;
+
+  if (e.target.classList.contains("plus")) cart[index].qty = (parseInt(cart[index].qty) || 0) + 1;
+  if (e.target.classList.contains("minus")) {
+    let current = parseInt(cart[index].qty) || 1;
+    if (current > 1) {
+      cart[index].qty = current - 1;
+    } else {
+      cart.splice(index, 1);
+    }
+  }
+  renderCart();
+});
+
+// Handle qty input on keyup
+document.getElementById("cart-items").addEventListener("keyup", e => {
+  if (!e.target.classList.contains("qty")) return;
+  let index = e.target.closest(".cart-item").dataset.index;
+  let value = e.target.value;
+
+  if (value === "") {
+    // allow empty while typing
+    cart[index].qty = "";
+  } else {
+    let num = parseInt(value, 10);
+    cart[index].qty = isNaN(num) || num < 1 ? 1 : num;
+  }
+
+  renderCart();
+});
+
+// Validate when leaving input (blur)
+document.getElementById("cart-items").addEventListener("blur", e => {
+  if (!e.target.classList.contains("qty")) return;
+  let index = e.target.closest(".cart-item").dataset.index;
+  let value = e.target.value.trim();
+
+  if (value === "" || isNaN(value) || parseInt(value) < 1) {
+    cart[index].qty = 1; // fallback
+  } else {
+    cart[index].qty = parseInt(value, 10);
+  }
+  renderCart();
+}, true);
+
+// Example: add item
+document.querySelectorAll(".btn-add").forEach(btn => {
+  btn.addEventListener("click", () => {
+    let name = btn.dataset.name;
+    let item_profile_id = btn.dataset.item_profile_id;
+    let name2 = btn.dataset.name2;
+
+    // store all prices in the cart item
+    let walkin = parseFloat(btn.dataset.walkin);
+    let regular = parseFloat(btn.dataset.price);
+    let wholesaler = parseFloat(btn.dataset.wholesaler);
+
+    // decide active price based on buyer_type
+    let b_type = $('#buyer_type').val();
+    //let price = (b_type === "WALKIN") ? walkin 
+      //        : (b_type === "REGULAR") ? regular 
+        //      : wholesaler;
+    let price = regular;
+
+    // let existing = cart.find(i => i.item_profile_id === item_profile_id);
+    let existing = cart.find(i => i.name2 === name2);
+    if (existing) {
+      existing.qty++;
+    } else {
+      cart.push({ 
+        item_profile_id, 
+        name, 
+        name2,
+        walkin, 
+        regular, 
+        wholesaler, 
+        price, 
+        qty: 1 
+      });
+    }
+    renderCart();
+  });
+});
+
+// Clear cart
+document.getElementById("clear-cart").addEventListener("click", e => {
+  e.preventDefault();
+  cart = [];
+  renderCart();
+});
+
+// Buyer type change -> update all cart prices
+$("#buyer_type").on("change", function () {
+  let b_type = $(this).val();
+  cart.forEach(item => {
+    if (b_type === "WALKIN") item.price = item.walkin;
+    else if (b_type === "REGULAR") item.price = item.regular;
+    else if (b_type === "WHOLESALER") item.price = item.wholesaler;
+  });
+  renderCart();
+});
+
+//   // Search filter
+//   $("#productSearch").on("keyup", function () {
+//       var value = $(this).val().toLowerCase();
+//       $(".product-card").filter(function () {
+//           $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+//       });
+//       currentPage = 1; // reset to first page when searching
+//       showPage(currentPage);
+//   });
+
+  // Buyer toggle
+  $("#Buyer_id").on("change", function () {
+      if(($(this).val() == 0)){
+          $('#other_buyer').removeAttr('hidden');
+      }else{
+          $('#other_buyer').attr('hidden', 'true');
+      }
+  });
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const itemsPerPage = 8;
+    const pagination = document.getElementById("pagination");
+    let currentPage = 1;
+    let searchValue = "";
+
+    const allCards = Array.from(document.querySelectorAll(".product-card"));
+
+    function getFilteredCards() {
+        if (!searchValue) return allCards;
+        return allCards.filter(card =>
+            card.textContent.toLowerCase().includes(searchValue)
+        );
+    }
+
+    function showPage(page) {
+        const filteredCards = getFilteredCards();
+        const totalPages = Math.ceil(filteredCards.length / itemsPerPage);
+        currentPage = Math.min(page, totalPages || 1);
+
+        // Hide everything first
+        allCards.forEach(card => card.style.display = "none");
+
+        // Show only filtered + paginated items
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        filteredCards.slice(start, end).forEach(card => {
+            card.style.display = "block";
+        });
+
+        renderPagination(totalPages);
+    }
+
+    function renderPagination(totalPages) {
+        pagination.innerHTML = "";
+        if (totalPages <= 1) return;
+
+        // Previous Button
+        const prevLi = document.createElement("li");
+        prevLi.className = `page-item ${currentPage === 1 ? "disabled" : ""}`;
+        prevLi.innerHTML = `<a class="page-link" href="#">Previous</a>`;
+        prevLi.onclick = () => { if (currentPage > 1) showPage(currentPage - 1); };
+        pagination.appendChild(prevLi);
+
+        // Page Numbers
+        for (let i = 1; i <= totalPages; i++) {
+            const li = document.createElement("li");
+            li.className = `page-item ${i === currentPage ? "active" : ""}`;
+            li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+            li.onclick = () => showPage(i);
+            pagination.appendChild(li);
+        }
+
+        // Next Button
+        const nextLi = document.createElement("li");
+        nextLi.className = `page-item ${currentPage === totalPages ? "disabled" : ""}`;
+        nextLi.innerHTML = `<a class="page-link" href="#">Next</a>`;
+        nextLi.onclick = () => { if (currentPage < totalPages) showPage(currentPage + 1); };
+        pagination.appendChild(nextLi);
+    }
+
+    // ✅ Search filter (does not directly toggle)
+    $("#productSearch").on("keyup", function () {
+        searchValue = $(this).val().toLowerCase();
+        currentPage = 1; // reset to first page
+        showPage(currentPage);
+    });
+
+    // Initialize
+    showPage(1);
+});
+</script>
+
+<!-- For see more feature -->
+<script>
+document.querySelectorAll('.desc-text').forEach(p => {
+  const fullText = p.textContent.trim();
+  const limit = 50;
+
+  if (fullText.length > limit) {
+    const shortText = fullText.substring(0, limit) + '...';
+    p.innerHTML = `
+      <span class="short-text">${shortText}</span>
+      <span class="full-text d-none">${fullText}</span>
+      <button class="btn btn-link p-0 text-primary see-more" type="button">See more</button>
+    `;
+  }
+});
+
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('see-more')) {
+    const btn = e.target;
+    const parent = btn.closest('.desc-text');
+    parent.querySelector('.short-text').classList.toggle('d-none');
+    parent.querySelector('.full-text').classList.toggle('d-none');
+    btn.textContent = btn.textContent === 'See more' ? 'See less' : 'See more';
+  }
+});
+</script>

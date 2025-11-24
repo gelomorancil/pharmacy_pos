@@ -22,10 +22,12 @@ class Report_model extends CI_Model
         $this->db->select('
             pParent.*,
             user.FName,
-            user.LName
+            user.LName,
+            buyer.name AS buyer_name,
         ');
         $this->db->from($this->Table->payment_parent . ' AS pParent');
         $this->db->join($this->Table->user . ' AS user', 'pParent.recieved_by = user.id', 'left');
+        $this->db->join($this->Table->buyers . ' AS buyer', 'pParent.Buyer_ID = buyer.ID', 'left');
 
         if ($this->date_from && $this->date_to) {
             $this->db->where('pParent.date_created >=', $this->date_from);
