@@ -136,6 +136,7 @@ class Inventory_model extends CI_Model
             po.date_added,
             po.po_num,
             po.received_by,
+            po.date_approved,
 
             unit.unit_of_measure,
 

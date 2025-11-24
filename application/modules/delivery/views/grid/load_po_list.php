@@ -19,14 +19,6 @@
                 <td class="text-center"><?= @$value->supplier_name??"<span style='color:red;font-weight:bold;'>UPDATE TO ADD SUPPLIER</span>"?></td>
                 <td class="text-center">
 
-                    <!-- Delete Button -->
-                    <!-- <button type="button" 
-                            class="btn btn-sm btn-danger" 
-                            data-PO="<?= $value->po_num ?>" 
-                            onclick="del_po(this)">
-                        <i class="fa fa-trash"></i>
-                    </button> -->
-
                     <!-- Approve Button -->
                     <button type="button" 
                             class="btn btn-sm btn-success" 

@@ -175,18 +175,18 @@ var edit_po = (btn) => {
                 // Clear current table
                 $("#e-order_table tbody").empty();
 
-                // Loop through items
+                // Loop through items <td>${row.description ?? ''}</td> <td>${row.date_expiry ? row.date_expiry.split(" ")[0] : ''}</td><td>${row.pcs ?? ''}</td>
                 if (data.items && data.items.length > 0) {
                     data.items.forEach(function (row) {
                         let tr = `
                             <tr>
                                 <td data-unit-id="${row.unit_ID}">${row.unit_of_measure ?? ''}</td>
                                 <td>${row.qty ?? ''}</td>
-                                <td>${row.pcs ?? ''}</td>
+                                
                                 <td data-item-id="${row.po_item_id}">${row.item_name ?? ''}</td>
                                 <td>${row.unit_price ?? ''}</td>
-                                <td>${row.description ?? ''}</td>
-                                <td>${row.date_expiry ? row.date_expiry.split(" ")[0] : ''}</td>
+                                
+                                
 
                                 <td>
                                     <button class="btn btn-sm btn-danger" onclick="removeRow(this)" data-id="${row.po_item_id}">Remove</button>
@@ -208,9 +208,9 @@ $("#add_to_table").on("click", function () {
     let item_id = $("#item").val();
     let item_text = $("#item option:selected").text();
     let unit_price = $("#unit_price").val();
-    let desc = $("#item_desc").val();
-    let date_expiry = $("#date_expiry").val();
-    let pcs = $("#po-pcs").val();
+    // let desc = $("#item_desc").val();
+    // let date_expiry = $("#date_expiry").val();
+    // let pcs = $("#po-pcs").val();
     // let threshold = $("#threshold").val();
 
     console.log(qty, item_id, unit_price);
@@ -227,38 +227,34 @@ $("#add_to_table").on("click", function () {
         item_id,
         item_text,
         unit_price,
-        desc,
-        date_expiry,
-        pcs
+        // desc,
+        // date_expiry,
+        // pcs
         // threshold
     };
     orderItems.push(newItem);
 
-    let formattedExpiry = "";
-    if (date_expiry instanceof Date) {
-        formattedExpiry = date_expiry.toISOString().split('T')[0]; 
-    } else {
-        formattedExpiry = date_expiry; 
-    }
-    console.log(formattedExpiry);
+    // let formattedExpiry = "";
+    // if (date_expiry instanceof Date) {
+    //     formattedExpiry = date_expiry.toISOString().split('T')[0]; 
+    // } else {
+    //     formattedExpiry = date_expiry; 
+    // }
+    // console.log(formattedExpiry); <td>${formattedExpiry}</td><td>${pcs}</td>
     // Append to table
     let row = `
         <tr>
-            <td>${unit_text}</td>
-            <td>${qty}</td>
-            <td>${pcs}</td>
+            <td>${qty}</td>            
             <td>${item_text}</td>
             <td>${unit_price}</td>
-            <td>${desc}</td>
-            <td>${formattedExpiry}</td>
             <td><button class="btn btn-danger btn-sm remove-item">Remove</button></td>
         </tr>`;
     $("#order_table tbody").append(row);
 
-    // Clear fields after add
+    // Clear fields after add <td>${desc}</td>
     $("#quantity").val("");
     $("#unit_price").val("");
-    $("#item_desc").val("");
+    // $("#item_desc").val("");
     // $("#threshold").val("");
     // $("#branded_flag").prop("checked", false);
 });
@@ -346,11 +342,11 @@ $("#update-po").on("click", function () {
         poData.items.push({
             unit_id: unitID,
             qty: $(row[1]).text(),
-            pcs: $(row[2]).text(),
+            // pcs: $(row[2]).text(),
             item_id: itemID,
-            unit_price: $(row[4]).text(),
-            desc: $(row[5]).text(),
-            date_expiry: $(row[6]).text(),
+            // unit_price: $(row[4]).text(),
+            // desc: $(row[5]).text(),
+            // date_expiry: $(row[6]).text(),
             // threshold: $(row[6]).text()
         });
     });
@@ -404,16 +400,16 @@ var fill_in_item = (data)  => {
             // let response = JSON.parse(res);
 
             // Fill Unit of Measure (select)
-            $("#unit_id").val(response.unit_id).trigger('change');
+            // $("#unit_id").val(response.unit_id).trigger('change');
 
-            // Fill Item Description
-            $("#item_desc").val(response.description);
+            // // Fill Item Description
+            // $("#item_desc").val(response.description);
 
-            if (response.unit_of_measure.toLowerCase() === "box") {
-                $("#po-pcs").prop("disabled", false);
-            } else {
-                $("#po-pcs").prop("disabled", true).val("");
-            }
+            // if (response.unit_of_measure.toLowerCase() === "box") {
+            //     $("#po-pcs").prop("disabled", false);
+            // } else {
+            //     $("#po-pcs").prop("disabled", true).val("");
+            // }
 
             console.log("Auto-filled:", response);
         },
