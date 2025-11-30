@@ -6,9 +6,20 @@ $session = (object) get_userdata(USER);
 ?>
 
 <style>
+    /* AUTH MODAL should always appear above any other modal */
+    #auth-modal {
+        z-index: 1060 !important;
+    }
+
+    #auth-modal .modal-dialog {
+        z-index: 1070 !important;
+    }
+
+
     #approve-delivery-modal .modal-dialog {
-    max-width: 80% !important;
-}
+        z-index: 1065 !important;
+        max-width: 80% !important;
+    } 
 </style>
 
 <div class="row">
@@ -54,7 +65,7 @@ $session = (object) get_userdata(USER);
 </div> -->
 
 
-<div class="modal fade" id="modal-stock-in-purchase">
+<!-- <div class="modal fade" id="modal-stock-in-purchase">
     <div class="modal-dialog modal-lg" style="max-width: 1200px;">
         <div class="modal-content">
             <div class="modal-header">
@@ -128,7 +139,7 @@ $session = (object) get_userdata(USER);
 
         </div>
     </div>
-</div>
+</div> -->
 
 
 <div class="modal fade" id="approve-delivery-modal">
@@ -197,7 +208,44 @@ $session = (object) get_userdata(USER);
             <div class="modal-footer">
                 <div class="justify-content-between">
                     <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-sm btn-success" id="approve-delivery">Approve Delivery Order</button>
+                    <button type="button" class="btn btn-sm btn-success" id="auth-delivery">Approve Delivery
+                        Order</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="auth-modal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h3 class="modal-title">Authenticate Delivery</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label for="auth-username">Username</label>
+                    <input type="text" class="form-control" id="auth-username" placeholder="Enter your username">
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label for="auth-password">Password</label>
+                    <input type="password" class="form-control" id="auth-password" placeholder="Enter your password">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="d-flex justify-content-between w-100">
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-sm btn-success" id="approve-delivery">Authenticate</button>
                 </div>
             </div>
 

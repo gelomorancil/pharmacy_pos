@@ -37,6 +37,7 @@ define('DUPLICATE_ITEM_FOUND', 'Duplicated Item name found in the system, please
 define('DEFAULT_PASSWORD', 'Do not use the default password. Please create new password.');
 define('NOT_MATCH', 'Your password does not match. Please try again.');
 define('DUPLICATE_USERNAME_FOUND', 'Username is already taken, please try again.');
+define('USER_MISMATCH', 'User mismatch detected. Authenticate using the current logged in user.');
 
 /** default messages */
 define('DEFAULT_LOGIN_PASSWORD', 'password1234*');
