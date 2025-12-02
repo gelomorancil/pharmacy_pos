@@ -53,6 +53,8 @@ class Management_services_model extends CI_Model
                 'classification' => $this->classification,
                 'storage_condition' => $this->storage_condition,
                 'distributor' => $this->distributor,
+                'pcs_stub' => $this->pcs_stub,
+                'pcs_box' => $this->pcs_box,
                 // 'batch_no' => $this->batch_no,
 
             );
@@ -145,6 +147,8 @@ class Management_services_model extends CI_Model
                 'classification' => $this->classification,
                 'storage_condition' => $this->storage_condition,
                 'distributor' => $this->distributor,
+                'pcs_stub' => $this->pcs_stub,
+                'pcs_box' => $this->pcs_box,
                 // 'storage_condition' => $this->storage_condition,
                 // 'batch_no' => $this->batch_no,
             );

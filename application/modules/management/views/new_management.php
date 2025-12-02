@@ -357,6 +357,8 @@ main_header(['list_management']);
                                                             data-storage_condition="<?=$value->storage_condition?>"
                                                             data-item_expiry_date="<?=$value->item_expiry_date?>"
                                                             data-batch_no="<?=$value->batch_no?>"
+                                                            data-pcs_stub="<?=$value->pcs_stub?>"
+                                                            data-pcs_box="<?=$value->pcs_box?>"
                                                             data-distributor="<?=$value->distributor?>">
                                                             <?= $value->item_name ?>
                                                         </option>
@@ -433,14 +435,14 @@ main_header(['list_management']);
                                                         <option value="OTC">OTC</option>
                                                     </select>
                                                 </div>
-                                                <!-- <div class="col-3">
-                                                    <label for="">Batch No:</label>
-                                                    <input type="text" id="batch_no" class="form-control inpt" placeholder="Batch number">
+                                                <div class="col-3">
+                                                    <label for="">Number of PCS per <strong class="text-danger">STUB:</strong></label>
+                                                    <input type="text" id="pcs_stub" class="form-control inpt" placeholder="Pieces per Stub">
                                                 </div>
-                                                <div class="col-2">
-                                                    <label for="">Expiration Date:</label>
-                                                    <input type="date" id="item_expiry_date" class="form-control inpt">
-                                                </div> -->
+                                                <div class="col-3">
+                                                    <label for="">Number of PCS per <strong class="text-danger">BOX:</strong></label>
+                                                    <input type="text" id="pcs_box" class="form-control inpt" placeholder="Pieces per Box">
+                                                </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-5">
