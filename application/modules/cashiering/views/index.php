@@ -142,6 +142,7 @@ $session = (object) get_userdata(USER);
                                     data-name2="<?=$i->item_name." (RS)"?>"
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
                                     data-price="<?=$i->RS?>" 
+                                    data-to_pcs="<?=$i->pcs_stub?>" 
                                 >RS ₱<?=number_format($i->RS,2)?>
                                  </button>  <br>
                                 <button class="price-label btn-add" 
@@ -149,6 +150,7 @@ $session = (object) get_userdata(USER);
                                     data-name2="<?=$i->item_name." (RB)"?>"
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
                                     data-price="<?=$i->RB?>" 
+                                    data-to_pcs="<?=$i->pcs_box?>" 
                                 >RB ₱<?=number_format($i->RB,2)?>
                                 </button> 
                             </div>
@@ -165,6 +167,7 @@ $session = (object) get_userdata(USER);
                                     data-name2="<?=$i->item_name." (WS)"?>"
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
                                     data-price="<?=$i->WS?>" 
+                                    data-to_pcs="<?=$i->pcs_stub?>"
                                 >WS ₱<?=number_format($i->WS,2)?>
                                  </button>  <br>
                                 <button class="price-label btn-add" 
@@ -172,6 +175,7 @@ $session = (object) get_userdata(USER);
                                     data-name2="<?=$i->item_name." (WB)"?>"
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
                                     data-price="<?=$i->WB?>" 
+                                    data-to_pcs="<?=$i->pcs_box?>"
                                 >WB ₱<?=number_format($i->WB,2)?>
                                 </button> 
                             </div>
@@ -520,6 +524,7 @@ function renderCart() {
       <div class="cart-item mb-3 pb-2 border-bottom" data-index="${i}" data-item_profile_id="${item.item_profile_id}">
         <div><strong>${item.name2}</strong></div>
         <input type="text" hidden value="${item.item_profile_id}">
+        <input type="text" hidden class="to_pcs" value="${item.to_pcs}">
         <div class="d-flex justify-content-between align-items-center">
           <div>
             ₱${item.price.toLocaleString("en-PH", { minimumFractionDigits: 2 })} each
@@ -610,6 +615,7 @@ document.querySelectorAll(".btn-add").forEach(btn => {
     let walkin = parseFloat(btn.dataset.walkin);
     let regular = parseFloat(btn.dataset.price);
     let wholesaler = parseFloat(btn.dataset.wholesaler);
+    let to_pcs = parseFloat(btn.dataset.to_pcs);
 
     // decide active price based on buyer_type
     let b_type = $('#buyer_type').val();
@@ -631,7 +637,8 @@ document.querySelectorAll(".btn-add").forEach(btn => {
         regular, 
         wholesaler, 
         price, 
-        qty: 1 
+        qty: 1,
+        to_pcs
       });
     }
     renderCart();

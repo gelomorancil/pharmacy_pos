@@ -34,6 +34,8 @@ class Management_service extends MY_Controller
 		$this->msModel->classification = $this->input->post("classification");
 		$this->msModel->storage_condition = $this->input->post("storage_condition");
 		$this->msModel->distributor = $this->input->post("distributor");
+		$this->msModel->pcs_stub = $this->input->post("pcs_stub");
+		$this->msModel->pcs_box = $this->input->post("pcs_box");
 		// $this->msModel->item_expiry_date = $this->input->post("item_expiry_date");
 		// $this->msModel->batch_no = $this->input->post("batch_no");
 
@@ -96,6 +98,8 @@ class Management_service extends MY_Controller
 		$this->msModel->classification = $this->input->post("classification");
 		$this->msModel->storage_condition = $this->input->post("storage_condition");
 		$this->msModel->distributor = $this->input->post("distributor");
+		$this->msModel->pcs_stub = $this->input->post("pcs_stub");
+		$this->msModel->pcs_box = $this->input->post("pcs_box");
 		// $this->msModel->storage_condition = $this->input->post("storage_condition");
 		// $this->msModel->batch_no = $this->input->post("batch_no");
 

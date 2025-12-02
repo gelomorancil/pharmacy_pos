@@ -22,6 +22,8 @@ var editProfile = (data) => {
     $('#regular_box_price').val(data.getAttribute('data-regular_box_price'));
     $('#walkin_stub_price').val(data.getAttribute('data-walkin_stub_price'));
     $('#walkin_box_price').val(data.getAttribute('data-walkin_box_price'));
+    $('#pcs_stub').val(data.getAttribute('data-pcs_stub'));
+    $('#pcs_box').val(data.getAttribute('data-pcs_box'));
     // $('#wholesale_price').val(data.getAttribute('data-unit_price'));
     $('#threshold').val(data.getAttribute('data-threshold'));
   

@@ -118,6 +118,8 @@ $('#save_item').click(function () {
               classification: $('#classification').val(),
               storage_condition: $('#storage_condition').val(),
               distributor: $('#distributor').val(),
+              pcs_stub: $('#pcs_stub').val(),
+              pcs_box: $('#pcs_box').val(),
               // batch_no: $('#batch_no').val(),
               // item_expiry_date: $('#item_expiry_date').val(),
             },
@@ -140,6 +142,8 @@ $('#save_item').click(function () {
                 $('#classification').val("");
                 $('#storage_condition').val("");
                 $('#distributor').val("");
+                $('#pcs_stub').val("");
+                $('#pcs_box').val("");
                 // $('#item_expiry_date').val("");
                 // $('#batch_no').val("");
                 // setTimeout(function () {
@@ -190,6 +194,8 @@ $('#update_item').click(function () {
               classification: $('#classification').val(),
               storage_condition: $('#storage_condition').val(),
               distributor: $('#distributor').val(),
+              pcs_stub: $('#pcs_stub').val(),
+              pcs_box: $('#pcs_box').val(),
               // item_expiry_date: $('#item_expiry_date').val(),
               // batch_no: $('#batch_no').val(),
             },
@@ -212,6 +218,8 @@ $('#update_item').click(function () {
                 $('#classification').val("");
                 $('#storage_condition').val("");
                 $('#distributor').val("");
+                $('#pcs_stub').val("");
+                $('#pcs_box').val("");
                 // $('#item_expiry_date').val("");
                 // $('#batch_no').val("");
                 setTimeout(function () {
@@ -327,6 +335,8 @@ $('#select_item').change(function () {
   $('#classification').val(selectedOption.data('classification'));
   $('#storage_condition').val(selectedOption.data('storage_condition'));
   $('#distributor').val(selectedOption.data('distributor'));
+  $('#pcs_stub').val(selectedOption.data('pcs_stub'));
+  $('#pcs_box').val(selectedOption.data('pcs_box'));
 
 });
 

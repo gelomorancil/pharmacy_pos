@@ -304,19 +304,48 @@ function process_payment() {
     //     }
     // });
     
+    //OLD CODE
+    // document.querySelectorAll(".cart-item").forEach(cartItem => {
+    //     const item = {
+    //         // You can store the index if needed
+    //         index: cartItem.dataset.index,  
+    //         item_profile_id: cartItem.dataset.item_profile_id,
+
+
+    //         item_name: cartItem.querySelector("strong").innerText.trim(),
+    //         unit_price: parseFloat(
+    //             cartItem.querySelector(".d-flex div").innerText.replace(/[^\d.-]/g, "")
+    //         ),
+    //         quantity: parseInt(cartItem.querySelector(".qty").value, 10),
+    //         to_pcs: parseInt(cartItem.querySelector(".to_pcs").value, 10),
+    //         total_pcs: quantity * to_pcs,
+    //         discount: 0, // set later if you add discount input
+    //         total: parseFloat(
+    //             cartItem.querySelector(".text-right").innerText.replace(/[^\d.-]/g, "")
+    //         )
+    //     };
+
+    //     itemsArray.push(item);
+    // });
+
+
     document.querySelectorAll(".cart-item").forEach(cartItem => {
+
+        const quantity = parseInt(cartItem.querySelector(".qty").value, 10);
+        const to_pcs = parseInt(cartItem.querySelector(".to_pcs").value, 10);
+
         const item = {
-            // You can store the index if needed
             index: cartItem.dataset.index,  
             item_profile_id: cartItem.dataset.item_profile_id,
-
 
             item_name: cartItem.querySelector("strong").innerText.trim(),
             unit_price: parseFloat(
                 cartItem.querySelector(".d-flex div").innerText.replace(/[^\d.-]/g, "")
             ),
-            quantity: parseInt(cartItem.querySelector(".qty").value, 10),
-            discount: 0, // set later if you add discount input
+            quantity: quantity,
+            to_pcs: to_pcs,
+            total_pcs: quantity * to_pcs,  // ✅ works now
+            discount: 0,
             total: parseFloat(
                 cartItem.querySelector(".text-right").innerText.replace(/[^\d.-]/g, "")
             )
@@ -324,6 +353,7 @@ function process_payment() {
 
         itemsArray.push(item);
     });
+
 
     // console.log(itemsArray);
     if (parseFloat(amount_rendered) == 0 || parseFloat(amount_rendered) < parseFloat(total_amount)) {

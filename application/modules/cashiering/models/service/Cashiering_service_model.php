@@ -194,12 +194,18 @@ class Cashiering_service_model extends CI_Model
     {
         $data = [];
 
+       
         foreach ($items_array as $item) {
+              $final_quantity = !is_numeric($item['total_pcs'])
+                ? $item['quantity']
+                : $item['total_pcs'];
+
+
             $data[] = [
                 'payment_id' => $payment_id,
                 'item_profile_id' => $item['item_profile_id'],
                 'unit_price' => $item['unit_price'],
-                'quantity' => $item['quantity'],
+                'quantity' => $final_quantity,
                 'discount' => $item['discount'],
                 'total_price' => $item['total']
             ];
