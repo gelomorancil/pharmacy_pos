@@ -19,7 +19,19 @@ class Inventory_model extends CI_Model
         u.unit_of_measure,
         i.item_name,
         i.item_code,
-        i.short_name');
+        i.short_name,
+        i.distributor,
+        i.strenght,
+        i.storage_condition,
+        i.uom,
+        i.category,
+        i.packaging,
+        i.description,
+        i.classification,
+        i.active,
+        i.item_expiry_date,
+        '
+    );
 
         $this->db->from($this->Table->item_profile . ' AS ip');
         $this->db->join($this->Table->items . ' AS i', 'ip.item_id = i.id', 'left');
@@ -238,6 +250,8 @@ class Inventory_model extends CI_Model
             u.unit_of_measure,
             i.item_name,
             i.item_code,
+            i.strenght,
+            i.short_name,
             i.description');
         $this->db->from($this->Table->purchase_order_items . ' AS poi');
         $this->db->join($this->Table->items . ' AS i', 'poi.item_id = i.id', 'left');

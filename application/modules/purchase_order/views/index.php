@@ -4,7 +4,23 @@ $session = (object) get_userdata(USER);
 
 // var_dump($session->FName);
 ?>
+<style>
 
+  /* Change hover color to light gray */
+    .select2-results__option--highlighted {
+        background-color: #f2f2f2 !important; /* light gray background */
+        color: #000 !important; /* black text */
+    }
+
+    /* Optional: make the cursor consistent */
+    .select2-results__option {
+        cursor: pointer;
+    }
+
+    .select2-results__options {
+        max-height: 400px !important;  /* default is ~200px */
+    }
+</style>
 <div class="row">
     <div class="col-lg-12 col-md-6 col-sm-12">
         <div class="card">
@@ -65,17 +81,29 @@ $session = (object) get_userdata(USER);
                 </div>
 
                 <div class="row">
-                    <div class="col-sm-4">
+                    <div class="col-sm-8">
                         <label for="">Select Item:</label>
-                        <select name="" id="item" class="form-control inpt" onchange="fill_in_item(this)">
-                            <option selected disabled value="">Select Item</option>
-                            <?php
-                            foreach ($items_profiles as $value) {
-                                ?>
-                                <option value="<?= $value->id ?>"> <?= $value->item_name ?></option>
-                                <?php
-                            }
-                            ?>
+                         <select id="item" class="select2 form-control" style="width: 100%;">
+                            <option value="" disabled selected>-- Select Category --</option>
+                            <?php foreach($items_profiles as $key => $value){ ?>
+                                <option 
+                                    value="<?= $value->id ?>"
+                                    data-id="<?=$value->id?>" 
+                                    data-item_name="<?=$value->item_name?>" 
+                                    data-item_code="<?=$value->item_code?>" 
+                                    data-short_name="<?=$value->short_name?>" 
+                                    data-description="<?=$value->description?>" 
+                                    data-category="<?=$value->category?>" 
+                                    data-status="<?=$value->active?>" 
+                                    data-strenght="<?=$value->strenght?>"
+                                    data-packaging="<?=$value->packaging?>"
+                                    data-uom="<?=$value->uom?>"
+                                    data-classification="<?=$value->classification?>"
+                                    data-storage_condition="<?=$value->storage_condition?>"
+                                    data-distributor="<?=$value->distributor?>">
+                                    <?= $value->item_name ?>
+                                </option>
+                            <?php } ?>
                         </select>
                     </div>
                     <!-- <div class="col-sm-2">
@@ -141,6 +169,7 @@ $session = (object) get_userdata(USER);
                             <th>Qty</th>
                             <!-- <th>Pcs</th> -->
                             <th>Item</th>
+                            <th>Dosage</th>
                             <!-- <th>Unit Price</th> -->
                             <!-- <th>Description</th> -->
                             <!-- <th>Date Expiry</th> -->
@@ -282,6 +311,91 @@ $session = (object) get_userdata(USER);
 main_footer();
 ?>
 <script>
-    
+        $('#item').select2({
+        width: '100%',
+        matcher: function(params, data) {
+            if ($.trim(params.term) === '') return data;
+
+            const term = params.term.toLowerCase();
+            const text = (data.text || '').toLowerCase();
+            let found = text.indexOf(term) > -1;
+
+            if (!found && data.element) {
+                const $option = $(data.element);
+                $.each($option.data(), function(key, value) {
+                    if (String(value).toLowerCase().indexOf(term) > -1) {
+                        found = true;
+                        return false;
+                    }
+                });
+            }
+            return found ? data : null;
+        },
+        templateResult: function(option) {
+            if (!option.id) return option.text;
+
+            const data = $(option.element).data();
+            const statusColor = data.status == 1 ? 'green' : 'red';
+
+            return `
+                <div class="p-1">
+                    <div class="d-flex justify-content-between align-items-start mb-1">
+                        <div>
+                            <div class="d-flex align-items-center">
+                                <span style="
+                                    display:inline-block;
+                                    width:10px;
+                                    height:10px;
+                                    border-radius:50%;
+                                    background:${statusColor};
+                                    margin-right:6px;
+                                "></span>
+                                <strong>${data.item_name || option.text}</strong>
+                            </div>
+                            <small class="text-muted d-block mt-1">
+                                <span class="text-danger">GENERIC NAME:</span> ${data.short_name || '-'}
+                            </small>
+                            <small class="text-muted d-block">
+                                <span class="text-danger">MANUFACTURER:</span> ${data.item_code || '-'}
+                            </small>
+                            <small class="text-muted d-block">
+                                <span class="text-danger">DISTRIBUTOR:</span> ${data.distributor || '-'}
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="border-top pt-1">
+                        <small class="text-muted d-block">
+                            <span class="text-primary">CATEGORY:</span> ${data.category || '-'}
+                        </small>
+                        <small class="text-muted d-block">
+                            <span class="text-primary">STRENGTH:</span> ${data.strenght || '-'}
+                        </small>
+                        <small class="text-muted d-block">
+                            <span class="text-primary">STORAGE:</span> ${data.storage_condition || '-'}
+                        </small>
+                        <small class="text-muted d-block">
+                            <span class="text-primary">UOM:</span> ${data.uom || '-'}
+                        </small>
+                        <small class="text-muted d-block">
+                            <span class="text-primary">PACKAGING:</span> ${data.packaging || '-'}
+                        </small>
+                        <small class="text-muted d-block">
+                            <span class="text-primary">DESCRIPTION:</span> ${data.description || '-'}
+                        </small>
+                        <small class="text-muted d-block">
+                            <span class="text-primary">CLASSIFICATION:</span> ${data.classification || '-'}
+                        </small>
+                    </div>
+                </div>
+            `;
+        },
+        templateSelection: function(option) {
+            if (!option.id) return option.text;
+            const data = $(option.element).data();
+            return data.item_name || option.text;
+        },
+        escapeMarkup: function(m) { return m; } // Allow HTML rendering
+    });
 </script>
 <script src="<?php echo base_url() ?>/assets/js/inventory/po.js"></script>

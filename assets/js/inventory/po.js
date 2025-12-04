@@ -206,6 +206,7 @@ $("#add_to_table").on("click", function () {
     let qty = $("#quantity_po").val();
     let item_id = $("#item").val();
     let item_text = $("#item option:selected").text();
+    let item_strenght = $("#item option:selected").data("strenght");
     // let unit_price = $("#unit_price").val();
     // let desc = $("#item_desc").val();
     // let date_expiry = $("#date_expiry").val();
@@ -226,6 +227,7 @@ $("#add_to_table").on("click", function () {
         qty,
         item_id,
         item_text,
+        item_strenght,
         // unit_price,
         // desc,
         // date_expiry,
@@ -246,6 +248,7 @@ $("#add_to_table").on("click", function () {
         <tr>
             <td>${qty}</td>            
             <td>${item_text}</td>
+            <td>${item_strenght}</td>
             <td><button class="btn btn-danger btn-sm remove-item">Remove</button></td>
         </tr>`;
     $("#order_table tbody").append(row);
