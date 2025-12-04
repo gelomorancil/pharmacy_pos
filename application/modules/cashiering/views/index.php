@@ -11,7 +11,7 @@ $session = (object) get_userdata(USER);
       border-radius: 10px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       position: relative;
-      height: 180px;
+      height: 200px;
     }
     .stock-label {
       background: #eafaf1;
@@ -127,8 +127,10 @@ $session = (object) get_userdata(USER);
                             <small class="card-text text-muted mb-1"><?=strtoupper($i->Category)?></small>
                             <h6 class="card-title mb-1"><?=$i->item_name?></h6>
                             <span class="<?=$i->current_stock == 0 ? 'stock-label-zero' : 'stock-label'?>">Stock: <?=$i->current_stock?></span>
-                            <p class="card-text text-muted mb-1 desc-text"><?=$i->description?></p>
-                            <small class="card-text text-muted mb-1"><?=$i->item_code?></small>
+                            <p class="card-text text-muted mb-1 desc-text"><?=$i->strenght?></p>
+                            <small class="card-text text-muted"><?=$i->uom?></small>
+                            <small class="card-text text-muted"><?=$i->packaging?></small>
+                            <small class="card-text text-muted"><?=$i->classification?></small>
                              <div class="font-weight-bold d-flex gap-3">
                                 <button class="price-label btn-add" 
                                     data-name="<?=$i->item_name?>"

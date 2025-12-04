@@ -59,6 +59,9 @@ var approve_delivery = (btn) => {
                             <tr>
                                 <td>${row.qty ?? ''}</td>
                                 <td data-item-id="${row.po_item_id}">${row.item_name ?? ''}</td>
+                               <td data-item-id="${row.po_item_id}">
+                                    ${row.short_name ?? ''}${row.strenght ? ` (${row.strenght})` : ''}
+                                </td>
                                  <td>
                                     <input type="number" class="form-control form-control-xs unit-price" 
                                         min="0" value="0">
