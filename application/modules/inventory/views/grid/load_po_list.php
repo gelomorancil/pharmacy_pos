@@ -42,12 +42,12 @@
                     </button>
 
                     <!-- Approve Button -->
-                    <button type="button" 
+                    <!-- <button type="button" 
                             class="btn btn-sm btn-success" 
                             data-PO="<?= $value->po_num ?>" 
                             onclick="approve_po(this)">
                         <i class="fa fa-check"></i>
-                    </button>
+                    </button> -->
                 </td>
 
             </tr>

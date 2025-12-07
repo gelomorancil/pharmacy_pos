@@ -182,7 +182,7 @@ $session = (object) get_userdata(USER);
                         <tr>
                             <th>Qty</th>
                             <th>Brand</th>
-                            <th>Item</th>
+                            <th>Dosage</th>
                             <!-- <th>Brand</th>  -->
                             <th>Unit Price</th>
                             <th>Date Expiry</th>

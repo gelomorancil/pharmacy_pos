@@ -247,6 +247,7 @@ class Inventory_model extends CI_Model
             poi.unit_ID,
             poi.qty,
             poi.item_ID,
+            poi.supplier_price,
             u.unit_of_measure,
             i.item_name,
             i.item_code,

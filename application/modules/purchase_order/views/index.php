@@ -47,7 +47,7 @@ $session = (object) get_userdata(USER);
 
 
 <div class="modal fade" id="modal-stock-in-purchase">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Purchase Order</h3>
@@ -59,7 +59,7 @@ $session = (object) get_userdata(USER);
                 <div class="row">
                     <div class="col-sm-4">
                         <label for="">PO number:</label>
-                        <input type="text" id="po_number" class="form-control inpt" value="<?= @$PO_num ?>" disabled>
+                        <input type="text" id="po_number" class="form-control inpt" value="<?= @$PO_num ?>">
                     </div>
                     <div class="col-sm-4">
                         <label for="">Date Purchased:</label>
@@ -170,6 +170,7 @@ $session = (object) get_userdata(USER);
                             <!-- <th>Pcs</th> -->
                             <th>Item</th>
                             <th>Dosage</th>
+                            <th>Supplier Price</th>
                             <!-- <th>Unit Price</th> -->
                             <!-- <th>Description</th> -->
                             <!-- <th>Date Expiry</th> -->
@@ -192,7 +193,7 @@ $session = (object) get_userdata(USER);
 
 
 <div class="modal fade" id="edit-po-modal">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Purchase Order</h3>
@@ -204,7 +205,8 @@ $session = (object) get_userdata(USER);
                 <div class="row">
                     <div class="col-sm-4">
                         <label for="">PO number:</label>
-                        <input type="text" id="e-po_number" class="form-control inpt" disabled>
+                        <input type="text" id="e-po_number" class="form-control inpt">
+                        <input type="text" id="e-po_number-id" class="form-control inpt"  style="display: none;">
                     </div>
                     <div class="col-sm-4">
                         <label for="">Date Purchased:</label>
@@ -222,16 +224,32 @@ $session = (object) get_userdata(USER);
                 </div>
 
                 <div class="row">
-                    <div class="col-sm-4">
+                    <div class="col-sm-8">
                         <label for="">Select Item:</label>
-                        <select id="e-item" class="form-control inpt">
-                            <option selected disabled value="">Select Item</option>
-                            <?php foreach ($items_profiles as $value): ?>
-                                <option value="<?= $value->id ?>"><?= $value->item_name ?></option>
-                            <?php endforeach; ?>
+                        <select id="item_2" class="select2 form-control" style="width: 100%;">
+                            <option value="" disabled selected>-- Select Category --</option>
+                            <?php foreach($items_profiles as $key => $value){ ?>
+                                <option 
+                                    value="<?= $value->id ?>"
+                                    data-id="<?=$value->id?>" 
+                                    data-item_name="<?=$value->item_name?>" 
+                                    data-item_code="<?=$value->item_code?>" 
+                                    data-short_name="<?=$value->short_name?>" 
+                                    data-description="<?=$value->description?>" 
+                                    data-category="<?=$value->category?>" 
+                                    data-status="<?=$value->active?>" 
+                                    data-strenght="<?=$value->strenght?>"
+                                    data-packaging="<?=$value->packaging?>"
+                                    data-uom="<?=$value->uom?>"
+                                    data-classification="<?=$value->classification?>"
+                                    data-storage_condition="<?=$value->storage_condition?>"
+                                    data-distributor="<?=$value->distributor?>">
+                                    <?= $value->item_name ?>
+                                </option>
+                            <?php } ?>
                         </select>
                     </div>
-                    <div class="col-sm-2">
+                    <!-- <div class="col-sm-2"> -->
                         <!-- <div class="form-group w-100">
                             <label for="">Unit of Measure:</label>
                             <select class="form-control" id="e-unit_id">
@@ -240,12 +258,12 @@ $session = (object) get_userdata(USER);
                                 <?php endforeach; ?>
                             </select>
                         </div> -->
-                    </div>
+                    <!-- </div> -->
                     <!-- <div class="col-sm-2">
                         <label for="">Pcs:</label>
                         <input type="number" id="e-po-pcs" class="form-control inpt" placeholder="Enter pcs" disabled>
                     </div> -->
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <label for="">Quantity:</label>
                         <input type="number" id="e-quantity_po" class="form-control inpt" placeholder="Enter quantity">
                     </div>
@@ -284,8 +302,9 @@ $session = (object) get_userdata(USER);
                             <!-- <th>Unit</th> -->
                             <th>Qty</th>
                             <!-- <th>Pcs</th> -->
-                            <th>Brand</th>
-                            <th>Unit Price</th>
+                            <th>Item</th>
+                            <th>Dosage</th>
+                            <th>Supplier Price</th>
                             <!-- <th>Description</th> -->
                             <!-- <th>Date Expiry</th> -->
                             <!-- <th>Threshold</th> -->
@@ -311,8 +330,9 @@ $session = (object) get_userdata(USER);
 main_footer();
 ?>
 <script>
-        $('#item').select2({
+        $('#item, #item_2').select2({
         width: '100%',
+        dropdownParent: $('body'),
         matcher: function(params, data) {
             if ($.trim(params.term) === '') return data;
 

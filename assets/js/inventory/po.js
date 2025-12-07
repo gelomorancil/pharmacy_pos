@@ -167,6 +167,7 @@ var edit_po = (btn) => {
                 let header = data.header;
 
                 // Fill form fields
+                $("#e-po_number-id").val(header.ID);
                 $("#e-po_number").val(header.po_num);
                 $("#e-date_in").val(header.date_ordered.split(" ")[0]);
                 $("#e-supplier").val(header.supplier_ID);
@@ -180,13 +181,17 @@ var edit_po = (btn) => {
                     data.items.forEach(function (row) {
                         let tr = `
                             <tr>
-                                <td data-unit-id="${row.unit_ID}">${row.unit_of_measure ?? ''}</td>
-                                <td>${row.qty ?? ''}</td>
-                                
+                                <td>
+                                    <input type="number" class="form-control form-control-xs qty" 
+                                        min="0" value="${row.qty ?? '0'}">
+                                </td>
                                 <td data-item-id="${row.po_item_id}">${row.item_name ?? ''}</td>
+                                <td>${row.strenght ?? ''}</td>
                                 
-                                
-
+                                <td>
+                                    <input type="number" class="form-control form-control-xs supplier-price" 
+                                        min="0" value="${row.supplier_price ?? '0'}">
+                                </td>
                                 <td>
                                     <button class="btn btn-sm btn-danger" onclick="removeRow(this)" data-id="${row.po_item_id}">Remove</button>
                                 </td>
@@ -228,6 +233,7 @@ $("#add_to_table").on("click", function () {
         item_id,
         item_text,
         item_strenght,
+        supplier_price: 0,
         // unit_price,
         // desc,
         // date_expiry,
@@ -249,6 +255,10 @@ $("#add_to_table").on("click", function () {
             <td>${qty}</td>            
             <td>${item_text}</td>
             <td>${item_strenght}</td>
+             <td>
+                <input type="number" class="form-control form-control-xs supplier-price" 
+                    min="0" value="0">
+            </td>
             <td><button class="btn btn-danger btn-sm remove-item">Remove</button></td>
         </tr>`;
     $("#order_table tbody").append(row);
@@ -259,6 +269,14 @@ $("#add_to_table").on("click", function () {
     // $("#item_desc").val("");
     // $("#threshold").val("");
     // $("#branded_flag").prop("checked", false);
+});
+
+// Update supplier price in array dynamically
+$("#order_table").on("input", ".supplier-price", function () {
+    let rowIndex = $(this).closest("tr").index();
+    let price = parseFloat($(this).val()) || 0;
+
+    orderItems[rowIndex].supplier_price = price;
 });
 
 // Remove row
@@ -329,6 +347,7 @@ $('#add_stock_po').click(function () {
 
 $("#update-po").on("click", function () {
     let poData = {
+        po_number_id: $("#e-po_number-id").val(),
         po_number: $("#e-po_number").val(),
         date_in: $("#e-date_in").val(),
         supplier_id: $("#e-supplier").val(),
@@ -336,14 +355,18 @@ $("#update-po").on("click", function () {
         items: []
     };
 
+
     $("#e-order_table tbody tr").each(function () {
         let row = $(this).find("td");
         let tds = $(this).find("td");
         let unitID = tds.eq(0).data("unit-id");    
-        let itemID = tds.eq(2).data("item-id");     
+        let itemID = tds.eq(1).data("item-id");     
+        let qty = tds.eq(0).find("input.qty").val(); 
+        let supplier_price = tds.eq(3).find("input.supplier-price").val();
         poData.items.push({
             unit_id: unitID,
-            qty: $(row[1]).text(),
+            qty: qty,
+            supplier_price: supplier_price,
             // pcs: $(row[2]).text(),
             item_id: itemID,
             // unit_price: $(row[4]).text(),
@@ -354,7 +377,6 @@ $("#update-po").on("click", function () {
     });
 
     console.log("Submitting edited PO:", poData);
-
     $.confirm({
         title: 'Confirm Update',
         content: 'Are you sure you want to update this purchase order?',
