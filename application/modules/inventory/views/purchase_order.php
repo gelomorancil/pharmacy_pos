@@ -115,17 +115,17 @@ $subtotal = floatval(0);
         <tr>
           <th>Quantity</th>
           <th>Unit</th>
-          <th>Item Description</th>
+          <th>Generic Name</th>
           <th>Brand</th>
-          <th>Expiry</th>
-          <th>Unit Price</th>
+          <th>Strenght/Dosage</th>
+          <th>Supplier Price</th>
           <th>Amount</th>
         </tr>
       </thead>
       <tbody>
         <?php foreach($po_items as $items) {
           $item_qty = ($items->pcs != null && $items->pcs > 0) ? $items->pcs : $items->qty;
-          $row_amount = floatval($item_qty * $items->unit_price);
+          $row_amount = floatval($item_qty * $items->supplier_price);
           $subtotal += $row_amount;
           ?>
         <tr>
@@ -133,8 +133,9 @@ $subtotal = floatval(0);
           <td><?=$items->unit_of_measure?></td>
           <td class="text-start"><?=$items->description?></td>
           <td><?=$items->item_name?></td>
-          <td><?=($items->date_expiry != '0000-00-00') ? date("m/Y", strtotime($items->date_expiry)) : ''?></td>
-          <td class="text-end"><?=number_format($items->unit_price, 2)?></td>
+          <!-- <td><?=($items->date_expiry != '0000-00-00') ? date("m/Y", strtotime($items->date_expiry)) : ''?></td> -->
+           <td><?=$items->strenght?></td>
+          <td class="text-end"><?=number_format($items->supplier_price, 2)?></td>
           <td class="text-end"><?=number_format($row_amount, 2)?></td>
         <?php }
         $freight = 0;

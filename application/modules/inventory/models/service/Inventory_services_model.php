@@ -67,7 +67,7 @@ class Inventory_services_model extends CI_Model
             'received_by' => $this->recieved_by,
             'date_added' => date('Y-m-d H:i:s'),
         );
-
+        
         $emptyFields = array_filter($purchaseOrderData, function ($value) {
             return $value === null || $value === '';
         });
@@ -105,7 +105,8 @@ class Inventory_services_model extends CI_Model
                 // 'date_expiry' => $val['date_expiry'],
                 'item_ID'     => $val['item_id'],
                 // 'unit_price'  => $val['unit_price'],
-                'unit_ID'     => $unitID,
+                // 'unit_ID'     => $unitID,
+                'supplier_price'     =>  $val['supplier_price'],
                 // 'po_descr'   => $val['desc'],
                 'qty'   => $val['qty'],
                 'po_ID'    => $po_id,
@@ -151,7 +152,8 @@ public function update_po_with_items($data)
     // Get PO ID from number
     $po = $this->db->select('ID')
                    ->from($this->Table->purchase_order)
-                   ->where('po_num', $data['po_number'])
+                //    ->where('po_num', $data['po_number'])
+                   ->where('ID', $data['po_number_id'])
                    ->get()
                    ->row();
 
@@ -163,6 +165,7 @@ public function update_po_with_items($data)
     // Update PO header if needed
     $updateData = [
         'date_ordered' => $data['date_in'],
+        'po_num' => $data['po_number'],
         'supplier_ID'  => $data['supplier_id'],
         // 'received_by'  => $data['received_by']
     ];
@@ -189,10 +192,11 @@ public function update_po_with_items($data)
             $itemRow = [
                 // 'date_expiry' => $val['date_expiry'],
                 'item_ID'     => $val['item_id'],
-                'unit_price'  => $val['unit_price'],
+                // 'unit_price'  => $val['unit_price'],
                 'unit_ID'     => $unitID,
                 // 'po_descr'   => $val['desc'],
                 'qty'   => $val['qty'],
+                'supplier_price'   => $val['supplier_price'],
                 'po_ID'    => $poID,
             ];
             // }
