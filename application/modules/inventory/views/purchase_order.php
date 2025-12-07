@@ -21,16 +21,21 @@ $subtotal = floatval(0);
       border: 1px dashed #999;
       border-radius: 6px;
     }
-    .logo-placeholder {
-      width: 100px;
-      height: 100px;
-      background: #f0f0f0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px dashed #999;
-      margin-right: 15px;
-    }
+  .logo-placeholder {
+    width: 100px;
+    height: 100px;
+    background-image: url('<?= base_url() ?>assets/images/Logo/logo-alone.png');
+    background-size: cover;       /* Ensures image covers the box */
+    background-position: center;  /* Centers the image */
+    background-repeat: no-repeat; /* Prevents tiling */
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed #999;
+    margin-right: 15px;
+  }
+
 
     .po-section { border-top: 1px solid #e5e5e5; padding-top: .75rem; margin-top: .5rem; }
   .po-header { position: relative; }
@@ -70,7 +75,7 @@ $subtotal = floatval(0);
   <!-- Header -->
   <div class="row align-items-center mb-3">
     <div class="col-md-1 text-center">
-      <div class="logo-placeholder">Logo</div>
+      <div class="logo-placeholder"></div>
     </div>
     <div class="col-md-11 text-center">
       <h5 class="mb-0 font-weight-bold">ZANNA HEALTH AND WELLNESS PRODUCTS TRADING</h5>
