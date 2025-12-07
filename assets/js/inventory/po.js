@@ -271,6 +271,75 @@ $("#add_to_table").on("click", function () {
     // $("#branded_flag").prop("checked", false);
 });
 
+$("#e-add_to_table").on("click", function () {
+    let unit_id = $("#unit_id").val();
+    let unit_text = $("#unit_id option:selected").text();
+    let qty = $("#e-quantity_po").val();
+    let item_id = $("#item_2").val();
+    let item_text = $("#item_2 option:selected").text();
+    let item_strenght = $("#item_2 option:selected").data("strenght");
+    // let unit_price = $("#unit_price").val();
+    // let desc = $("#item_desc").val();
+    // let date_expiry = $("#date_expiry").val();
+    // let pcs = $("#po-pcs").val();
+    // let threshold = $("#threshold").val();
+
+ 
+    // if (!qty || !item_id || !unit_price) {
+    if (!qty || !item_id) {
+        alert("Quantity and Item are required!");
+        return;
+    }
+
+    // Store to array
+    let newItem = {
+        unit_id,
+        unit_text,
+        qty,
+        item_id,
+        item_text,
+        item_strenght,
+        supplier_price: 0,
+        // unit_price,
+        // desc,
+        // date_expiry,
+        // pcs
+        // threshold
+    };
+    orderItems.push(newItem);
+
+    // let formattedExpiry = "";
+    // if (date_expiry instanceof Date) {
+    //     formattedExpiry = date_expiry.toISOString().split('T')[0]; 
+    // } else {
+    //     formattedExpiry = date_expiry; 
+    // }
+    // console.log(formattedExpiry); <td>${formattedExpiry}</td><td>${pcs}</td>
+    // Append to table
+    let row = `
+        <tr>
+            <td>
+                <input type="number" class="form-control form-control-xs qty" 
+                    min="0" value="${qty}">
+            </td>
+            <td data-item-id="${item_id}">${item_text}</td>
+            <td>${item_strenght}</td>
+             <td>
+                <input type="number" class="form-control form-control-xs supplier-price" 
+                    min="0" value="0">
+            </td>
+            <td><button class="btn btn-danger btn-sm remove-item">Remove</button></td>
+        </tr>`;
+    $("#e-order_table tbody").append(row);
+
+    // Clear fields after add <td>${desc}</td>
+    $("#quantity").val("");
+    // $("#unit_price").val("");
+    // $("#item_desc").val("");
+    // $("#threshold").val("");
+    // $("#branded_flag").prop("checked", false);
+});
+
 // Update supplier price in array dynamically
 $("#order_table").on("input", ".supplier-price", function () {
     let rowIndex = $(this).closest("tr").index();

@@ -196,7 +196,7 @@ $session = (object) get_userdata(USER);
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Purchase Order</h3>
+                <h3 class="modal-title">Edit Purchase Order</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -230,7 +230,7 @@ $session = (object) get_userdata(USER);
                             <option value="" disabled selected>-- Select Category --</option>
                             <?php foreach($items_profiles as $key => $value){ ?>
                                 <option 
-                                    value="<?= $value->id ?>"
+                                     value="<?= $value->id ?>"
                                     data-id="<?=$value->id?>" 
                                     data-item_name="<?=$value->item_name?>" 
                                     data-item_code="<?=$value->item_code?>" 
