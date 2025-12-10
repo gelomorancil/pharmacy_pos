@@ -136,7 +136,7 @@ $subtotal = floatval(0);
         <tr>
           <td><?=$item_qty?></td>
           <td><?=$items->unit_of_measure?></td>
-          <td class="text-start"><?=$items->description?></td>
+          <td class="text-start"><?=$items->short_name?></td>
           <td><?=$items->item_name?></td>
           <!-- <td><?=($items->date_expiry != '0000-00-00') ? date("m/Y", strtotime($items->date_expiry)) : ''?></td> -->
            <td><?=$items->strenght?></td>

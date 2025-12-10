@@ -36,6 +36,8 @@ class Inventory_model extends CI_Model
         $this->db->from($this->Table->item_profile . ' AS ip');
         $this->db->join($this->Table->items . ' AS i', 'ip.item_id = i.id', 'left');
         $this->db->join($this->Table->unit . ' AS u', 'ip.unit_id = u.id', 'left');
+        $this->db->where('i.active', 1);
+        $this->db->order_by('i.item_name', 'ASC');
         $query = $this->db->get()->result();
         return $query;
     }
