@@ -87,8 +87,8 @@ $session = (object) get_userdata(USER);
                             <option value="" disabled selected>-- Select Category --</option>
                             <?php foreach($items_profiles as $key => $value){ ?>
                                 <option 
-                                    value="<?= $value->id ?>"
-                                    data-id="<?=$value->id?>" 
+                                    value="<?= $value->item_id ?>"
+                                    data-id="<?=$value->item_id?>" 
                                     data-item_name="<?=$value->item_name?>" 
                                     data-item_code="<?=$value->item_code?>" 
                                     data-short_name="<?=$value->short_name?>" 
@@ -230,8 +230,8 @@ $session = (object) get_userdata(USER);
                             <option value="" disabled selected>-- Select Category --</option>
                             <?php foreach($items_profiles as $key => $value){ ?>
                                 <option 
-                                     value="<?= $value->id ?>"
-                                    data-id="<?=$value->id?>" 
+                                     value="<?= $value->item_id ?>"
+                                    data-id="<?=$value->item_id?>" 
                                     data-item_name="<?=$value->item_name?>" 
                                     data-item_code="<?=$value->item_code?>" 
                                     data-short_name="<?=$value->short_name?>" 

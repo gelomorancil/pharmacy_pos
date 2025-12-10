@@ -185,7 +185,7 @@ var edit_po = (btn) => {
                                     <input type="number" class="form-control form-control-xs qty" 
                                         min="0" value="${row.qty ?? '0'}">
                                 </td>
-                                <td data-item-id="${row.po_item_id}">${row.item_name ?? ''}</td>
+                                <td data-item-id="${row.item_ID}">${row.item_name ?? ''}</td>
                                 <td>${row.strenght ?? ''}</td>
                                 
                                 <td>
