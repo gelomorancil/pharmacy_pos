@@ -228,15 +228,14 @@ $session = (object) get_userdata(USER);
                     <div id="cart-items"></div>
 
                     <hr>
-                     <p class="cart-total">Buyer type:
+                     <!-- <p class="cart-total">Buyer type:
                         <span class="float-right">
                           <select name="" id="buyer_type" class="form-control form-control-sm"  style="width: 200px;" >
                                 <option value="WALKIN" selected>WALKIN</option>
                                 <option value="REGULAR">REGULAR</option>
-                                <!-- <option value="WHOLESALER">WHOLESALER</option> -->
                             </select>
                         </span>
-                    </p>
+                    </p> -->
                     <p class="cart-total">Buyer: 
                         <span class="float-right">
                           <select name="" id="Buyer_id" class="form-control form-control-sm"  style="width: 200px;" >
@@ -620,7 +619,7 @@ document.querySelectorAll(".btn-add").forEach(btn => {
     let to_pcs = parseFloat(btn.dataset.to_pcs);
 
     // decide active price based on buyer_type
-    let b_type = $('#buyer_type').val();
+    //let b_type = $('#buyer_type').val();
     //let price = (b_type === "WALKIN") ? walkin 
       //        : (b_type === "REGULAR") ? regular 
         //      : wholesaler;

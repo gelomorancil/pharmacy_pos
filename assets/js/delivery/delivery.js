@@ -29,6 +29,33 @@ $('#stock_in_purchase').click(function () {
 //     window.location = base_url + "inventory/Inventory/load_po/?pon=" + po_num;
 // }
 
+// Auto-compute Unit Prices based on Freight Price
+// Auto-compute Unit Prices based on Freight Price
+$(document).on("keyup", "#e-freight", function () {
+
+    let freightAmount = parseFloat($(this).val()) || 0;
+
+    // count total PO items (number of rows)
+    let totalItems = $("#e-order_table tbody tr").length || 1;
+
+    // compute freight per item
+    let freightPerItem = freightAmount / totalItems;
+
+    $("#e-order_table tbody tr").each(function () {
+
+        // get supplier_price from column index 3
+        let supplierPrice = parseFloat($(this).find("td:eq(3)").text()) || 0;
+
+        // calculate: supplier price + freight per item
+        let computed = supplierPrice + freightPerItem;
+
+        // set unit price
+        $(this).find(".unit-price").val(computed.toFixed(2));
+    });
+
+});
+
+
 var approve_delivery = (btn) => {
     $('#approve-delivery-modal').modal('show');
     let poNumber = $(btn).data("po");  // ✔ use btn, not this
@@ -60,6 +87,7 @@ var approve_delivery = (btn) => {
                                 <td>${row.qty ?? ''}</td>
                                 <td data-item-id="${row.po_item_id}">${row.item_name ?? ''}</td>
                                 <td>${row.strenght ?? ''}</td>
+                                <td>${row.supplier_price ?? ''}</td>
                                  <td>
                                     <input type="number" class="form-control form-control-xs unit-price" 
                                         min="0" value="0">
@@ -69,11 +97,11 @@ var approve_delivery = (btn) => {
                                         value="${row.date_expiry ? row.date_expiry.split(' ')[0] : ''}">
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control form-control-xs damaged-qty" 
+                                    <input type="number" class="form-control form-control-xs received-qty" 
                                         min="0" value="0">
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control form-control-sm received-qty" 
+                                    <input type="number" class="form-control form-control-sm damaged-pcs" 
                                        value="0" min="0">
                                 </td>
                                 <td>
@@ -146,6 +174,7 @@ function approveDelivery(){
     let supplier_id = $('#e-supplier').val();
     let received_by = $('#e-recieved_by').val();
     let received_date = $('#e-recieved_date').val();
+    let freight = $('#e-freight').val();
 
     let orderData = [];
 
@@ -172,10 +201,12 @@ function approveDelivery(){
         supplier_id: supplier_id,
         received_by: received_by,
         received_date: received_date,
+        freight: freight,
         order_items: orderData
     };
 
     console.log(payload);
+
 
     $.ajax({
         url: base_url + 'delivery/approve_delivery',

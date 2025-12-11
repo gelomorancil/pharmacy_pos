@@ -56,12 +56,14 @@ class Delivery extends MY_Controller
 		  $received_by   = $payload['received_by'];
 		  $received_date = $payload['received_date'];
 		  $order_items   = $payload['order_items'];
+		  $freight   = $payload['freight'];
   
 		  // Example parent data — adjust column names to your DB structure
 		  $delivery_data = [
 			//   'po_number'      => $po_number,
 			  'date_approved'  => $date_in,
 			  'received_by'    => $received_by,
+			  'freight'    => $freight,
 			  'approved' => 1
 		  ];
   
