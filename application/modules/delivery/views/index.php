@@ -173,6 +173,10 @@ $session = (object) get_userdata(USER);
                         <label for="">Date Recieved:</label>
                         <input type="date" id="e-recieved_date" class="form-control inpt">
                     </div>
+                    <div class="col-sm-4">
+                        <label for="">Freight Amount:</label>
+                        <input type="number" id="e-freight" class="form-control inpt">
+                    </div>
                 </div>
 
                 <hr>
@@ -183,12 +187,13 @@ $session = (object) get_userdata(USER);
                             <th>Qty</th>
                             <th>Brand</th>
                             <th>Dosage</th>
+                            <th>Supplier Price</th>
                             <!-- <th>Brand</th>  -->
                             <th>Unit Price</th>
                             <th>Date Expiry</th>
                             <th>Recieved Qty</th>
                             <th>Damaged Qty</th>
-                            <th>Batch_Number</th>
+                            <th>Lot Number</th>
                         </tr>
                     </thead>
                     <tbody></tbody>

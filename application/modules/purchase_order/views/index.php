@@ -351,13 +351,72 @@ main_footer();
             }
             return found ? data : null;
         },
+        // templateResult: function(option) {
+        //     if (!option.id) return option.text;
+
+        //     const data = $(option.element).data();
+        //     const statusColor = data.status == 1 ? 'green' : 'red';
+
+        //     return $`
+        //         <div class="p-1">
+        //             <div class="d-flex justify-content-between align-items-start mb-1">
+        //                 <div>
+        //                     <div class="d-flex align-items-center">
+        //                         <span style="
+        //                             display:inline-block;
+        //                             width:10px;
+        //                             height:10px;
+        //                             border-radius:50%;
+        //                             background:${statusColor};
+        //                             margin-right:6px;
+        //                         "></span>
+        //                         <strong>${data.item_name || option.text}</strong>
+        //                     </div>
+        //                     <small class="text-muted d-block mt-1">
+        //                         <span class="text-danger">GENERIC NAME:</span> ${data.short_name || '-'}
+        //                     </small>
+        //                     <small class="text-muted d-block">
+        //                         <span class="text-danger">MANUFACTURER:</span> ${data.item_code || '-'}
+        //                     </small>
+        //                     <small class="text-muted d-block">
+        //                         <span class="text-danger">DISTRIBUTOR:</span> ${data.distributor || '-'}
+        //                     </small>
+        //                 </div>
+        //             </div>
+
+        //             <div class="border-top pt-1">
+        //                 <small class="text-muted d-block">
+        //                     <span class="text-primary">CATEGORY:</span> ${data.category || '-'}
+        //                 </small>
+        //                 <small class="text-muted d-block">
+        //                     <span class="text-primary">STRENGTH:</span> ${data.strenght || '-'}
+        //                 </small>
+        //                 <small class="text-muted d-block">
+        //                     <span class="text-primary">STORAGE:</span> ${data.storage_condition || '-'}
+        //                 </small>
+        //                 <small class="text-muted d-block">
+        //                     <span class="text-primary">UOM:</span> ${data.uom || '-'}
+        //                 </small>
+        //                 <small class="text-muted d-block">
+        //                     <span class="text-primary">PACKAGING:</span> ${data.packaging || '-'}
+        //                 </small>
+        //                 <small class="text-muted d-block">
+        //                     <span class="text-primary">DESCRIPTION:</span> ${data.description || '-'}
+        //                 </small>
+        //                 <small class="text-muted d-block">
+        //                     <span class="text-primary">CLASSIFICATION:</span> ${data.classification || '-'}
+        //                 </small>
+        //             </div>
+        //         </div>
+        //     `;
+        // },
         templateResult: function(option) {
             if (!option.id) return option.text;
 
             const data = $(option.element).data();
             const statusColor = data.status == 1 ? 'green' : 'red';
 
-            return `
+            let html = `
                 <div class="p-1">
                     <div class="d-flex justify-content-between align-items-start mb-1">
                         <div>
@@ -409,7 +468,15 @@ main_footer();
                     </div>
                 </div>
             `;
+
+            return $(html);  // <-- required fix
         },
+
+        // templateSelection: function(option) {
+        //     if (!option.id) return option.text;
+        //     const data = $(option.element).data();
+        //     return data.item_name || option.text;
+        // },
         templateSelection: function(option) {
             if (!option.id) return option.text;
             const data = $(option.element).data();
@@ -417,5 +484,16 @@ main_footer();
         },
         escapeMarkup: function(m) { return m; } // Allow HTML rendering
     });
+
+    $('#item_2').select2('destroy');
+$('#item_2').select2();
+    $(document).on('select2:open', () => {
+        setTimeout(() => {
+            const field = document.querySelector('.select2-container--open .select2-search__field');
+            field.focus();
+            field.select();
+        }, 10);
+    });
+
 </script>
 <script src="<?php echo base_url() ?>/assets/js/inventory/po.js"></script>

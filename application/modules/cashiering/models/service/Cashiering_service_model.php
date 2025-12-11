@@ -266,7 +266,7 @@ class Cashiering_service_model extends CI_Model
         try {
 
             $data = array(
-                'FName' => $x,
+                'name' => $x,
             );
 
             $this->db->trans_start();

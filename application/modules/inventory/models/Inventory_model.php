@@ -110,13 +110,14 @@ class Inventory_model extends CI_Model
     public function get_inventory(){
         $this->db->select('
             inv.item_ID,
-            (SUM(inv.qty) - COALESCE(MAX(sq.sold_quantity), 0)) AS current_stock,
+            (SUM(inv.received_qty) - COALESCE(MAX(sq.sold_quantity), 0)) AS current_stock,
             ip.threshold,
             unit.unit_of_measure,
             items.item_name,
             items.short_name,
             items.item_code,
-            items.description
+            items.description,
+            items.strenght
         ');
         $this->db->from($this->Table->purchase_order_items . ' AS inv');
         $this->db->join($this->Table->purchase_order . ' AS po', 'inv.po_ID = po.ID', 'left');
@@ -125,16 +126,22 @@ class Inventory_model extends CI_Model
         $this->db->join($this->Table->unit . ' AS unit', 'inv.unit_ID = unit.id', 'left');
     
         // Subquery: one row per item_id (sold total)
-        $this->db->join("
-            (SELECT ipj.item_id, SUM(pc.quantity) AS sold_quantity
-               FROM {$this->Table->payment_child} pc
-               JOIN {$this->Table->item_profile} ipj
-                 ON pc.item_profile_id = ipj.id
-              GROUP BY ipj.item_id
-            ) AS sq",
-            'sq.item_id = inv.item_ID',
-            'left'
-        );
+            $this->db->join("
+                (SELECT 
+                    ipj.item_id, 
+                    SUM(pc.quantity) AS sold_quantity
+                FROM {$this->Table->payment_child} pc
+                JOIN {$this->Table->item_profile} ipj
+                    ON pc.item_profile_id = ipj.id
+                JOIN {$this->Table->payment_parent} py
+                    ON pc.payment_id = py.id
+                WHERE py.date_created >= '2025-12-01'
+                GROUP BY ipj.item_id
+                ) AS sq",
+                'sq.item_id = inv.item_ID',
+                'left'
+            );
+
     
         $this->db->where('po.approved', 1);
         $this->db->group_by('inv.item_ID, ip.threshold, unit.unit_of_measure, items.item_name, items.short_name, items.item_code, items.description');
@@ -156,6 +163,9 @@ class Inventory_model extends CI_Model
 
             items.item_name,
             poi.po_descr,
+            poi.date_expiry,
+            poi.received_qty,
+            poi.batch_no,
 
             supplier.supplier_name
         ');

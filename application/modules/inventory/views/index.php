@@ -277,7 +277,7 @@ $session = (object) get_userdata(USER);
 </div>
 
 <div class="modal fade" id="modal-stock-history">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Stock History:</h3>

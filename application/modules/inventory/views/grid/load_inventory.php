@@ -8,8 +8,8 @@
 <table id="example1" class="table table-bordered table-striped inventory-div">
     <thead>
         <tr>
-            <th style="width:10%;">Item Code</th>
-            <th style="width:30%;">Item Name</th>
+            <th style="width:10%;">Brand</th>
+            <th style="width:30%;">Dosage</th>
             <th style="width:30%;">Description</th>
             <th style="width:10%;">Current Stocks</th>
             <th style="width:10%;">Actions</th>
@@ -22,8 +22,8 @@
             ?>
             <tr>
 
-                <td><?= $value->item_code ?></td>
                 <td><?= $value->item_name ?></td>
+                <td><?= $value->strenght ?></td>
                 <td><?= $value->description ?></td>
                 <td>
                     <b style="color: 

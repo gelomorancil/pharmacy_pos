@@ -2,10 +2,12 @@
     <thead>
         <tr>
             <th style="width:20%;">Purchase Order #</th>
+            <th style="width:20%;">Batch #</th>
             <th style="width:20%;">Item Name</th>
             <th style="width:20%;">Supplier</th>
             <th style="width:10%;">Quantity</th>
             <th style="width:25%;">Recieved By</th>
+            <th style="width:25%;">Date Expiry</th>
             <th style="width:25%;">Date Encoded</th>
         </tr>
     </thead>
@@ -17,10 +19,20 @@
             <tr>
 
                 <td><?= $value->po_num ?></td>
+                <td><?= $value->batch_no ?></td>
                 <td><?= $value->item_name ?></td>
                 <td><?= $value->supplier_name ?></td>
-                <td><?= $value->unit_of_measure=="box" ? intval($value->qty * $value->pcs) : $value->qty ?></td>
+                <!-- <td><?= $value->unit_of_measure=="box" ? intval($value->qty * $value->received_pcs) : $value->qty ?></td> -->
+                <td><?= $value->received_qty ?></td>
                 <td><?= $value->received_by ?></td>
+                <td>
+                    <?= 
+                        ($value->date_expiry == '0000-00-00 00:00:00' || empty($value->date_expiry))
+                        ? ''
+                        : date('M d, Y h:i A', strtotime($value->date_expiry)); 
+                    ?>
+                </td>
+
                 <td><?= date('M d, Y h:i A', strtotime($value->date_approved)) ?></td>
 
             </tr>
@@ -32,7 +44,7 @@
 
 <script>
     $("#example2").DataTable({
-        "responsive": false,
+        "responsive": true,
         "lengthChange": false,
         "autoWidth": false,
         "searching": false,
