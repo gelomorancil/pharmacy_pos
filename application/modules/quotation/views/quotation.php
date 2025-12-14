@@ -258,9 +258,6 @@ $session = (object) get_userdata(USER);
                         <!-- headers adapted to show the key visible columns -->
                         <th style="width:8%;">Qty</th>
                         <th style="width:23%;">Item</th>
-                        <th style="width:10%;">Unit of Measure</th>
-                        <th style="width:25%;">Item Description</th>
-                        <th style="width:8%;">Pcs</th>
                         <th style="width:10%;">Unit Price</th>
                         <th style="width:10%;">Total</th>
                         <th style="width:6%;">Action</th>
@@ -319,26 +316,25 @@ $session = (object) get_userdata(USER);
                 <label for="modal_select_item">Select Item:</label>
                 <select id="modal_select_item" onchange="fill_in_item(this)">
                     <option value="" selected disabled>-- Select item --</option>
-                    <?php
-                    foreach ($items_profiles as $value) {
-                        ?>
-                        <option value="<?= $value->id ?>"> <?= $value->item_name ?></option>
-                        <?php
-                    }
-                    ?>
-                </select>
-            </div>
-
-            <div class="form-col" style="flex:1;">
-                <label for="modal_specs">Unit of Measure:</label>
-                <select id="modal_specs" disabled>
-                    <?php
-                    foreach ($units as $value) {
-                        ?>
-                        <option value="<?= $value->id ?>"><?= $value->unit_of_measure ?></option>
-                        <?php
-                    }
-                    ?>
+                    <?php foreach($items_profiles as $key => $value){ ?>
+                                <option 
+                                     value="<?= $value->item_id ?>"
+                                    data-id="<?=$value->item_id?>" 
+                                    data-item_name="<?=$value->item_name?>" 
+                                    data-item_code="<?=$value->item_code?>" 
+                                    data-short_name="<?=$value->short_name?>" 
+                                    data-description="<?=$value->description?>" 
+                                    data-category="<?=$value->category?>" 
+                                    data-status="<?=$value->active?>" 
+                                    data-strenght="<?=$value->strenght?>"
+                                    data-packaging="<?=$value->packaging?>"
+                                    data-uom="<?=$value->uom?>"
+                                    data-classification="<?=$value->classification?>"
+                                    data-storage_condition="<?=$value->storage_condition?>"
+                                    data-distributor="<?=$value->distributor?>">
+                                    <?= $value->item_name ?>
+                                </option>
+                            <?php } ?>
                 </select>
             </div>
 
@@ -348,23 +344,9 @@ $session = (object) get_userdata(USER);
             </div>
 
             <div class="form-col" style="flex:1;">
-                <label for="modal_pcs">Pcs:</label>
-                <input id="modal_pcs" type="number" min="0" step="1" placeholder="Enter pcs" disabled />
-            </div>
-
-            <div class="form-col" style="flex:1;">
                 <label for="modal_unit">Unit Price:</label>
                 <!-- kept id modal_unit for backward compatibility -->
                 <input id="modal_unit" type="number" min="0" step="0.01" placeholder="Enter Unit Price" value="0" />
-            </div>
-        </div>
-
-        <!-- Row 2: Item Description / Date Expiry -->
-        <div class="form-row">
-            <div class="form-col" style="flex:3;">
-                <label for="modal_desc">Item Description:</label>
-                <!-- kept id modal_desc for backward compatibility -->
-                <input id="modal_desc" type="text" placeholder="Item Description" />
             </div>
         </div>
     </div>
@@ -400,16 +382,11 @@ main_footer();
         $('#modalAdd').on('click', function () {
             let itemId = $('#modal_select_item').val() || '';
             let itemName = $('#modal_select_item option:selected').text() || '';
-            let uom = $('#modal_specs').val() || '';
-            let uom_display = $('#modal_specs option:selected').text() || '';
             let qty = parseInt($('#modal_qty').val(), 10) || 0;
-            let pcs = parseInt($('#modal_pcs').val(), 10) || 0;
             let unit = parseFloat($('#modal_unit').val()) || 0;
-            let desc = $('#modal_desc').val().trim() || '';
-            let expiry = '';
             let total = parseFloat((qty * unit).toFixed(2)) || 0.00;
 
-            recalcTotals();
+
 
             if (!itemId) { alert('Please select an item.'); $('#modal_select_item').focus(); return; }
             if (qty <= 0) { alert('Quantity must be at least 1.'); $('#modal_qty').focus(); return; }
@@ -420,22 +397,14 @@ main_footer();
                 if ($tr.length) {
                     $tr.attr('data-item-id', itemId)
                         .attr('data-item-name', itemName)
-                        .attr('data-uom', uom)
-                        .attr('data-desc', desc)
                         .attr('data-qty', qty)
-                        .attr('data-pcs', pcs)
                         .attr('data-unit', unit.toFixed(2))
-                        .attr('data-total', total.toFixed(2))
-                        .attr('data-expiry', expiry);
+                        .attr('data-total', total.toFixed(2));
 
                     $tr.find('.display-item').text(itemName);
-                    $tr.find('.display-uom').text(uom);
-                    $tr.find('.display-desc').text(desc);
                     $tr.find('.display-qty').text(qty);
-                    $tr.find('.display-pcs').text(pcs);
                     $tr.find('.display-unit').text(unit.toFixed(2));
                     $tr.find('.display-total').text(total.toFixed(2));
-                    $tr.find('.display-expiry').text(expiry);
                 }
             } else {
                 // append new row
@@ -445,13 +414,9 @@ main_footer();
                     'data-temp-id': tempId,
                     'data-item-id': itemId,
                     'data-item-name': itemName,
-                    'data-uom': uom,
-                    'data-desc': desc,
                     'data-qty': qty,
-                    'data-pcs': pcs,
                     'data-unit': unit.toFixed(2),
                     'data-total': total.toFixed(2),
-                    'data-expiry': expiry
                 });
 
                 $tr.append($('<td>').html(
@@ -461,18 +426,6 @@ main_footer();
                 $tr.append($('<td>').html(
                     `<span class="display-item">${escapeHtml(itemName)}</span>
          <input type="hidden" name="items[${rowIndex}][item_id]" value="${escapeHtml(itemId)}">`
-                ));
-                $tr.append($('<td>').html(
-                    `<span class="display-uom">${escapeHtml(uom_display)}</span>
-         <input type="hidden" name="items[${rowIndex}][uom]" value="${escapeHtml(uom)}">`
-                ));
-                $tr.append($('<td>').html(
-                    `<span class="display-desc">${escapeHtml(desc)}</span>
-         <input type="hidden" name="items[${rowIndex}][desc]" value="${escapeHtml(desc)}">`
-                ));
-                $tr.append($('<td>').html(
-            `<span class="display-pcs">${pcs == 0 ? qty : pcs}</span>
-            <input type="hidden" name="items[${rowIndex}][pcs]" value="${pcs}" class="i_pcs_${rowIndex}">`
                 ));
                 $tr.append($('<td>').html(
                     `<span class="display-unit">${unit.toFixed(2)}</span>
@@ -491,7 +444,7 @@ main_footer();
 
                 $('#table_rows').append($tr);
             }
-
+            recalcTotals();
             hideModal();
         });
 
@@ -512,12 +465,8 @@ main_footer();
             if (!$tr.length) return;
             recalcTotals();
             $('#modal_select_item').val($tr.attr('data-item-id'));
-            $('#modal_specs').val($tr.attr('data-uom'));
             $('#modal_qty').val($tr.attr('data-qty'));
-            $('#modal_pcs').val($tr.attr('data-pcs'));
             $('#modal_unit').val($tr.attr('data-unit'));
-            $('#modal_desc').val($tr.attr('data-desc'));
-            $('#modal_expiry').val($tr.attr('data-expiry'));
 
             editingTempId = tid;
             $('#modalTitle').text('Edit item');
@@ -534,24 +483,16 @@ main_footer();
                 // read from data-* attributes (fallback to visible spans)
                 const item_id = $tr.attr('data-item-id') || $tr.find('input[name$="[item_id]"]').val() || '';
                 const item_name = $tr.attr('data-item-name') || $tr.find('.display-item').text().trim() || '';
-                const uom = $tr.attr('data-uom') || $tr.find('.display-uom').text().trim() || '';
-                const desc = $tr.attr('data-desc') || $tr.find('.display-desc').text().trim() || '';
                 const qty = parseInt($tr.attr('data-qty') || $tr.find('.display-qty').text()) || 0;
-                const pcs = parseInt($tr.attr('data-pcs') || $tr.find('.display-pcs').text()) || 0;
                 const unit = parseFloat($tr.attr('data-unit') || $tr.find('.display-unit').text()) || 0;
                 const total = parseFloat($tr.attr('data-total') || $tr.find('.display-total').text()) || (qty * unit) || 0;
-                const expiry = $tr.attr('data-expiry') || $tr.find('.display-expiry').text().trim() || '';
 
                 items.push({
                     item_id: item_id,
                     item_name: item_name,
-                    uom: uom,
-                    desc: desc,
                     qty: qty,
-                    pcs: pcs,
                     unit: unit,
-                    total: total,
-                    expiry: expiry
+                    total: total
                 });
             });
 

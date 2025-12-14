@@ -238,7 +238,6 @@ $session = (object) get_userdata(USER);
                     <tr>
                         <th style="width:8%;">#</th>
                         <th style="width:26%;">Item</th>
-                        <th style="width:10%;">Unit of Measure</th>
                         <th style="width:28%;">Item Description</th>
                         <th style="width:8%;">Pcs</th>
                         <th style="width:10%;">Unit Price</th>
@@ -294,7 +293,7 @@ main_footer();
 
     function load_quotation() {
         $(document).gmLoadPage({
-            url: base_url + 'Quotation/load_quotation_items?qID=<?= $quotation->ID ?>',
+            url: base_url + 'quotation/load_quotation_items?qID=<?= $quotation->ID ?>',
             load_on: '#table_rows'
         });
     }

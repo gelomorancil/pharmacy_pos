@@ -13,18 +13,6 @@ var fill_in_item = (data) => {
             let response = JSON.parse(e);
             // let response = JSON.parse(res);
 
-            // Fill Unit of Measure (select)
-            $("#modal_specs").val(response.unit_id).trigger('change');
-
-            // Fill Item Description
-            $("#modal_desc").val(response.description);
-
-            if (response.unit_of_measure.toLowerCase() === "box") {
-                $("#modal_pcs").prop("disabled", false);
-            } else {
-                $("#modal_pcs").prop("disabled", true).val("");
-            }
-
             console.log("Auto-filled:", response);
         },
         error: function () {
