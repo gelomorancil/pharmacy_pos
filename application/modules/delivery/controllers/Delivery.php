@@ -99,4 +99,17 @@ class Delivery extends MY_Controller
 			  echo json_encode(['status' => 'success']);
 		  }
 	  }
+
+	public function validate_user()
+	{
+		$username = $this->input->post('username');
+		$password = $this->input->post('password');
+		$auth = $this->dModel->authenticate_user($username, $password);
+
+		if (!$auth['has_error']) {
+			echo json_encode(['status' => 'success', 'message' => 'Authentication successful.']);
+		} else {
+			echo json_encode(['status' => 'error', 'message' => $auth['message']]);
+		}
+	}
 }

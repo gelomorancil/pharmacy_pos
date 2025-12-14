@@ -118,7 +118,57 @@ var approve_delivery = (btn) => {
     });
 }
 
+
+
 $('#approve-delivery').click(function () {
+    
+    let username = $('#auth-username').val().trim();
+    let password = $('#auth-password').val().trim();
+
+    if (username === '' || password === '') {
+        toastr.error('Please enter your username and password.');
+        return;
+    }
+
+    $.ajax({
+        url: base_url + 'delivery/validate_user',
+        type: 'POST',
+        data: { username: username, password: password },
+
+        success: function (res) {
+            var res = JSON.parse(res);
+            console.log(res);
+            if (res.status == 'success') {
+                toastr.success('Authentication successful.');
+                $('#auth-modal').modal('hide');
+                setTimeout(function () {
+                    approveDelivery();
+
+                }, 300);
+
+            } else {
+                toastr.error("Error: "+ res.message);
+            }
+        },
+
+        error: function () {
+            toastr.error('Server error.');
+        }
+    });
+});
+
+$('#auth-delivery').click(function () {
+    $('#auth-username').val('');
+    $('#auth-password').val('');
+
+    $('#auth-modal').modal('show');
+    $('#auth-modal').on('show.bs.modal', function () {
+        // add a special class so we can style its backdrop on top
+        $('.modal-backdrop').addClass('auth-backdrop');
+    }); 
+});
+
+function approveDelivery(){
     let po_number = $('#e-po_number').val();
     let date_in = $('#e-date_in').val();
     let supplier_id = $('#e-supplier').val();
@@ -163,8 +213,11 @@ $('#approve-delivery').click(function () {
         method: 'POST',
         data: { data: JSON.stringify(payload) },
         dataType: 'json',
-        success: function (res) {
-            if (res.status === 'success') {
+        success: function (resp) {
+            // console.log(resp)
+            // var response = JSON.parse(resp);
+            // console.log(resp)
+            if (resp.status == 'success') {
                 toastr.success('Delivery approved successfully!');
                 $('#approve-delivery').prop('disabled', true);
                 $('#approve-delivery-modal').modal('hide');
@@ -172,7 +225,7 @@ $('#approve-delivery').click(function () {
                     location.reload();
                 }, 2500);
             } else {
-                toastr.error('Failed to save: ' + res.message);
+                toastr.error('Failed to save: ' + resp.message);
             }
         },
         error: function (xhr, status, err) {
@@ -180,4 +233,67 @@ $('#approve-delivery').click(function () {
             toastr.error('Error saving data.');
         }
     });
-});
+}
+    
+// Stacked modals helper: dynamically raises z-index for modal + backdrop
+// Put this in delivery.js (after jQuery & Bootstrap JS)
+// (function ($) {
+//     // base z-index for Bootstrap (backdrop 1040, modal 1050). We'll increment from here.
+//     var baseBackdropZ = 1040;
+//     var baseModalZ = 1050;
+//     var zStep = 10;
+
+//     $(document).on('show.bs.modal', '.modal', function (e) {
+//         var $opening = $(this);
+
+//         // how many modals already visible (excluding the one opening)
+//         var openModals = $('.modal.show').length; // for BS4/5; use :visible fallback for BS3
+//         if (openModals === 0) openModals = $('.modal:visible').length;
+
+//         // compute new z-index values
+//         var newBackdropZ = baseBackdropZ + (zStep * openModals);
+//         var newModalZ = baseModalZ + (zStep * openModals);
+
+//         // apply z-index to the modal (use inline style)
+//         $opening.css('z-index', newModalZ);
+
+//         // after a tick the backdrop will be inserted — style it then
+//         // select the backdrop(s) that don't have our marker class yet
+//         setTimeout(function () {
+//             $('.modal-backdrop').not('.modal-stack').each(function (i, el) {
+//                 var $back = $(el);
+//                 // increment further if multiple backdrops exist
+//                 var idx = $('.modal-backdrop.modal-stack').length;
+//                 $back.css('z-index', newBackdropZ + (idx * 1)).addClass('modal-stack');
+//             });
+//         }, 0);
+
+//         // add marker to body so scrolling is prevented correctly
+//         $('body').addClass('modal-open');
+//     });
+
+//     // When a modal is hidden, remove its z-index and cleanup backdrops
+//     $(document).on('hidden.bs.modal', '.modal', function (e) {
+//         var $closed = $(this);
+//         // remove inline z-index (optional, keeps DOM clean)
+//         $closed.css('z-index', '');
+
+//         // remove one backdrop-stack and adjust others if necessary
+//         // remove the most recently added backdrop-stack
+//         var $stacks = $('.modal-backdrop.modal-stack');
+//         if ($stacks.length) {
+//             $stacks.last().remove();
+//         }
+
+//         // If there are still visible modals, ensure body has modal-open; otherwise remove
+//         var stillOpen = $('.modal.show').length;
+//         if (stillOpen === 0) {
+//             $('body').removeClass('modal-open');
+//             // remove any remaining marker class from leftover backdrops
+//             $('.modal-backdrop.modal-stack').remove();
+//         }
+//     });
+
+//     // Extra: handle esc/backdrop clicks when stacking (optional)
+//     // Ensures backdrop clicks close only the top modal (Bootstrap does by default).
+// })(jQuery);

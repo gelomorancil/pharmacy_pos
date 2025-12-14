@@ -6,7 +6,7 @@ class Delivery_model extends CI_Model
     public function __construct()
     {
         parent::__construct();
-        $this->session = (object)get_userdata(USER);
+        $this->session = (object) get_userdata(USER);
 
         // if(is_empty_object($this->session)){
         // 	redirect(base_url().'login/authentication', 'refresh');
@@ -16,21 +16,22 @@ class Delivery_model extends CI_Model
         $this->load->model($model_list);
         $this->Table = json_decode(TABLE);
     }
-    
+
     public function get_po_list()
     {
         $this->db->select('po.ID,po.po_num, po.date_ordered, po.date_added, s.supplier_name');
-        $this->db->from($this->Table->purchase_order. ' as po');
+        $this->db->from($this->Table->purchase_order . ' as po');
         $this->db->join($this->Table->supplier . ' AS s', 'po.supplier_id = s.id', 'left');
         $this->db->where('approved', 0);
         $this->db->order_by('ID', 'DESC');
         $query = $this->db->get()->result();
-     
+
         return $query;
     }
 
-    
-    public function insert_delivery_header($data,$po_num) {
+
+    public function insert_delivery_header($data, $po_num)
+    {
         $this->db->where('po_num', $po_num);
         $this->db->update($this->Table->purchase_order, $data);
 
@@ -42,9 +43,41 @@ class Delivery_model extends CI_Model
         return $q->ID;
     }
 
-    public function update_po_item($data) {
+    public function update_po_item($data)
+    {
         $this->db->where('po_ID', $data['po_ID']);
         $this->db->update($this->Table->purchase_order_items, $data);
         return true;
+    }
+
+    public function authenticate_user($uname, $pw)
+    {
+        try {
+            if (empty($uname) || empty($pw)) {
+                throw new Exception(REQUIRED_FIELD);
+            }
+            $this->db->select('*');
+            $this->db->from($this->Table->user);
+            $this->db->where('Username', $uname);
+            $query = $this->db->get()->row();
+
+            if ($this->session->ID != $query->ID) {
+                throw new Exception(USER_MISMATCH);
+
+            }
+            if ($query->Active == 0) {
+                throw new Exception(DISABLED_ACCOUNT, true);
+            }
+            if (empty($query)) {
+                throw new Exception(NO_ACCOUNT, true);
+            }
+            if ($query->Password !== sha1(password_generator($pw, $query->Locker))) {
+                throw new Exception(NOT_MATCH, true);
+            }
+
+            return array('message' => 'Delivery Approved Successfully', 'has_error' => false);
+        } catch (Exception $e) {
+            return array('message' => $e->getMessage(), 'has_error' => true);
+        }
     }
 }
