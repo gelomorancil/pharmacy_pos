@@ -35,7 +35,7 @@ var fill_in_item = (data) => {
 
 function view_q(row) {
     ID = $(row).data('id');
-    window.location.href = base_url + 'Quotation/view?qID=' + ID;
+    window.location.href = base_url + 'quotation/view?qID=' + ID;
 }
 
 function delete_q(row) {
