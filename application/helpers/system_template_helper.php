@@ -83,7 +83,6 @@ $modules = [
   'delivery'         => base_url('delivery'),
   'top_buyers'         => base_url('top_buyers'),
   'top_items'         => base_url('top_items'),
-  'purchase_order'         => base_url('purchase_order'),
   'expense'         => base_url('expense'),
 ];
 

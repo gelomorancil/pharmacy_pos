@@ -6,9 +6,6 @@
             <!-- Item (e.g., item name / product reference) -->
             <td><?php echo $val->item_name; ?></td>
 
-            <!-- Unit of Measure -->
-            <td><?php echo $val->unit_of_measure; ?></td>
-
             <!-- Item Description -->
             <td><?php echo $val->po_descr; ?></td>
 

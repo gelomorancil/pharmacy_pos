@@ -226,6 +226,7 @@ function approveDelivery(){
 
     console.log(payload);
 
+
     $.ajax({
         url: base_url + 'delivery/approve_delivery',
         method: 'POST',
