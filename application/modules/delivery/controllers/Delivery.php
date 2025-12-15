@@ -78,13 +78,14 @@ class Delivery extends MY_Controller
 				  'po_ID'   => $po_ID,
 				  'date_expiry'   => !empty($item['date_expiry']) ? $item['date_expiry'] : null,
 				  'received_qty'  => $item['received_qty'],
+				  'received_pcs'  => $item['pcs_value'],
 				//   'received_pcs'  => $item['received_pcs'],
 				  'damaged_pcs'   => $item['damaged_pcs'],
 				  'batch_no'  => $item['batch_number'],
 				  'unit_price'  => $item['unit_price'],
 			  ];
   
-			  $this->dModel->update_po_item($item_data);
+			  $this->dModel->update_po_item($item_data, $item['item_id']);
 		  }
 
 

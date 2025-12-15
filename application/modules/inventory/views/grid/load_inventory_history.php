@@ -23,7 +23,7 @@
                 <td><?= $value->item_name ?></td>
                 <td><?= $value->supplier_name ?></td>
                 <!-- <td><?= $value->unit_of_measure=="box" ? intval($value->qty * $value->received_pcs) : $value->qty ?></td> -->
-                <td><?= $value->received_qty ?></td>
+                <td><?= $value->received_pcs ?></td>
                 <td><?= $value->received_by ?></td>
                 <td>
                     <?= 

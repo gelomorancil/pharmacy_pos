@@ -43,9 +43,8 @@ class Delivery_model extends CI_Model
         return $q->ID;
     }
 
-    public function update_po_item($data)
-    {
-        $this->db->where('po_ID', $data['po_ID']);
+    public function update_po_item($data,$item_id) {
+        $this->db->where('ID', $item_id);
         $this->db->update($this->Table->purchase_order_items, $data);
         return true;
     }
