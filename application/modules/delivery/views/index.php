@@ -202,8 +202,9 @@ $session = (object) get_userdata(USER);
                             <!-- <th>Brand</th>  -->
                             <th>Unit Price</th>
                             <th>Date Expiry</th>
-                            <th>Recieved Qty</th>
-                            <th>Damaged Qty</th>
+                            <th>Packaging</th>
+                            <th>Received Qty</th>
+                            <th>Damaged Qty <span style="font-size:10px" class="text-danger">(pcs only)</span></th>
                             <th>Lot Number</th>
                         </tr>
                     </thead>
