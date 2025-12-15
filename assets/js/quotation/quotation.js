@@ -1,5 +1,5 @@
 $('#create_quotation').click(function () {
-    window.location.href = base_url + "/quotation/create";
+    window.location.href = base_url + "quotation/create";
 })
 
 var fill_in_item = (data) => {
