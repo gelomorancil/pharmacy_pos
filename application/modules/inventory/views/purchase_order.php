@@ -119,7 +119,7 @@ $subtotal = floatval(0);
       <thead class="table-light">
         <tr>
           <th>Quantity</th>
-          <th>Unit</th>
+          <th>Packaging</th>
           <th>Generic Name</th>
           <th>Brand</th>
           <th>Strenght/Dosage</th>
@@ -135,7 +135,7 @@ $subtotal = floatval(0);
           ?>
         <tr>
           <td><?=$item_qty?></td>
-          <td><?=$items->unit_of_measure?></td>
+          <td><?=$items->packaging?></td>
           <td class="text-start"><?=$items->short_name?></td>
           <td><?=$items->item_name?></td>
           <!-- <td><?=($items->date_expiry != '0000-00-00') ? date("m/Y", strtotime($items->date_expiry)) : ''?></td> -->

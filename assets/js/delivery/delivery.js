@@ -55,6 +55,9 @@ $(document).on("keyup", "#e-freight", function () {
 
 });
 
+function formatNumber(num) {
+    return Number(num).toLocaleString();
+}
 
 var approve_delivery = (btn) => {
     $('#approve-delivery-modal').modal('show');
@@ -83,8 +86,8 @@ var approve_delivery = (btn) => {
                 if (data.items && data.items.length > 0) {
                     data.items.forEach(function (row) {
                         let tr = `
-                            <tr>
-                                <td>${row.qty ?? ''}</td>
+                            <tr data-pcs-box="${row.pcs_box}">
+                                <td>${formatNumber(row.qty)}</td>
                                 <td data-item-id="${row.po_item_id}">${row.item_name ?? ''}</td>
                                 <td>${row.strenght ?? ''}</td>
                                 <td>${row.supplier_price ?? ''}</td>
@@ -96,10 +99,18 @@ var approve_delivery = (btn) => {
                                     <input type="date" class="form-control form-control-sm item-expiry"
                                         value="${row.date_expiry ? row.date_expiry.split(' ')[0] : ''}">
                                 </td>
+                                <td>${row.packaging ?? ''}</td>
                                 <td>
-                                    <input type="number" class="form-control form-control-xs received-qty" 
-                                        min="0" value="0">
+                                    <div style="display: flex; flex-direction: column;">
+                                        <input type="number" class="form-control form-control-xs received-qty" 
+                                            min="0" value="0">
+
+                                        <small class="text-muted unit-note">
+                                            In pcs: <span class="pcs-value">0</span>
+                                        </small>
+                                    </div>
                                 </td>
+
                                 <td>
                                     <input type="number" class="form-control form-control-sm damaged-pcs" 
                                        value="0" min="0">
@@ -118,7 +129,13 @@ var approve_delivery = (btn) => {
     });
 }
 
+$(document).on("input", ".received-qty", function () {
+    let tr = $(this).closest("tr");
+    let pcsBox = parseFloat(tr.data("pcsBox")) || 0;
+    let qty = parseFloat($(this).val()) || 0;
 
+    tr.find(".pcs-value").text((pcsBox * qty).toLocaleString());
+});
 
 $('#approve-delivery').click(function () {
     
@@ -186,8 +203,10 @@ function approveDelivery(){
             item_name: $tr.find('td[data-item-id]').text().trim(),
             // unit_price: $tr.find('td').eq(4).text().trim(),
             unit_price: $tr.find('.unit-price').val() || 0,
-            date_expiry: $tr.find('td').eq(5).text().trim(),
+            // date_expiry: $tr.find('td').eq(5).text().trim(),
+            date_expiry: $tr.find('.item-expiry').val() || 0,
             received_qty: $tr.find('.received-qty').val() || 0,
+            pcs_value: $tr.find('.pcs-value').text() || 0,
             // received_pcs: $tr.find('.received-pcs').val() || 0,
             damaged_pcs: $tr.find('.damaged-pcs').val() || 0,
             batch_number: $tr.find('.batch-number').val().trim() || ''
@@ -206,7 +225,6 @@ function approveDelivery(){
     };
 
     console.log(payload);
-
 
     $.ajax({
         url: base_url + 'delivery/approve_delivery',

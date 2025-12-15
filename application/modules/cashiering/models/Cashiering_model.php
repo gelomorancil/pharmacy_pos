@@ -53,34 +53,72 @@ class Cashiering_model extends CI_Model
         return $query;
     }
 
-    public function get_current_stock($item_id)
-    {
+    // public function get_current_stock($item_id)
+    // {
+    //     $this->db->select('
+    //         inv.item_ID,
+    //         (SUM(inv.received_qty) - IFNULL(sold_quantities.sold_quantity, 0)) AS current_stock
+    //     ');
+    //     $this->db->from($this->Table->purchase_order_items . ' AS inv');
+    //     $this->db->join($this->Table->item_profile . ' AS ip', 'inv.item_ID = ip.id', 'left');
+    //     $this->db->join($this->Table->items . ' AS items', 'ip.item_id = items.id', 'left');
+
+    //     // Subquery for sold quantities
+    //     $this->db->join(
+    //         "(SELECT pc.item_profile_id, SUM(pc.quantity) AS sold_quantity 
+    //         FROM {$this->Table->payment_child} pc
+    //         JOIN {$this->Table->payment_parent} py
+    //                 ON pc.payment_id = py.id
+    //             WHERE py.date_created >= '2025-12-01'
+    //         GROUP BY pc.item_profile_id) AS sold_quantities",
+    //         'sold_quantities.item_profile_id = inv.item_ID',
+    //         'left'
+    //     );
+        
+        
+
+    //     $this->db->where('items.id', $item_id);
+    //     $this->db->group_by('inv.item_ID');
+
+    //     $query = $this->db->get()->row();
+
+    //     return $query ? $query->current_stock : 0; // return 0 if no stock found
+    // }
+
+     public function get_current_stock($item_id){
         $this->db->select('
             inv.item_ID,
-            (SUM(inv.received_qty) - IFNULL(sold_quantities.sold_quantity, 0)) AS current_stock
+            (SUM(inv.received_pcs) - COALESCE(MAX(sq.sold_quantity), 0)) AS current_stock,
         ');
         $this->db->from($this->Table->purchase_order_items . ' AS inv');
-        $this->db->join($this->Table->item_profile . ' AS ip', 'inv.item_ID = ip.id', 'left');
-        $this->db->join($this->Table->items . ' AS items', 'ip.item_id = items.id', 'left');
-
-        // Subquery for sold quantities
-        $this->db->join(
-            "(SELECT pc.item_profile_id, SUM(pc.quantity) AS sold_quantity 
-            FROM {$this->Table->payment_child} pc
-            JOIN {$this->Table->payment_parent} py
+        $this->db->join($this->Table->purchase_order . ' AS po', 'inv.po_ID = po.ID', 'left');
+        $this->db->join($this->Table->item_profile . ' AS ip', 'inv.item_ID = ip.item_id', 'left');
+        $this->db->join($this->Table->items . ' AS items', 'inv.item_ID = items.id', 'left');
+        $this->db->join($this->Table->unit . ' AS unit', 'inv.unit_ID = unit.id', 'left');
+    
+        // Subquery: one row per item_id (sold total)
+            $this->db->join("
+                (SELECT 
+                    ipj.item_id, 
+                    SUM(pc.quantity) AS sold_quantity
+                FROM {$this->Table->payment_child} pc
+                JOIN {$this->Table->item_profile} ipj
+                    ON pc.item_profile_id = ipj.id
+                JOIN {$this->Table->payment_parent} py
                     ON pc.payment_id = py.id
                 WHERE py.date_created >= '2025-12-01'
-            GROUP BY pc.item_profile_id) AS sold_quantities",
-            'sold_quantities.item_profile_id = inv.item_ID',
-            'left'
-        );
-        
-        
+                GROUP BY ipj.item_id
+                ) AS sq",
+                'sq.item_id = inv.item_ID',
+                'left'
+            );
 
-        $this->db->where('items.id', $item_id);
-        $this->db->group_by('inv.item_ID');
-
-        $query = $this->db->get()->row();
+    
+        $this->db->where('po.approved', 1);
+         $this->db->where('items.id', $item_id);
+        $this->db->group_by('inv.item_ID, ip.threshold, unit.unit_of_measure, items.item_name, items.short_name, items.item_code, items.description');
+    
+       $query = $this->db->get()->row();
 
         return $query ? $query->current_stock : 0; // return 0 if no stock found
     }

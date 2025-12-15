@@ -110,7 +110,7 @@ class Inventory_model extends CI_Model
     public function get_inventory(){
         $this->db->select('
             inv.item_ID,
-            (SUM(inv.received_qty) - COALESCE(MAX(sq.sold_quantity), 0)) AS current_stock,
+            (SUM(inv.received_pcs) - COALESCE(MAX(sq.sold_quantity), 0)) AS current_stock,
             ip.threshold,
             unit.unit_of_measure,
             items.item_name,
@@ -165,6 +165,7 @@ class Inventory_model extends CI_Model
             poi.po_descr,
             poi.date_expiry,
             poi.received_qty,
+            poi.received_pcs,
             poi.batch_no,
 
             supplier.supplier_name
@@ -265,6 +266,8 @@ class Inventory_model extends CI_Model
             i.item_code,
             i.strenght,
             i.short_name,
+            i.packaging,
+            i.pcs_box,
             i.description');
         $this->db->from($this->Table->purchase_order_items . ' AS poi');
         $this->db->join($this->Table->items . ' AS i', 'poi.item_id = i.id', 'left');
