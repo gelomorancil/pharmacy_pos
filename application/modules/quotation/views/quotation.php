@@ -313,12 +313,12 @@ $session = (object) get_userdata(USER);
         <!-- Row 1: Select Item / UOM / Quantity / Pcs / Unit Price -->
         <div class="form-row">
             <div class="form-col" style="flex:2;">
-                <label for="modal_select_item">Select Item:</label>
-                <select id="modal_select_item" onchange="fill_in_item(this)">
-                    <option value="" selected disabled>-- Select item --</option>
-                    <?php foreach($items_profiles as $key => $value){ ?>
+                <label for="item_2">Select Item:</label>
+                <select id="item_2" class="select2 form-control" style="width: 100%;">
+                            <option value="" disabled selected>-- Select Category --</option>
+                            <?php foreach($items_profiles as $key => $value){ ?>
                                 <option 
-                                     value="<?= $value->item_id ?>"
+                                    value="<?= $value->item_id ?>"
                                     data-id="<?=$value->item_id?>" 
                                     data-item_name="<?=$value->item_name?>" 
                                     data-item_code="<?=$value->item_code?>" 
@@ -335,6 +335,7 @@ $session = (object) get_userdata(USER);
                                     <?= $value->item_name ?>
                                 </option>
                             <?php } ?>
+                        </select>
                 </select>
             </div>
 
@@ -360,14 +361,113 @@ $session = (object) get_userdata(USER);
 <?php
 main_footer();
 ?>
-<script src="<?php echo base_url() ?>/assets/js/quotation/quotation.js"></script>
+
 
 <script>
     $(function () {
+
+        $('#item_2').select2({
+        width: '100%',
+        dropdownParent: $('#itemModal'),
+        matcher: function(params, data) {
+            if ($.trim(params.term) === '') return data;
+
+            const term = params.term.toLowerCase();
+            const text = (data.text || '').toLowerCase();
+            let found = text.indexOf(term) > -1;
+
+            if (!found && data.element) {
+                const $option = $(data.element);
+                $.each($option.data(), function(key, value) {
+                    if (String(value).toLowerCase().indexOf(term) > -1) {
+                        found = true;
+                        return false;
+                    }
+                });
+            }
+            return found ? data : null;
+        },
+    
+        templateResult: function(option) {
+            if (!option.id) return option.text;
+
+            const data = $(option.element).data();
+            const statusColor = data.status == 1 ? 'green' : 'red';
+
+            let html = `
+                <div class="p-1">
+                    <div class="d-flex justify-content-between align-items-start mb-1">
+                        <div>
+                            <div class="d-flex align-items-center">
+                                <span style="
+                                    display:inline-block;
+                                    width:10px;
+                                    height:10px;
+                                    border-radius:50%;
+                                    background:${statusColor};
+                                    margin-right:6px;
+                                "></span>
+                                <strong>${data.item_name || option.text}</strong>
+                            </div>
+                            <small class="text-muted d-block mt-1">
+                                <span class="text-danger">GENERIC NAME:</span> ${data.short_name || '-'}
+                            </small>
+                            <small class="text-muted d-block">
+                                <span class="text-danger">MANUFACTURER:</span> ${data.item_code || '-'}
+                            </small>
+                            <small class="text-muted d-block">
+                                <span class="text-danger">DISTRIBUTOR:</span> ${data.distributor || '-'}
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="border-top pt-1">
+                        <small class="text-muted d-block">
+                            <span class="text-primary">CATEGORY:</span> ${data.category || '-'}
+                        </small>
+                        <small class="text-muted d-block">
+                            <span class="text-primary">STRENGTH:</span> ${data.strenght || '-'}
+                        </small>
+                        <small class="text-muted d-block">
+                            <span class="text-primary">STORAGE:</span> ${data.storage_condition || '-'}
+                        </small>
+                        <small class="text-muted d-block">
+                            <span class="text-primary">UOM:</span> ${data.uom || '-'}
+                        </small>
+                        <small class="text-muted d-block">
+                            <span class="text-primary">PACKAGING:</span> ${data.packaging || '-'}
+                        </small>
+                        <small class="text-muted d-block">
+                            <span class="text-primary">DESCRIPTION:</span> ${data.description || '-'}
+                        </small>
+                        <small class="text-muted d-block">
+                            <span class="text-primary">CLASSIFICATION:</span> ${data.classification || '-'}
+                        </small>
+                    </div>
+                </div>
+            `;
+
+            return $(html);  // <-- required fix
+        },
+
+        // templateSelection: function(option) {
+        //     if (!option.id) return option.text;
+        //     const data = $(option.element).data();
+        //     return data.item_name || option.text;
+        // },
+        templateSelection: function(option) {
+            if (!option.id) return option.text;
+            const data = $(option.element).data();
+            return data.item_name || option.text;
+        },
+        escapeMarkup: function(m) { return m; } // Allow HTML rendering
+    });
+
+
         function escapeHtml(str) { if (str === null || str === undefined) return ''; return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#039;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-        function showModal() { $('#modalBackdrop').fadeIn(150); $('#itemModal').fadeIn(180); $('#modal_select_item').focus(); }
+        function showModal() { $('#modalBackdrop').fadeIn(150); $('#itemModal').fadeIn(180); $('#item_2').focus(); }
         function hideModal() { $('#itemModal').fadeOut(120); $('#modalBackdrop').fadeOut(120); clearModal(); editingTempId = null; }
-        function clearModal() { $('#modal_select_item').val(''); $('#modal_specs').val('box'); $('#modal_qty').val(1); $('#modal_pcs').val(''); $('#modal_unit').val('0.00'); $('#modal_desc').val(''); $('#modal_expiry').val(''); $('#modalTitle').text('Add item to quotation'); }
+        function clearModal() { $('#item_2').val(''); $('#modal_specs').val('box'); $('#modal_qty').val(1); $('#modal_pcs').val(''); $('#modal_unit').val('0.00'); $('#modal_desc').val(''); $('#modal_expiry').val(''); $('#modalTitle').text('Add item to quotation'); }
         function recalcLineTotal() { let q = parseFloat($('#modal_qty').val()) || 0; let u = parseFloat($('#modal_unit').val()) || 0; $('#modal_total_hidden').val((q * u).toFixed(2)); } // kept for compatibility if needed
 
         let editingTempId = null;
@@ -380,15 +480,15 @@ main_footer();
 
         // Add or update item (keeps append feature and stores data-item-id)
         $('#modalAdd').on('click', function () {
-            let itemId = $('#modal_select_item').val() || '';
-            let itemName = $('#modal_select_item option:selected').text() || '';
+            let itemId = $('#item_2').val() || '';
+            let itemName = $('#item_2 option:selected').text() || '';
             let qty = parseInt($('#modal_qty').val(), 10) || 0;
             let unit = parseFloat($('#modal_unit').val()) || 0;
             let total = parseFloat((qty * unit).toFixed(2)) || 0.00;
 
 
 
-            if (!itemId) { alert('Please select an item.'); $('#modal_select_item').focus(); return; }
+            if (!itemId) { alert('Please select an item.'); $('#item_2').focus(); return; }
             if (qty <= 0) { alert('Quantity must be at least 1.'); $('#modal_qty').focus(); return; }
 
             if (editingTempId) {
@@ -464,7 +564,7 @@ main_footer();
             let $tr = $('#table_rows').find('tr[data-temp-id="' + tid + '"]');
             if (!$tr.length) return;
             recalcTotals();
-            $('#modal_select_item').val($tr.attr('data-item-id'));
+            $('#item_2').val($tr.attr('data-item-id'));
             $('#modal_qty').val($tr.attr('data-qty'));
             $('#modal_unit').val($tr.attr('data-unit'));
 
@@ -700,7 +800,18 @@ main_footer();
 
         $(document).on('input', '#freight_input', recalcTotals);
 
+        
+//     $('#item_2').select2('destroy');
+// $('#item_2').select2();
+    $(document).on('select2:open', () => {
+        setTimeout(() => {
+            const field = document.querySelector('.select2-container--open .select2-search__field');
+            field.focus();
+            field.select();
+        }, 10);
+    });
     });
 
 
 </script>
+<script src="<?php echo base_url() ?>/assets/js/quotation/quotation.js"></script>
