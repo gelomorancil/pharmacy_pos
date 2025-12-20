@@ -101,10 +101,10 @@ $session = (object) get_userdata(USER);
         background: #fff;
         z-index: 9999;
         width: 820px;
-        max-width: 98%;
+        max-width: 100%;
         border-radius: 6px;
         box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
-        height: 34%;
+        height: 50%;
     }
 
     .modal-header,
@@ -232,6 +232,22 @@ $session = (object) get_userdata(USER);
         button {
             display: none !important;
         }
+    }
+
+
+  /* Change hover color to light gray */
+    .select2-results__option--highlighted {
+        background-color: #f2f2f2 !important; /* light gray background */
+        color: #000 !important; /* black text */
+    }
+
+    /* Optional: make the cursor consistent */
+    .select2-results__option {
+        cursor: pointer;
+    }
+
+    .select2-results__options {
+        max-height: 400px !important;  /* default is ~200px */
     }
 </style>
 

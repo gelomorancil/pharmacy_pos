@@ -238,8 +238,8 @@ $session = (object) get_userdata(USER);
                     <tr>
                         <th style="width:8%;">#</th>
                         <th style="width:26%;">Item</th>
-                        <th style="width:28%;">Item Description</th>
-                        <th style="width:8%;">Pcs</th>
+                        <th style="width:28%;">Packaging</th>
+                        <th style="width:8%;">Qty</th>
                         <th style="width:10%;">Unit Price</th>
                         <th style="width:10%;">Total</th>
                     </tr>

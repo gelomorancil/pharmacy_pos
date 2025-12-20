@@ -7,10 +7,10 @@
             <td><?php echo $val->item_name; ?></td>
 
             <!-- Item Description -->
-            <td><?php echo $val->po_descr; ?></td>
+            <td><?php echo $val->packaging; ?></td>
 
             <!-- Pcs -->
-            <td><?php echo $val->pcs; ?></td>
+            <td><?php echo $val->qty; ?></td>
 
             <!-- Unit Price -->
             <td><?php echo number_format($val->unit_price, 2); ?></td>

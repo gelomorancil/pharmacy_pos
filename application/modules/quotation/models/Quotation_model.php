@@ -60,7 +60,7 @@ class Quotation_model extends CI_Model
 
     public function get_quotation_items($quotation_id)
     {
-        $this->db->select('qi.*, i.item_name,u.unit_of_measure');
+        $this->db->select('qi.*, i.item_name,i.packaging,u.unit_of_measure');
         $this->db->from('tbl_quotation_items qi');
         $this->db->join('tbl_items i', 'qi.item_ID = i.ID', 'left');
         $this->db->join('tbl_unit u', 'qi.unit_ID = u.ID', 'left');
