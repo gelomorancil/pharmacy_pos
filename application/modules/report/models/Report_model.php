@@ -52,6 +52,8 @@ class Report_model extends CI_Model
                 ip.item_id,
                 item.item_name,
                 item.item_code,
+                item.short_name,
+                item.strenght,
             ');
             $this->db->from($this->Table->payment_child . ' AS pChild');
             $this->db->join($this->Table->item_profile . ' AS ip', 'pChild.item_profile_id = ip.id', 'left');

@@ -110,6 +110,9 @@ class Quotation extends MY_Controller
             // unit_ID: if your modal sends a numeric unit id use it; otherwise fallback to 0.
             $unit_ID = isset($it['unit_id']) ? intval($it['unit_id']) : 0;
 
+            $expiry = isset($it['expiry']) ? $this->db->escape_str($it['expiry']) : '';
+            $lot_number = isset($it['lot_number']) ? $this->db->escape_str($it['lot_number']) : '';
+
             $qty = isset($it['qty']) ? intval($it['qty']) : 0;
             $pcs = isset($it['pcs']) ? intval($it['pcs']) : 0;
             $descr = isset($it['desc']) ? $this->db->escape_str($it['desc']) : '';
@@ -121,7 +124,9 @@ class Quotation extends MY_Controller
                 'qo_ID' => intval($quotation_id), // store quotation id in qo_ID column
                 'qty' => $qty,
                 'po_descr' => substr($descr, 0, 255),
-                'pcs' => $pcs
+                'pcs' => $pcs,
+                'date_expiry' => $expiry,
+                'batch_no' => $lot_number
             ];
         }
 

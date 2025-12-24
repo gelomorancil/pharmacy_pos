@@ -2,11 +2,26 @@ $(document).ready(function () {
     load_expenses();
 })
 
+$('#expense_date_range').daterangepicker({
+    locale: {
+        format: 'MMM D, YYYY' // Format for Oct 21, 2024
+    },
+    // startDate: moment().startOf('month'), // First day of the current month
+    // endDate: moment().endOf('month')      // Last day of the current month
+});
+
+$(document).on('change', '#expense_date_range', function () {
+  load_expenses($(this).val());
+}); 
+
 //load expenses table/grid
-var load_expenses = () => {
+var load_expenses = (date_range) => {
     $(document).gmLoadPage({
        url: 'expense/get_expenses',
-       load_on: '#load_expenses'
+       load_on: '#load_expenses',
+       data: {
+           date_range: date_range
+       }
    });
   }
 

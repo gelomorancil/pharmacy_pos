@@ -485,8 +485,8 @@ main_footer();
         escapeMarkup: function(m) { return m; } // Allow HTML rendering
     });
 
-    $('#item_2').select2('destroy');
-$('#item_2').select2();
+    // $('#item_2').select2('destroy');
+    // $('#item_2').select2();
     $(document).on('select2:open', () => {
         setTimeout(() => {
             const field = document.querySelector('.select2-container--open .select2-search__field');

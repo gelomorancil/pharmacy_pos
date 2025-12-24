@@ -268,15 +268,26 @@ $session = (object) get_userdata(USER);
             <button class="btn" id="savePrintBtn">🖨️ Save & Print Quotation</button>
         </div>
         <div class="table-responsive">
-            <table id="quotation_table">
+            <table id="quotation_table" style="font-size:10px;">
                 <thead>
                     <tr>
                         <!-- headers adapted to show the key visible columns -->
-                        <th style="width:8%;">Qty</th>
+                        <!-- <th style="width:8%;">Qty</th>
                         <th style="width:23%;">Item</th>
                         <th style="width:10%;">Unit Price</th>
                         <th style="width:10%;">Total</th>
-                        <th style="width:6%;">Action</th>
+                        <th style="width:6%;">Action</th> -->
+
+                        <th>Brand</th>
+                        <th>Generic</th>
+                        <th>Dosage</th>
+                        <th>Packaging</th>
+                        <th>Expiry</th>
+                        <th>Lot Number</th>
+                        <th>Qty</th>
+                        <th>Unit Price</th>
+                        <th>Total</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody id="table_rows">
@@ -498,11 +509,14 @@ main_footer();
         $('#modalAdd').on('click', function () {
             let itemId = $('#item_2').val() || '';
             let itemName = $('#item_2 option:selected').text() || '';
+            let genericName = $('#item_2 option:selected').data('short_name') || '';
+            let strenght = $('#item_2 option:selected').data('strenght') || '';
+            let packaging = $('#item_2 option:selected').data('packaging') || '';
             let qty = parseInt($('#modal_qty').val(), 10) || 0;
             let unit = parseFloat($('#modal_unit').val()) || 0;
             let total = parseFloat((qty * unit).toFixed(2)) || 0.00;
 
-
+           
 
             if (!itemId) { alert('Please select an item.'); $('#item_2').focus(); return; }
             if (qty <= 0) { alert('Quantity must be at least 1.'); $('#modal_qty').focus(); return; }
@@ -535,14 +549,33 @@ main_footer();
                     'data-total': total.toFixed(2),
                 });
 
-                $tr.append($('<td>').html(
-                    `<span class="display-qty">${qty}</span>
-         <input type="hidden" name="items[${rowIndex}][qty]" value="${qty}" class="i_qty_${rowIndex}">`
-                ));
+                
                 $tr.append($('<td>').html(
                     `<span class="display-item">${escapeHtml(itemName)}</span>
-         <input type="hidden" name="items[${rowIndex}][item_id]" value="${escapeHtml(itemId)}">`
+                    <input type="hidden" name="items[${rowIndex}][item_id]" value="${escapeHtml(itemId)}">`
                 ));
+                 $tr.append($('<td>').html(
+                    `<span class="display-item">${escapeHtml(genericName)}</span>`
+                ));
+                 $tr.append($('<td>').html(
+                    `<span class="display-item">${escapeHtml(strenght)}</span>`
+                ));
+                 $tr.append($('<td>').html(
+                    `<span class="display-item">${escapeHtml(packaging)}</span>`
+                ));
+               $tr.append($('<td>').html(
+                    `<input type="date" class="form-control form-control-sm" name="items[${rowIndex}][expiry]" style="font-size:12px;">`
+                ));
+
+                $tr.append($('<td>').html(
+                    `<input type="text" class="form-control form-control-sm" name="items[${rowIndex}][lot_number]" style="font-size:12px;">`
+                ));
+
+                $tr.append($('<td>').html(
+                    `<span class="display-qty">${qty}</span>
+                <input type="hidden" name="items[${rowIndex}][qty]" value="${qty}" class="i_qty_${rowIndex}">`
+                ));
+
                 $tr.append($('<td>').html(
                     `<span class="display-unit">${unit.toFixed(2)}</span>
          <input type="hidden" name="items[${rowIndex}][unit]" value="${unit.toFixed(2)}" class="i_unit_${rowIndex}">`
@@ -598,6 +631,8 @@ main_footer();
                 const $tr = $(this);
                 // read from data-* attributes (fallback to visible spans)
                 const item_id = $tr.attr('data-item-id') || $tr.find('input[name$="[item_id]"]').val() || '';
+                const expiry = $tr.attr('data-expiry') || $tr.find('input[name$="[expiry]"]').val() || '';
+                const lot_number = $tr.attr('data-lot_number') || $tr.find('input[name$="[lot_number]"]').val() || '';
                 const item_name = $tr.attr('data-item-name') || $tr.find('.display-item').text().trim() || '';
                 const qty = parseInt($tr.attr('data-qty') || $tr.find('.display-qty').text()) || 0;
                 const unit = parseFloat($tr.attr('data-unit') || $tr.find('.display-unit').text()) || 0;
@@ -608,7 +643,9 @@ main_footer();
                     item_name: item_name,
                     qty: qty,
                     unit: unit,
-                    total: total
+                    total: total,
+                    expiry: expiry,
+                    lot_number: lot_number
                 });
             });
 

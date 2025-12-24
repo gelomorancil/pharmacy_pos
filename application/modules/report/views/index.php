@@ -97,7 +97,7 @@ $session = (object) get_userdata(USER);
     <!-- Hidden Flag Variables -->
     <input disabled hidden id="parent_id" value="">
 
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Sales Details Per-item:</cont>

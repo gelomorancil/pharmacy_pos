@@ -1,9 +1,8 @@
-<table id="example10" class="table table-bordered table-striped">
+<table id="example11" class="table table-bordered table-striped">
     <thead>
         <tr>
             <th style="width:15%;">Purchase Order</th>
             <th style="width:25%;">Date Added</th>
-            <th style="width:25%;">Date Approved</th>
             <th style="width:25%;">Supplier</th>
             <th style="width:15%;">Actions</th>
         </tr>
@@ -17,27 +16,20 @@
 
                 <td class="text-center" style="color: red; font-weight: bolder;">PO-<?= $value->po_num ?></td>
                 <td class="text-center"><?=  date('Y-m-d',strtotime(@$value->date_added ))?></td>
-                <td class="text-center"><?= $value->date_approved != '0000-00-00 00:00:00'
-                        ? date('Y-m-d', strtotime($value->date_approved))
-                        : '-';
-                    ?>
-                    </td>
                 <td class="text-center"><?= @$value->supplier_name??"<span style='color:red;font-weight:bold;'>UPDATE TO ADD SUPPLIER</span>"?></td>
                 <td class="text-center">
                     <!-- view Button -->
                     <button type="button" 
                             class="btn btn-sm btn-primary" 
                             data-PO="<?= $value->po_num ?>" 
-                            onclick="view_po(this)"
-                            >
+                            onclick="view_po(this)">
                         <i class="fa fa-eye"></i>
                     </button>
                     <!-- Edit Button -->
                     <button type="button" 
                             class="btn btn-sm btn-primary" 
                             data-PO="<?= $value->po_num ?>" 
-                            onclick="edit_po(this)"
-                            style="display:<?=$value->approved==1?'none':''?>">
+                            onclick="edit_po(this)">
                         <i class="fa fa-edit"></i>
                     </button>
 
@@ -45,8 +37,7 @@
                     <button type="button" 
                             class="btn btn-sm btn-danger" 
                             data-PO="<?= $value->po_num ?>" 
-                            onclick="del_po(this)"
-                            style="display:<?=$value->approved==1?'none':''?>">
+                            onclick="del_po(this)">
                         <i class="fa fa-trash"></i>
                     </button>
 
@@ -67,7 +58,7 @@
 </table>
 
 <script>
-    $("#example10").DataTable({
+    $("#example11").DataTable({
         // "responsive": false,
         "lengthChange": false,
         // "autoWidth": false,

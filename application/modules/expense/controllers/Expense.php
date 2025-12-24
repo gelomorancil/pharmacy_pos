@@ -23,15 +23,45 @@ class Expense extends MY_Controller
 		$this->load->view('layout', $this->data);
 	}
 
-	public function get_expenses() {
-        $this->eModel->d_from = $this->input->post("d_from");
-		$this->eModel->d_to = $this->input->post("d_to");
-		$this->eModel->branch = $this->input->post("branch");
-		
+	public function get_expenses()
+	{
+		$date_range = trim($this->input->post('date_range'));
+
+		// ✅ DEFAULT: today
+		if (empty($date_range) || strpos($date_range, ' - ') === false) {
+
+			$today = date('Y-m-d');
+
+			$this->eModel->date_from = $today . ' 00:00:00';
+			$this->eModel->date_to   = $today . ' 23:59:59';
+
+		} else {
+
+			$date_parts = explode(' - ', $date_range);
+
+			$date_from = trim($date_parts[0]);
+			$date_to   = trim($date_parts[1]);
+
+			$fromObj = DateTime::createFromFormat('F d, Y', $date_from);
+			$toObj   = DateTime::createFromFormat('F d, Y', $date_to);
+
+			// Extra safety fallback
+			if (!$fromObj || !$toObj) {
+				$today = date('Y-m-d');
+				$this->eModel->date_from = $today . ' 00:00:00';
+				$this->eModel->date_to   = $today . ' 23:59:59';
+			} else {
+				$this->eModel->date_from = $fromObj->format('Y-m-d 00:00:00');
+				$this->eModel->date_to   = $toObj->format('Y-m-d 23:59:59');
+			}
+		}
+
 		$this->data['expenses'] = $this->eModel->get_expenses();
-		$this->data['content'] = 'grid/load_expenses';
+		$this->data['content']  = 'grid/load_expenses';
 		$this->load->view('layout', $this->data);
 	}
+
+
 
 	public function get_expense_details(){
 		$this->eModel->exp_id = $this->input->post("exp_id");

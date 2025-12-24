@@ -586,12 +586,10 @@ main_header(['list_management']);
                                     </div>
                                     
                                     <div class="card-footer">
-                                        <button type="button" class="btn btn-primary" data-toggle="modal"
-                                            data-target="#modal-default" id="Save">Submit</button>
+                                        <button type="button" class="btn btn-primary"  id="save_user">Submit</button>
                                         <button type="button" class="btn btn-warning" id="Update" value=""
                                             style="display:none">Update</button>
-                                        <button type="button" class="btn btn-success" data-toggle="modal"
-                                            data-target="#r_modal-default" id="Reset" value="" style="display:none">Reset
+                                        <button type="button" class="btn btn-success" id="Reset" value="" style="display:none">Reset
                                             Password</button>
                                         <button type="button" class="btn btn-danger" data-toggle="modal"
                                             data-target="#d_modal-default" id="Delete" value="" style="display:none">Delete
@@ -650,7 +648,7 @@ main_header(['list_management']);
                             <thead class="table-dark">
                                 <tr>
                                     <th style="width:20%;">Users</th>
-                                    <th colspan="8" class="text-center">Modules</th>
+                                    <th colspan="14" class="text-center">Modules</th>
                                 </tr>
                                 <tr>
                                     <th></th>
@@ -658,6 +656,11 @@ main_header(['list_management']);
                                     <th>Cashiering</th>
                                     <th>Quotation</th>
                                     <th>Inventory</th>
+                                    <th>Top Buyers</th>
+                                    <th>Top Items</th>
+                                    <th>Purchase Order</th>
+                                    <th>Delivery</th>
+                                    <th>Expense</th>
                                     <th>Item Profile</th>
                                     <th>Management</th>
                                     <th>User Management</th>
@@ -689,6 +692,31 @@ main_header(['list_management']);
                                         <td class="text-center">
                                             <input type="checkbox" class="role-checkbox" data-user-id="<?= $u->u_ID ?>"
                                                 data-module="inventory" <?= !empty($u->inventory) && $u->inventory == 1 ? 'checked' : '' ?>>
+                                        </td>
+
+                                         <td class="text-center">
+                                            <input type="checkbox" class="role-checkbox" data-user-id="<?= $u->u_ID ?>"
+                                                data-module="top_buyers" <?= !empty($u->top_buyers) && $u->top_buyers == 1 ? 'checked' : '' ?>>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <input type="checkbox" class="role-checkbox" data-user-id="<?= $u->u_ID ?>"
+                                                data-module="top_items" <?= !empty($u->top_items) && $u->top_items == 1 ? 'checked' : '' ?>>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <input type="checkbox" class="role-checkbox" data-user-id="<?= $u->u_ID ?>"
+                                                data-module="purchase_order" <?= !empty($u->purchase_order) && $u->purchase_order == 1 ? 'checked' : '' ?>>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <input type="checkbox" class="role-checkbox" data-user-id="<?= $u->u_ID ?>"
+                                                data-module="delivery" <?= !empty($u->delivery) && $u->delivery == 1 ? 'checked' : '' ?>>
+                                        </td>
+
+                                         <td class="text-center">
+                                            <input type="checkbox" class="role-checkbox" data-user-id="<?= $u->u_ID ?>"
+                                                data-module="expense" <?= !empty($u->expense) && $u->expense == 1 ? 'checked' : '' ?>>
                                         </td>
 
                                         <td class="text-center">

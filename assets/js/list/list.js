@@ -595,7 +595,7 @@ var editFunction = (x) => {
       // $('#Branch').val(e.Branch);
       $('#Update').val(e.U_ID);
       $('#delete_user').val(e.U_ID);
-      $('#reset_pass').val(e.U_ID);
+      $('#Reset').val(e.U_ID);
 
       $('#Save').css('display', 'none');
       $('#Update').css('display', 'inline');
@@ -608,7 +608,7 @@ var editFunction = (x) => {
 // SAVE USER DETAILS
 $('#save_user').click(function () {
   $.post({
-    url: 'service/Management_service/save_user',
+    url: baseUrl + 'management/service/Management_service/save_user',
     // selector: '.form-control',
     data: {
       FName: $('#FName').val(),
@@ -701,9 +701,9 @@ $('#delete_user').click(function () {
   })
 });
 
-$('#reset_pass').click(function () {
+$('#Reset').click(function () {
   $.post({
-    url: 'service/Management_service/reset',
+    url: baseUrl + 'management/service/Management_service/reset',
     // selector: '.form-control',
     data: {
       U_ID: $(this).val(),

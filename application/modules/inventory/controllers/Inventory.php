@@ -55,10 +55,17 @@ class Inventory extends MY_Controller
 		$this->data['content'] = 'purchase_order';
 		$this->load->view('layout', $this->data);
 	}
+	
 
 	public function load_po_list(){
 		$this->data['purchase_order'] = $this->iModel->get_po_list();
 		$this->data['content'] = 'grid/load_po_list';
+		$this->load->view('layout', $this->data);
+	}
+
+	public function load_po_list_history(){
+		$this->data['purchase_order'] = $this->iModel->get_po_list_history();
+		$this->data['content'] = 'grid/load_po_list_history';
 		$this->load->view('layout', $this->data);
 	}
 

@@ -233,15 +233,25 @@ $session = (object) get_userdata(USER);
             <p>Date: <span id="current_date"><?= date('F j, Y', strtotime($quotation->date_added)); ?></p>
         </div>
         <div class="table-responsive">
-            <table id="quotation_table">
+            <table id="quotation_table" style="font-size:10px;">
                 <thead>
                     <tr>
-                        <th style="width:8%;">#</th>
+                        <!-- <th style="width:8%;">#</th>
                         <th style="width:26%;">Item</th>
                         <th style="width:28%;">Packaging</th>
                         <th style="width:8%;">Qty</th>
                         <th style="width:10%;">Unit Price</th>
-                        <th style="width:10%;">Total</th>
+                        <th style="width:10%;">Total</th> -->
+
+                        <th>Brand</th>
+                        <th>Generic</th>
+                        <th>Dosage</th>
+                        <th>Packaging</th>
+                        <th>Expiry</th>
+                        <th>Lot Number</th>
+                        <th>Qty</th>
+                        <th>Unit Price</th>
+                        <th>Total</th>
                     </tr>
                 </thead>
                 <tbody id="table_rows">

@@ -213,6 +213,11 @@ class Management_services_model extends CI_Model
 
             $this->db->insert($this->Table->user, $data);
 
+            $last_insert_id = $this->db->insert_id();
+
+            $this->db->insert($this->Table->user_access, ['user_ID' => $last_insert_id]);
+            $this->db->insert($this->Table->u_image, ['user_id' => $last_insert_id]);
+
             $this->db->trans_complete();
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();

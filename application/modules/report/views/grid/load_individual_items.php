@@ -5,8 +5,10 @@
 <table id="example2" class="table table-bordered table-striped table-hover">
     <thead>
         <tr>
-            <th>Item Code</th>
-            <th>Item Name</th>
+            <th>Brand</th>
+            <th>Generic</th>
+            <th>Dosage</th>
+            <th>Packaging</th>
             <th>Item Price</th>
             <th>Quantity</th>
             <th>Sub-total</th>
@@ -32,8 +34,10 @@
                 $total_amount += (($value["unit_price"] * $value["quantity"]) - $value["discount"]);
                 ?>
                 <tr>
-                    <td><?= $value["item_code"] ?></td>
                     <td><?= $value["item_name"] ?></td>
+                    <td><?= $value["short_name"] ?></td>
+                    <td><?= $value["strenght"] ?></td>
+                    <td></td>
                     <td><?= "Php " . number_format($value["unit_price"], 2) ?></td>
                     <td><?= $value["quantity"] ?></td>
                     <td><?= "Php " . number_format($value["unit_price"] * $value["quantity"], 2) ?></td>

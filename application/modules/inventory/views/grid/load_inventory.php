@@ -9,8 +9,9 @@
     <thead>
         <tr>
             <th style="width:10%;">Brand</th>
+            <th style="width:10%;">Generic</th>
             <th style="width:30%;">Dosage</th>
-            <th style="width:30%;">Description</th>
+            <th style="width:30%;">Packaging</th>
             <th style="width:10%;">Current Stocks</th>
             <th style="width:10%;">Actions</th>
         </tr>
@@ -23,8 +24,9 @@
             <tr>
 
                 <td><?= $value->item_name ?></td>
+                <td><?= $value->short_name ?></td>
                 <td><?= $value->strenght ?></td>
-                <td><?= $value->description ?></td>
+                <td><?= $value->packaging ?></td>
                 <td>
                     <b style="color: 
                         <?php

@@ -2,6 +2,7 @@
   <table class="table table-hover text-nowrap datatable" id="itemDeletedTable">
     <thead>
         <tr>
+            <th></th>
             <th>Brand Name</th>
             <th>Pricing</th>
             <th>Item Category</th>
@@ -11,7 +12,6 @@
             <th>Packaging</th>
             <th>Indication</th>
             <th>Classification</th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -38,7 +38,7 @@
             data-storage_condition="<?=$value->storage_condition?>"
             >
 
-
+              <td><button class="btn btn-default btn-sm btn_retrieve" value="<?=$value->id?>">Restore</button></td>
                <td>
                     <!-- Item name with status circle -->
                     <div class="d-flex align-items-center">
@@ -90,7 +90,6 @@
                 <td><?= $value->packaging ?></td>
                 <td><?= $value->description ?></td>
                 <td><?= $value->classification ?></td>
-                <td><button class="btn btn-default btn-sm btn_retrieve" value="<?=$value->id?>">Retrieve</button></td>
             </tr>
         <?php
         }

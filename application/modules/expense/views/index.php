@@ -80,7 +80,17 @@ $session = (object)get_userdata(USER);
                     <div class="card-title">Expenses for today</div>
                 </div>
                 <div class="card-body">
-
+                     <div class="input-group input-group-sm mb-2 col-4">
+                        <label for="">Select Date Range:</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="far fa-calendar-alt"></i>
+                                </span>
+                            </div>
+                            <input type="text" class="form-control" id="expense_date_range">
+                        </div>
+                    </div>
                     <div class="" id="load_expenses">
                     </div>
                 </div>

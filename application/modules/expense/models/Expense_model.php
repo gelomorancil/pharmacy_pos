@@ -17,55 +17,42 @@ class Expense_model extends CI_Model
         $this->Table = json_decode(TABLE);
     }
 
-    public function get_expenses(){
-        $this->db->select(
-            'e.Branch as e_Branch,'.
-            'e.ID,'.
-            'e.Image,'.
-            'e.Date,'.
-            'e.Date,'.
-            'e.Descr,'.
-            'e.Actual_Money,'.
-            'e.expense,'.
-            'e.Balance,'.
-            'e.Editted,'.
-            'u.FName,'.
-            'u.LName'
+public function get_expenses()
+{
+    $this->db->select(
+        'e.Branch as e_Branch,
+         e.ID,
+         e.Image,
+         e.Date,
+         e.Descr,
+         e.Actual_Money,
+         e.expense,
+         e.Balance,
+         e.Editted,
+         u.FName,
+         u.LName'
+    );
 
-        );
-        $this->db->from($this->Table->expenses.' e');
-        $this->db->join($this->Table->user.' u', 'u.ID=e.Incharge','left');
-        $this->db->where('e.Void', 0);
+    $this->db->from($this->Table->expenses . ' e');
+    $this->db->join($this->Table->user . ' u', 'u.ID = e.Incharge', 'left');
+    $this->db->where('e.Void', 0);
 
-        if(@$this->d_from != NULL || @$this->d_to != NULL){
-            $this->db->where('e.Date >=', @$this->d_from);
-            $this->db->where('e.Date <=', @$this->d_to);
+    // ✅ Date filter
+    if (!empty($this->date_from) && !empty($this->date_to)) {
 
-        } else{
-            $this->db->where('e.Date', date('Y-m-d'));
-        }
+        $this->db->where('e.Date >=', $this->date_from);
+        $this->db->where('e.Date <=', $this->date_to);
 
-    //    if(!empty($this->session->Branch)){
-    //         if($this->session->Role == "Admin"){
-    //             $this->db->where('e.Branch', $this->session->Branch);
-    //             // $this->db->where('e.Branch', "Bacolod");
-    //         } else{
-    //             $this->db->where('u.Branch', $this->session->Branch);
-    //             $this->db->where('e.Incharge', $this->session->ID);
-    //         }
-    //     } 
-        
-    //   else {
-    //         if(!empty($this->branch && $this->branch != "All")){
-    //             $this->db->where('u.Branch', $this->branch);
-    //         }
-    //     }
+    } else {
 
-
-        $query = $this->db->get()->result();
-        return $query;
-        //  echo json_encode($query);
+        // ✅ Default: today (full day range)
+        $today = date('Y-m-d');
+        $this->db->where('e.Date >=', $today . ' 00:00:00');
+        $this->db->where('e.Date <=', $today . ' 23:59:59');
     }
+
+    return $this->db->get()->result();
+}
 
     public function get_expense_details(){
         $this->db->select('*');
