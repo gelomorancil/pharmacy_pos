@@ -1,5 +1,5 @@
 //Date range picker
-$('#sales_date_range').daterangepicker({
+$('#sales_date_range, #profitloss_date_range').daterangepicker({
     locale: {
         format: 'MMM D, YYYY' // Format for Oct 21, 2024
     },
@@ -27,6 +27,25 @@ function load_sales_report(date_range, load_type) {
     });
 }
 
+function load_profitloss_report(date_range) {
+    $.ajax({
+        url: 'report/load_profitloss_report',
+        type: 'POST',
+        data: {
+            date_range: date_range,
+            // load_type: load_type
+        },
+        success: function (response) {
+            $('#load_profitloss_report').html(response);
+            $('.report-title').text(date_range);
+
+        },
+        error: function (xhr, status, error) {
+            console.error("Error loading sales:", error);
+        }
+    });
+}
+
 function load_inventory_report(date_range) {
     $.ajax({
         url: 'report/load_inventory_report',
@@ -46,6 +65,7 @@ function load_inventory_report(date_range) {
 
 $(document).ready(function () {
     load_sales_report(current_date_range, current_load_type);
+    load_profitloss_report(current_date_range);
 });
 
 // $('#edit_details').click(function () {
@@ -224,3 +244,7 @@ $('#reprint_receipt').click(function () {
     });
 });
 
+
+$(document).on('change', '#profitloss_date_range', function () {
+  load_profitloss_report($(this).val());
+}); 

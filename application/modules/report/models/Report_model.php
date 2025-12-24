@@ -92,7 +92,91 @@ class Report_model extends CI_Model
         return $query;
     }
 
+    public function get_expenses()
+    {
+        $this->db->select(
+            'e.Branch as e_Branch,
+            e.ID,
+            e.Image,
+            e.Date,
+            e.Descr,
+            e.Actual_Money,
+            e.expense,
+            e.Balance,
+            e.Editted,
+            u.FName,
+            u.LName'
+        );
 
+        $this->db->from($this->Table->expenses . ' e');
+        $this->db->join($this->Table->user . ' u', 'u.ID = e.Incharge', 'left');
+        $this->db->where('e.Void', 0);
 
+        // ✅ Date filter
+        if (!empty($this->date_from) && !empty($this->date_to)) {
+
+            $this->db->where('e.Date >=', $this->date_from);
+            $this->db->where('e.Date <=', $this->date_to);
+
+        } else {
+
+            // ✅ Default: today (full day range)
+            $today = date('Y-m-d');
+            $this->db->where('e.Date >=', $today . ' 00:00:00');
+            $this->db->where('e.Date <=', $today . ' 23:59:59');
+        }
+
+        return $this->db->get()->result();
+    }
+
+    public function total_sales()
+    {
+        $this->db->select('SUM(total_amount) AS total_sales');
+        $this->db->from($this->Table->payment_parent);
+        $this->db->where('voided', 0);
+
+        if (!empty($this->date_from) && !empty($this->date_to)) {
+            $this->db->where('date_created >=', $this->date_from);
+            $this->db->where('date_created <=', $this->date_to);
+        } else {
+            $today = date('Y-m-d');
+            $this->db->where('date_created >=', $today . ' 00:00:00');
+            $this->db->where('date_created <=', $today . ' 23:59:59');
+        }
+
+        return (float) $this->db->get()->row()->total_sales;
+    }
+
+    public function get_purchases()
+    {
+        $this->db->select(
+            'i.Category,
+            p.received_pcs,
+            p.supplier_price,
+            (p.received_pcs * p.supplier_price) AS total_purchase_amount'
+        );
+
+        $this->db->from($this->Table->purchase_order_items . ' p');
+        $this->db->join($this->Table->items . ' i', 'i.id = p.item_id', 'left');
+        $this->db->join($this->Table->purchase_order . ' po', 'po.id = p.po_ID', 'left');
+        $this->db->where('po.date_approved !=', '0000-00-00 00:00:00');
+        
+        // ✅ Date filter
+        if (!empty($this->date_from) && !empty($this->date_to)) {
+
+            $this->db->where('po.date_ordered >=', $this->date_from);
+            $this->db->where('po.date_ordered <=', $this->date_to);
+
+        } else {
+
+            // ✅ Default: today (full day range)
+            $today = date('Y-m-d');
+            $this->db->where('po.date_ordered >=', $today . ' 00:00:00');
+            $this->db->where('po.date_ordered <=', $today . ' 23:59:59');
+        }
+
+        $this->db->group_by('i.Category');
+        return $this->db->get()->result();
+    }
 
 }

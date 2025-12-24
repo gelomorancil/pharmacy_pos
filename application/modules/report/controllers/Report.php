@@ -88,4 +88,32 @@ class Report extends MY_Controller
 		$this->load->view('layout', $this->data);
 	}
 
+	public function profitloss()
+	{
+		$this->data['content'] = 'profitloss';
+		$this->load->view('layout', $this->data);
+	}
+
+	public function load_profitloss_report()
+	{
+		$date_range = $this->input->post('date_range');
+		$date_parts = explode('-', $date_range);
+
+		$date_from = trim($date_parts[0]);
+		$date_to = trim($date_parts[1]);
+
+		$date_from_formatted = DateTime::createFromFormat('M d, Y', $date_from)->format('Y-m-d 00:00:00');
+		$date_to_formatted = DateTime::createFromFormat('M d, Y', $date_to)->format('Y-m-d 23:59:59');
+
+		$this->rModel->date_from = $date_from_formatted;
+		$this->rModel->date_to = $date_to_formatted;
+		// $this->rModel->load_type = $this->input->post('load_type');
+
+		$this->data['expenses'] = $this->rModel->get_expenses();
+		$this->data['total_sales'] = $this->rModel->total_sales();
+		$this->data['get_purchases'] = $this->rModel->get_purchases();
+		$this->data['content'] = 'grid/load_profitloss_report';
+		$this->load->view('layout', $this->data);
+	}
+
 }

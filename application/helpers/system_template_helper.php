@@ -468,6 +468,15 @@ function check_low_stocks() {
                     </a>
                   </li>
                 </ul>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="<?= base_url() ?>report/profitloss"
+                      class="nav-link <?= (sidebar($menubar, ['profitloss'])) ? 'active' : '' ?>">
+                      <i class="fas fa-chart-line nav-icon"></i>
+                      <p>Profit / Loss Report</p>
+                    </a>
+                  </li>
+                </ul>
               </li>
             </ul>
           </nav>
