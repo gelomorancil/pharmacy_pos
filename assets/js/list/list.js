@@ -578,32 +578,63 @@ $('#update_supplier').click(function () {
 
 // <<=========================================>>USER MANAGEMENT<<=========================================>>
 let global_user_id = null;
-var editFunction = (x) => {
-  global_user_id = x;
-  $.post({
-    url: 'management/get_user_details',
-    // selector: '.form-control',
-    data: {
-      user_id: x,
-    },
-    success: function (e) {
-      var e = JSON.parse(e);
-      $('#LName').val(e.LName);
-      $('#FName').val(e.FName);
-      $('#UName').val(e.Username);
-      $('#Role').val(e.Role);
-      // $('#Branch').val(e.Branch);
-      $('#Update').val(e.U_ID);
-      $('#delete_user').val(e.U_ID);
-      $('#Reset').val(e.U_ID);
+// var editFunction = (x) => {
+//   global_user_id = x;
+//   $.post({
+//     url: 'management/get_user_details',
+//     // selector: '.form-control',
+//     data: {
+//       user_id: x,
+//     },
+//     success: function (e) {
+//       var e = JSON.parse(e);
+//       $('#LName').val(e.LName);
+//       $('#FName').val(e.FName);
+//       $('#UName').val(e.Username);
+//       $('#Role').val(e.Role);
+//       // $('#Branch').val(e.Branch);
+//       $('#Update').val(e.U_ID);
+//       $('#delete_user').val(e.U_ID);
+//       $('#Reset').val(e.U_ID);
 
-      $('#Save').css('display', 'none');
-      $('#Update').css('display', 'inline');
-      $('#Reset').css('display', 'inline');
-      $('#Delete').css('display', 'inline');
-    },
-  })
+//       $('#Save').css('display', 'none');
+//       $('#Update').css('display', 'inline');
+//       $('#Reset').css('display', 'inline');
+//       $('#Delete').css('display', 'inline');
+//     },
+//   })
+// }
+
+var editFunction = (x, row) => {
+    global_user_id = x;
+
+    // 🔹 Highlight selected row
+    $('#userTable tbody tr').removeClass('selected');
+    $(row).addClass('selected');
+
+    $.post({
+        url: 'management/get_user_details',
+        data: {
+            user_id: x,
+        },
+        success: function (e) {
+            var e = JSON.parse(e);
+
+            $('#LName').val(e.LName);
+            $('#FName').val(e.FName);
+            $('#UName').val(e.Username);
+            $('#Role').val(e.Role);
+
+            $('#Update').val(e.U_ID);
+            $('#delete_user').val(e.U_ID);
+            $('#Reset').val(e.U_ID);
+
+            $('#Save').hide();
+            $('#Update, #Reset, #Delete').show();
+        },
+    });
 }
+
 
 // SAVE USER DETAILS
 $('#save_user').click(function () {

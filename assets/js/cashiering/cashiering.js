@@ -479,7 +479,7 @@ function process_payment() {
                             beforePrintEvent: null,     // function for printEvent in iframe
                             beforePrint: null,          // function called before iframe is filled
                             afterPrint: function () {
-                                // showPrintConfirmation(); // Show confirmation after the first print
+                                showPrintConfirmation(); // Show confirmation after the first print
                                 $('#payment_type').prop('disabled', true);
                                 $('#discount_type').prop('disabled', true);
                                 $('#amount_recieved').prop('disabled', true);

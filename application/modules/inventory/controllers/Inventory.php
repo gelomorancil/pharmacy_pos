@@ -41,6 +41,7 @@ class Inventory extends MY_Controller
 		$this->iModel->id = $this->input->post("id");
 
 		$this->data['history'] = $this->iModel->get_history();
+		$this->data['history_sold'] = $this->iModel->get_history_sold();
 		$this->data['content'] = 'grid/load_inventory_history';
 		$this->load->view('layout', $this->data);
 	}

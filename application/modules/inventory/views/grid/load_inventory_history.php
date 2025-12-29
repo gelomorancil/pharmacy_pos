@@ -1,4 +1,4 @@
-<table id="example2" class="table table-bordered table-striped">
+<table id="" class="table table-bordered table-striped example2">
     <thead>
         <tr>
             <th style="width:20%;">Purchase Order #</th>
@@ -42,8 +42,40 @@
     </tbody>
 </table>
 
+<h3 class="mt-5">Sold Items</h3>
+<table class="table table-bordered table-striped example2">
+    <thead>
+        <tr>
+            <th style="width:20%;">Date Ordered</th>
+            <th style="width:20%;">Item Name</th>
+            <th style="width:25%;">Qty</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        $total_qty = 0;
+        foreach ($history_sold as $key => $value) {
+            $total_qty += $value->quantity;
+            ?>
+            <tr>
+
+                <td><?= date('M d, Y', strtotime($value->date_created)) ?></td>
+                <td><?= $value->item_name ?></td>
+                <td><?= $value->quantity ?></td>
+            <?php
+        }
+        ?>
+    </tbody>
+    <tfooter>
+        <tr>
+            <th colspan="2" style="text-align:right;">Total Qty Sold:</th>
+            <th><?= number_format($total_qty,2) ?></th>
+        </tr>
+    </tfooter>
+</table>
+
 <script>
-    $("#example2").DataTable({
+    $(".example2").DataTable({
         "responsive": true,
         "lengthChange": false,
         "autoWidth": false,

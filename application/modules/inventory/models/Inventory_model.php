@@ -340,4 +340,25 @@ class Inventory_model extends CI_Model
         return $q!=null ? true : false;
     }
 
+    public function get_history_sold()
+    {
+        $this->db->select('
+            pc.*,
+            items.item_name,
+            pay.date_created
+        ');
+
+        $this->db->from($this->Table->payment_child . ' AS pc');
+        $this->db->join($this->Table->payment_parent . ' AS pay', 'pc.payment_id = pay.id', 'left');
+        $this->db->join($this->Table->item_profile . ' AS ip', 'pc.item_profile_id = ip.id', 'left');
+        $this->db->join($this->Table->items . ' AS items', 'ip.item_id = items.id', 'left');
+
+
+        $this->db->where('pc.item_profile_id', $this->id);
+        $this->db->where('pay.voided', 0);
+
+        $query = $this->db->get()->result();
+        return $query;
+    }
+
 }

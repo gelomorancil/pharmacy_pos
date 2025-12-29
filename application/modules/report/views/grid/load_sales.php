@@ -36,7 +36,7 @@
                     }
                     ?>
                     <tr onclick="show_individual_items(this)" 
-                        data-children-array='<?= json_encode($value['children']) ?>'<?= count($value['children']) ?>
+                        data-children-array='<?= htmlspecialchars(json_encode($value['children']), ENT_QUOTES, 'UTF-8') ?>'
                         data-parent_id="<?=$value['id']?>"
                         data-sub_total="<?=$value['sub_total']?>"
                         data-discount="<?=$value['discount_amount']?>"

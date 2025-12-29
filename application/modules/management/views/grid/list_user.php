@@ -1,4 +1,9 @@
 <?php load_table_css();?>
+<style>
+    #userTable tbody tr.selected {
+        background-color: #acacacff !important; /* light blue */
+    }
+</style>
 <table class="table table-hover text-nowrap datatable" id="userTable">
     <thead>
         <tr>
@@ -12,10 +17,15 @@
                 $prevCat = '';
                 foreach($user as $key => $value){ 
                 ?>
-                <tr  onClick="editFunction(<?=$value->ID?>)" >
+                <!-- <tr  onClick="editFunction(<?=$value->ID?>)" >
                     <td id="name" value="asd"><?=ucfirst($value->LName.", ".ucfirst($value->FName))?></td>
                     <td><?=$value->Username?></td>
                     <td><?=ucfirst($value->Role)?></td>
+                </tr> -->
+                <tr onclick="editFunction(<?=$value->ID?>, this)">
+                    <td><?= ucfirst($value->LName . ", " . ucfirst($value->FName)) ?></td>
+                    <td><?= $value->Username ?></td>
+                    <td><?= ucfirst($value->Role) ?></td>
                 </tr>
             <?php   
             }
