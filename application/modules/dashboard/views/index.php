@@ -5,7 +5,7 @@ main_header(['dashboard']);
 
     /* Scrollable table for low stock */
     .scrollable-table {
-      max-height: 300px;
+      /* max-height: 300px; */
       overflow-y: auto;
     }
     /* Fix table header when scrolling */
@@ -111,27 +111,17 @@ main_header(['dashboard']);
           <a href="<?=base_url()?>inventory" class="btn btn-warning btn-xs" style="float:right">View Inventory</a>
         </div>
           <div class="card-body p-0">
-            <div class="scrollable-table">
-              <table class="table table-hover mb-0">
+            <div class="scrollable-table" id="top_low_stock">
+              <!-- <table class="table table-hover mb-0">
                 <thead class="thead-light">
                   <tr>
                     <th>Item</th>
                     <th>Remaining Stock</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr class="table-danger"><td>Item X</td><td>2</td></tr>
-                  <tr class="table-danger"><td>Item Y</td><td>4</td></tr>
-                  <tr><td>Item Z</td><td>10</td></tr>
-                  <tr><td>Item W</td><td>8</td></tr>
-                  <tr><td>Item Q</td><td>15</td></tr>
-                  <tr><td>Item L</td><td>12</td></tr>
-                  <tr><td>Item M</td><td>9</td></tr>
-                  <tr><td>Item N</td><td>7</td></tr>
-                  <tr><td>Item O</td><td>3</td></tr>
-                  <tr><td>Item P</td><td>6</td></tr>
+                <tbody >
                 </tbody>
-              </table>
+              </table> -->
             </div>
           </div>
         </div>

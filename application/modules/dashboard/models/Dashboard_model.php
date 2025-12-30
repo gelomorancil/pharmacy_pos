@@ -17,40 +17,85 @@ class Dashboard_model extends CI_Model
         $this->Table = json_decode(TABLE);
     }
 
-    public function get_inventory()
-    {
+    // public function get_inventory()
+    // {
+    //     $this->db->select('
+    //         inv.item_profile_id,
+    //         (SUM(inv.quantity) - IFNULL(sold_quantities.sold_quantity, 0)) AS current_stock,
+    //         ip.threshold,
+    //         unit.unit_of_measure,
+    //         items.item_name,
+    //         items.short_name,
+    //         items.item_code,
+    //         items.description
+    //     ');
+
+    //     $this->db->from($this->Table->inventory . ' AS inv');
+    //     $this->db->join($this->Table->item_profile . ' AS ip', 'inv.item_profile_id = ip.id', 'left');
+    //     $this->db->join($this->Table->items . ' AS items', 'ip.item_id = items.id', 'left');
+    //     $this->db->join($this->Table->unit . ' AS unit', 'ip.unit_id = unit.id', 'left');
+
+    //     // Subquery join to get sold quantities directly
+    //     $this->db->join(
+    //         "(SELECT item_profile_id, SUM(quantity) AS sold_quantity 
+    //       FROM {$this->Table->payment_child} 
+    //       GROUP BY item_profile_id) AS sold_quantities",
+    //         'sold_quantities.item_profile_id = inv.item_profile_id',
+    //         'left'
+    //     );
+
+    //     // Group by essential fields only
+    //     $this->db->group_by('inv.item_profile_id, unit.unit_of_measure, items.item_name, items.short_name, items.item_code, items.description');
+
+    //     // Use HAVING clause to filter by threshold condition
+    //     $this->db->having('current_stock <= (1.40 * ip.threshold)');
+    //     $this->db->order_by('current_stock', 'ASC');
+
+    //     return $this->db->get()->result();
+    // }
+
+    public function get_inventory(){
         $this->db->select('
-            inv.item_profile_id,
-            (SUM(inv.quantity) - IFNULL(sold_quantities.sold_quantity, 0)) AS current_stock,
+            inv.item_ID,
+            (SUM(inv.received_pcs) - COALESCE(MAX(sq.sold_quantity), 0)) AS current_stock,
             ip.threshold,
             unit.unit_of_measure,
             items.item_name,
             items.short_name,
             items.item_code,
-            items.description
+            items.description,
+            items.strenght,
+            items.packaging
         ');
+        $this->db->from($this->Table->purchase_order_items . ' AS inv');
+        $this->db->join($this->Table->purchase_order . ' AS po', 'inv.po_ID = po.ID', 'left');
+        $this->db->join($this->Table->item_profile . ' AS ip', 'inv.item_ID = ip.item_id', 'left');
+        $this->db->join($this->Table->items . ' AS items', 'inv.item_ID = items.id', 'left');
+        $this->db->join($this->Table->unit . ' AS unit', 'inv.unit_ID = unit.id', 'left');
+    
+        // Subquery: one row per item_id (sold total)
+            $this->db->join("
+                (SELECT 
+                    ipj.item_id, 
+                    SUM(pc.quantity) AS sold_quantity
+                FROM {$this->Table->payment_child} pc
+                JOIN {$this->Table->item_profile} ipj
+                    ON pc.item_profile_id = ipj.id
+                JOIN {$this->Table->payment_parent} py
+                    ON pc.payment_id = py.id
+                WHERE py.date_created >= '2025-12-01'
+                GROUP BY ipj.item_id
+                ) AS sq",
+                'sq.item_id = inv.item_ID',
+                'left'
+            );
 
-        $this->db->from($this->Table->inventory . ' AS inv');
-        $this->db->join($this->Table->item_profile . ' AS ip', 'inv.item_profile_id = ip.id', 'left');
-        $this->db->join($this->Table->items . ' AS items', 'ip.item_id = items.id', 'left');
-        $this->db->join($this->Table->unit . ' AS unit', 'ip.unit_id = unit.id', 'left');
-
-        // Subquery join to get sold quantities directly
-        $this->db->join(
-            "(SELECT item_profile_id, SUM(quantity) AS sold_quantity 
-          FROM {$this->Table->payment_child} 
-          GROUP BY item_profile_id) AS sold_quantities",
-            'sold_quantities.item_profile_id = inv.item_profile_id',
-            'left'
-        );
-
-        // Group by essential fields only
-        $this->db->group_by('inv.item_profile_id, unit.unit_of_measure, items.item_name, items.short_name, items.item_code, items.description');
-
-        // Use HAVING clause to filter by threshold condition
-        $this->db->having('current_stock <= (1.40 * ip.threshold)');
+    
+        $this->db->where('po.approved', 1);
+        $this->db->having('current_stock <= (1.2 * ip.threshold)');
         $this->db->order_by('current_stock', 'ASC');
-
+        $this->db->group_by('inv.item_ID, ip.threshold, unit.unit_of_measure, items.item_name, items.short_name, items.item_code, items.description');
+    
         return $this->db->get()->result();
     }
 

@@ -63,6 +63,6 @@
         ],
         // "order": [[ 3, "asc" ]],
         // "buttons": ["copy", "csv", "excel", "pdf", "print"],
-        "pageLength": 5,
+        "pageLength": 10,
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 </script>

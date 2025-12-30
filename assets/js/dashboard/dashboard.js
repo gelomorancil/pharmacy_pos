@@ -117,12 +117,20 @@ function load_monthly_sales(year) {
     });
 }
 
+function load_low_stocks() {
+    $(document).gmLoadPage({
+        url: 'dashboard/load_inventory',
+        load_on: '#top_low_stock'
+    });
+}
+
 $(document).ready(function () {
     load_inventory();
     load_top_items(getCombinedDate());
     load_top_buyers(getCombinedDate());
     load_top_items_chart(getCombinedDate());
     load_monthly_sales($('#sales_year').val());
+    load_low_stocks();
 });
 
 $('#month, #year').change(function () {
