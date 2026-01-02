@@ -206,7 +206,7 @@ function approveDelivery(){
             // date_expiry: $tr.find('td').eq(5).text().trim(),
             date_expiry: $tr.find('.item-expiry').val() || 0,
             received_qty: $tr.find('.received-qty').val() || 0,
-            pcs_value: $tr.find('.pcs-value').text() || 0,
+            pcs_value: Number($tr.find('.pcs-value').text().replace(/,/g, '')) || 0,
             // received_pcs: $tr.find('.received-pcs').val() || 0,
             damaged_pcs: $tr.find('.damaged-pcs').val() || 0,
             batch_number: $tr.find('.batch-number').val().trim() || ''
@@ -225,7 +225,6 @@ function approveDelivery(){
     };
 
     console.log(payload);
-
 
     $.ajax({
         url: base_url + 'delivery/approve_delivery',

@@ -145,7 +145,8 @@ class Inventory_model extends CI_Model
 
     
         $this->db->where('po.approved', 1);
-        $this->db->group_by('inv.item_ID, ip.threshold, unit.unit_of_measure, items.item_name, items.short_name, items.item_code, items.description');
+        $this->db->group_by('items.id');
+        // $this->db->group_by('inv.item_ID, ip.threshold, unit.unit_of_measure, items.item_name, items.short_name, items.item_code, items.description');
     
         return $this->db->get()->result();
     }
@@ -354,9 +355,9 @@ class Inventory_model extends CI_Model
         $this->db->join($this->Table->items . ' AS items', 'ip.item_id = items.id', 'left');
 
 
-        $this->db->where('pc.item_profile_id', $this->id);
+        $this->db->where('items.id', $this->id);
         $this->db->where('pay.voided', 0);
-
+        $this->db->order_by('pay.date_created', 'DESC');
         $query = $this->db->get()->result();
         return $query;
     }

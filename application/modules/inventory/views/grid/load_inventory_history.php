@@ -43,7 +43,7 @@
 </table>
 
 <h3 class="mt-5">Sold Items</h3>
-<table class="table table-bordered table-striped example2">
+<table class="table table-bordered table-striped sold_items_table">
     <thead>
         <tr>
             <th style="width:20%;">Date Ordered</th>
@@ -59,7 +59,9 @@
             ?>
             <tr>
 
-                <td><?= date('M d, Y', strtotime($value->date_created)) ?></td>
+                <td data-order="<?= strtotime($value->date_created) ?>">
+                    <?= date('M d, Y', strtotime($value->date_created)) ?>
+                </td>
                 <td><?= $value->item_name ?></td>
                 <td><?= $value->quantity ?></td>
             <?php
@@ -75,12 +77,20 @@
 </table>
 
 <script>
-    $(".example2").DataTable({
-        "responsive": true,
-        "lengthChange": false,
-        "autoWidth": false,
-        "searching": false,
-        // "buttons": ["copy", "csv", "excel", "pdf", "print"],
-        "pageLength": 10,
-    }).buttons().container();
+    $(".sold_items_table").DataTable({
+        responsive: true,
+        lengthChange: false,
+        autoWidth: false,
+        searching: false,
+        pageLength: 10,
+        order: [[0, "desc"]] // Date Ordered column
+    });
+    // $(".sold_items_table").DataTable({
+    //     "responsive": true,
+    //     "lengthChange": false,
+    //     "autoWidth": false,
+    //     "searching": false,
+    //     // "buttons": ["copy", "csv", "excel", "pdf", "print"],
+    //     "pageLength": 10,
+    // }).buttons().container();
 </script>
