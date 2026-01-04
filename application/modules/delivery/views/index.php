@@ -224,6 +224,84 @@ $session = (object) get_userdata(USER);
     </div>
 </div>
 
+<div class="modal fade" id="show-delivery-modal">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="width: 110%;">
+            <div class="modal-header">
+                <h3 class="modal-title">Approve Delivery</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label for="">PO number:</label>
+                        <input type="text" id="e-po_number" class="form-control inpt" value="<?= @$PO_num ?>" disabled>
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="">Date Purchased:</label>
+                        <input type="date" id="e-date_in" class="form-control inpt" disabled>
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="">Supplier:</label>
+                        <select id="e-supplier" class="form-control inpt" disabled>
+                            <option selected disabled value="">Supplier</option>
+                            <?php foreach ($supplier as $value): ?>
+                                <option value="<?= $value->id ?>"><?= $value->supplier_name ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label for="">Recieved By:</label>
+                        <input type="text" id="e-recieved_by" class="form-control inpt"
+                            placeholder="User Full Name Here" disabled
+                            value="<?= $session->LName . ", " . $session->FName ?>">
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="">Date Recieved:</label>
+                        <input type="date" id="e-recieved_date" class="form-control inpt">
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="">Freight Amount:</label>
+                        <input type="number" id="e-freight" class="form-control inpt">
+                    </div>
+                </div>
+
+                <hr>
+                <h5>Order List</h5>
+                <table class="table table-bordered table-sm" id="e-order_table">
+                    <thead>
+                        <tr>
+                            <th>Qty</th>
+                            <th>Brand</th>
+                            <th>Dosage</th>
+                            <th>Supplier Price</th>
+                            <th>Unit Price</th>
+                            <th>Date Expiry</th>
+                            <th>Packaging</th>
+                            <th>Received Qty</th>
+                            <th>Damaged Qty <span style="font-size:10px" class="text-danger">(pcs only)</span></th>
+                            <th>Lot Number</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+            </div>
+            <div class="modal-footer">
+                <div class="justify-content-between">
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="auth-modal">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">

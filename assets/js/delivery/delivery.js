@@ -31,29 +31,54 @@ $('#stock_in_purchase').click(function () {
 
 // Auto-compute Unit Prices based on Freight Price
 // Auto-compute Unit Prices based on Freight Price
-$(document).on("keyup", "#e-freight", function () {
+// $(document).on("keyup", "#e-freight", function () {
 
+//     let freightAmount = parseFloat($(this).val()) || 0;
+
+//     // count total PO items (number of rows)
+//     let totalItems = $("#e-order_table tbody tr").length || 1;
+
+//     // compute freight per item
+//     let freightPerItem = freightAmount / totalItems;
+
+//     $("#e-order_table tbody tr").each(function () {
+
+//         // get supplier_price from column index 3
+//         let supplierPrice = parseFloat($(this).find("td:eq(3)").text()) || 0;
+
+//         // calculate: supplier price + freight per item
+//         let computed = supplierPrice + freightPerItem;
+
+//         // set unit price
+//         $(this).find(".unit-price").val(computed.toFixed(2));
+//     });
+
+// });
+
+$(document).on("keyup", "#e-freight", function () {
+    
     let freightAmount = parseFloat($(this).val()) || 0;
 
-    // count total PO items (number of rows)
-    let totalItems = $("#e-order_table tbody tr").length || 1;
+    // number of item rows
+    let totalItems = $("#e-order_table tbody tr:visible").length;
 
-    // compute freight per item
+
+    // freight per item group
     let freightPerItem = freightAmount / totalItems;
 
     $("#e-order_table tbody tr").each(function () {
 
-        // get supplier_price from column index 3
-        let supplierPrice = parseFloat($(this).find("td:eq(3)").text()) || 0;
+        let qty = parseFloat($(this).find(".qty").text());
+        let supplierPrice = parseFloat($(this).find(".supplier-price").text());
 
-        // calculate: supplier price + freight per item
-        let computed = supplierPrice + freightPerItem;
+        let freightPerUnit = freightPerItem / qty;
+        let computed = supplierPrice + freightPerUnit;
 
-        // set unit price
         $(this).find(".unit-price").val(computed.toFixed(2));
     });
 
 });
+
 
 function formatNumber(num) {
     return Number(num).toLocaleString();
@@ -87,10 +112,10 @@ var approve_delivery = (btn) => {
                     data.items.forEach(function (row) {
                         let tr = `
                             <tr data-pcs-box="${row.pcs_box}">
-                                <td>${formatNumber(row.qty)}</td>
+                                <td class="qty">${formatNumber(row.qty)}</td>
                                 <td data-item-id="${row.po_item_id}">${row.item_name ?? ''}</td>
                                 <td>${row.strenght ?? ''}</td>
-                                <td>${row.supplier_price ?? ''}</td>
+                                <td class="supplier-price">${row.supplier_price ?? ''}</td>
                                  <td>
                                     <input type="number" class="form-control form-control-xs unit-price" 
                                         min="0" value="0">
@@ -119,6 +144,63 @@ var approve_delivery = (btn) => {
                                     <input type="text" class="form-control form-control-sm batch-number" 
                                         value="">
                                 </td>
+                            </tr>
+                        `;
+                        $("#e-order_table tbody").append(tr);
+                    });
+                }
+            }
+        }
+    });
+}
+
+var view_delivery = (btn) => {
+    $('#show-delivery-modal').modal('show');
+    let poNumber = $(btn).data("po");  // ✔ use btn, not this
+    console.log("Editing PO:", poNumber);
+    $.ajax({
+        url: base_url + "inventory/Inventory/get_po_details/?pon=" + poNumber,
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+            console.log("Response:", data);
+
+            if (data && data.header) {
+                let header = data.header;
+
+                // Fill form fields
+                $("#e-po_number").val(header.po_num);
+                $("#e-date_in").val(header.date_ordered.split(" ")[0]);
+                $("#e-supplier").val(header.supplier_ID);
+                $("#e-recieved_by").val(header.received_by);
+
+                // Clear current table
+                $("#e-order_table tbody").empty();
+
+                // Loop through items | <td data-unit-id="${row.unit_ID}">${row.unit_of_measure ?? ''}
+                if (data.items && data.items.length > 0) {
+                    data.items.forEach(function (row) {
+                        let tr = `
+                            <tr data-pcs-box="${row.pcs_box}">
+                                <td>${formatNumber(row.qty)}</td>
+                                <td data-item-id="${row.po_item_id}">${row.item_name ?? ''}</td>
+                                <td>${row.strenght ?? ''}</td>
+                                <td>${row.supplier_price ?? ''}</td>
+                                <td>${row.unit_price ?? ''}</td>
+                                <td>${row.date_expiry ? row.date_expiry.split(' ')[0] : ''}</td>
+                                <td>${row.packaging ?? ''}</td>
+                                <td>
+                                    <div style="display: flex; flex-direction: column;">
+                                            ${row.received_qty ?? ''}
+
+                                        <small class="text-muted unit-note">
+                                            In pcs: <span>${row.received_pcs ?? ''}</span>
+                                        </small>
+                                    </div>
+                                </td>
+
+                                <td>${row.damaged_pcs ?? ''}</td>
+                                <td>${row.batch_no ?? ''}</td>
                             </tr>
                         `;
                         $("#e-order_table tbody").append(tr);

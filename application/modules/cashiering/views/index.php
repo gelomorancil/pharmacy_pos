@@ -127,20 +127,20 @@ $session = (object) get_userdata(USER);
                             <small class="card-text text-muted mb-1"><?=strtoupper($i->Category)?></small>
                             <small class="card-text text-muted mb-1"><?=strtoupper($i->short_name)?></small>
                             <h6 class="card-title mb-1"><?=$i->item_name?></h6>
-                            <span class="<?=$i->current_stock == 0 ? 'stock-label-zero' : 'stock-label'?>">Stock: <?=$i->current_stock?></span>
+                            <span class="<?=$i->current_stock <= 0 ? 'stock-label-zero' : 'stock-label'?>">Stock: <?=$i->current_stock?></span>
                             <p class="card-text text-muted mb-1 desc-text"><?=$i->strenght?></p>
                             <small class="card-text text-muted"><?=$i->uom?></small>
                             <small class="card-text text-muted"><?=$i->packaging?></small>
                             <small class="card-text text-muted"><?=$i->classification?></small>
                              <div class="font-weight-bold d-flex gap-3">
-                                <button class="price-label btn-add" <?=($i->current_stock == 0 ? 'disabled' : '')?>
+                                <button class="price-label btn-add" <?=($i->current_stock <= 0 ? 'disabled' : '')?>
                                     data-name="<?=$i->item_name?>"
                                     data-name2="<?=$i->item_name." (RP)"?>"
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
                                     data-price="<?=$i->RP?>" 
                                 >RP ₱<?=number_format($i->RP,2)?>
                                 </button><br>
-                                <button class="price-label btn-add" <?=($i->current_stock == 0 ? 'disabled' : '')?>
+                                <button class="price-label btn-add" <?=($i->current_stock <= 0 ? 'disabled' : '')?>
                                     data-name="<?=$i->item_name?>"
                                     data-name2="<?=$i->item_name." (RS)"?>"
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
@@ -148,7 +148,7 @@ $session = (object) get_userdata(USER);
                                     data-to_pcs="<?=$i->pcs_stub?>" 
                                 >RS ₱<?=number_format($i->RS,2)?>
                                  </button>  <br>
-                                <button class="price-label btn-add" <?=($i->current_stock == 0 ? 'disabled' : '')?>
+                                <button class="price-label btn-add" <?=($i->current_stock <= 0 ? 'disabled' : '')?>
                                     data-name="<?=$i->item_name?>"
                                     data-name2="<?=$i->item_name." (RB)"?>"
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
@@ -158,14 +158,14 @@ $session = (object) get_userdata(USER);
                                 </button> 
                             </div>
                             <div class="font-weight-bold d-flex gap-3 mt-1">
-                                <button class="price-label btn-add" <?=($i->current_stock == 0 ? 'disabled' : '')?>
+                                <button class="price-label btn-add" <?=($i->current_stock <= 0 ? 'disabled' : '')?>
                                     data-name="<?=$i->item_name?>"
                                     data-name2="<?=$i->item_name." (WP)"?>"
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
                                     data-price="<?=$i->WP?>" 
                                 >WP ₱<?=number_format($i->WP,2)?>
                                 </button>    <br>
-                                <button class="price-label btn-add" <?=($i->current_stock == 0 ? 'disabled' : '')?>
+                                <button class="price-label btn-add" <?=($i->current_stock <= 0 ? 'disabled' : '')?>
                                     data-name="<?=$i->item_name?>"
                                     data-name2="<?=$i->item_name." (WS)"?>"
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
@@ -173,7 +173,7 @@ $session = (object) get_userdata(USER);
                                     data-to_pcs="<?=$i->pcs_stub?>"
                                 >WS ₱<?=number_format($i->WS,2)?>
                                  </button>  <br>
-                                <button class="price-label btn-add" <?=($i->current_stock == 0 ? 'disabled' : '')?>
+                                <button class="price-label btn-add" <?=($i->current_stock <= 0 ? 'disabled' : '')?>
                                     data-name="<?=$i->item_name?>"
                                     data-name2="<?=$i->item_name." (WB)"?>"
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
@@ -222,7 +222,8 @@ $session = (object) get_userdata(USER);
                     <hr>
                      <p class="cart-total">Transaction Date:
                         <span class="float-right">
-                          <input type="date" class="form-control form-control-sm" id="transaction_date" value="<?= date('Y-m-d') ?>" style="width: 200px;">
+                          <!-- <input type="datetime" class="form-control form-control-sm" id="transaction_date" value="<?= date('Y-m-d') ?>" style="width: 200px;"> -->
+                            <input type="datetime-local" class="form-control form-control-sm" id="transaction_date" value="<?= date('Y-m-d\TH:i') ?>" style="width: 200px;">
                         </span>
                     </p>
                     <!-- Cart items will load here -->

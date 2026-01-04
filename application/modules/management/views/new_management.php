@@ -74,7 +74,7 @@ main_header(['list_management']);
             <a class="nav-link" id="accounts-tab" data-toggle="tab" href="#accounts" role="tab">User Accounts</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab">Store Settings</a>
+            <!-- <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab">Store Settings</a> -->
         </li>
     </ul>
 

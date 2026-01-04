@@ -19,10 +19,10 @@ class Delivery_model extends CI_Model
 
     public function get_po_list()
     {
-        $this->db->select('po.ID,po.po_num, po.date_ordered, po.date_added, s.supplier_name');
+        $this->db->select('po.ID,po.po_num, po.date_ordered, po.date_added, s.supplier_name,po.date_approved,po.approved');
         $this->db->from($this->Table->purchase_order . ' as po');
         $this->db->join($this->Table->supplier . ' AS s', 'po.supplier_id = s.id', 'left');
-        $this->db->where('approved', 0);
+        // $this->db->where('approved', 0);
         $this->db->order_by('ID', 'DESC');
         $query = $this->db->get()->result();
 

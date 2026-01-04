@@ -49,7 +49,7 @@ main_header(['dashboard']);
 </div>
 
 <div class="row ml-4">
-    <span><small class="text-danger">This filter updates the following cards: <b>Top 10 Selling Items, Top 10 Buyer and Item Low on Stock</b></small></span>
+    <span><small class="text-danger">This filter updates the following cards: <b>Top 10 Selling Items and Top 10 Buyer</b></small></span>
 </div>
 
 <section class="content">

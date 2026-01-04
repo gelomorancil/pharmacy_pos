@@ -104,7 +104,7 @@ $session = (object) get_userdata(USER);
         max-width: 100%;
         border-radius: 6px;
         box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
-        height: 50%;
+        height: 65%;
     }
 
     .modal-header,
@@ -337,7 +337,6 @@ $session = (object) get_userdata(USER);
     </div>
 
     <div class="modal-body">
-        <!-- Row 1: Select Item / UOM / Quantity / Pcs / Unit Price -->
         <div class="form-row">
             <div class="form-col" style="flex:2;">
                 <label for="item_2">Select Item:</label>
@@ -373,7 +372,6 @@ $session = (object) get_userdata(USER);
 
             <div class="form-col" style="flex:1;">
                 <label for="modal_unit">Unit Price:</label>
-                <!-- kept id modal_unit for backward compatibility -->
                 <input id="modal_unit" type="number" min="0" step="0.01" placeholder="Enter Unit Price" value="0" />
             </div>
         </div>
@@ -532,6 +530,9 @@ main_footer();
                         .attr('data-total', total.toFixed(2));
 
                     $tr.find('.display-item').text(itemName);
+                    $tr.find('.display-item-generic').text(genericName);
+                    $tr.find('.display-item-strength').text(strenght);
+                    $tr.find('.display-item-packaging').text(packaging);
                     $tr.find('.display-qty').text(qty);
                     $tr.find('.display-unit').text(unit.toFixed(2));
                     $tr.find('.display-total').text(total.toFixed(2));
@@ -555,13 +556,13 @@ main_footer();
                     <input type="hidden" name="items[${rowIndex}][item_id]" value="${escapeHtml(itemId)}">`
                 ));
                  $tr.append($('<td>').html(
-                    `<span class="display-item">${escapeHtml(genericName)}</span>`
+                    `<span class="display-item-generic">${escapeHtml(genericName)}</span>`
                 ));
                  $tr.append($('<td>').html(
-                    `<span class="display-item">${escapeHtml(strenght)}</span>`
+                    `<span class="display-item-strength">${escapeHtml(strenght)}</span>`
                 ));
                  $tr.append($('<td>').html(
-                    `<span class="display-item">${escapeHtml(packaging)}</span>`
+                    `<span class="display-item-packaging">${escapeHtml(packaging)}</span>`
                 ));
                $tr.append($('<td>').html(
                     `<input type="date" class="form-control form-control-sm" name="items[${rowIndex}][expiry]" style="font-size:12px;">`
@@ -613,7 +614,8 @@ main_footer();
             let $tr = $('#table_rows').find('tr[data-temp-id="' + tid + '"]');
             if (!$tr.length) return;
             recalcTotals();
-            $('#item_2').val($tr.attr('data-item-id'));
+            // $('#item_2').val($tr.attr('data-item-id'));
+            $('#item_2').val($tr.attr('data-item-id')).trigger('change');
             $('#modal_qty').val($tr.attr('data-qty'));
             $('#modal_unit').val($tr.attr('data-unit'));
 
@@ -701,128 +703,54 @@ main_footer();
             });
         }
 
-        // function printOnlyBondPaper() {
-        //     // 1) Clone the bond-paper (work on a copy)
-        //     const $clone = $('.bond-paper').first().clone();
-
-        //     // 2) Remove UI elements from the clone
-        //     // $clone.find('#openModalBtn, #savePrintBtn, .modal, .modal-backdrop, .action-btn, .btn').remove();
-
-        //     // 3) Remove action column (header + last cell in each row) from clone
-        //     $clone.find('#quotation_table th:last-child').remove();
-        //     $clone.find('#quotation_table tbody tr').each(function () {
-        //         $(this).find('td:last-child').remove();
-        //     });
-
-        //     // // 4) For each table cell: choose a single canonical value and replace the cell with that value
-        //     // $clone.find('#quotation_table tbody tr').each(function () {
-        //     //     $(this).find('td').each(function () {
-        //     //         const $td = $(this);
-
-        //     //         // Prefer visible display elements (classes like .display-*)
-        //     //         let $display = $td.find('[class*="display-"]').filter(function () {
-        //     //             return $(this).text().trim() !== '';
-        //     //         }).first();
-
-        //     //         let text = '';
-
-        //     //         if ($display && $display.length) {
-        //     //             text = $display.text().trim();
-        //     //         } else {
-        //     //             // then prefer visible inputs/selects/textarea (not hidden)
-        //     //             let $valEl = $td.find('input:not([type="hidden"]), select, textarea').first();
-        //     //             if ($valEl && $valEl.length) {
-        //     //                 text = $valEl.val() != null ? String($valEl.val()).trim() : '';
-        //     //             } else {
-        //     //                 // then check for hidden input (we use hidden inputs for server payload)
-        //     //                 let $hidden = $td.find('input[type="hidden"]').first();
-        //     //                 if ($hidden && $hidden.length) {
-        //     //                     text = $hidden.val() != null ? String($hidden.val()).trim() : '';
-        //     //                 } else {
-        //     //                     // fallback to raw td text (trimmed)
-        //     //                     text = $td.text().trim();
-        //     //                 }
-        //     //             }
-        //     //         }
-
-        //     //         // Replace the cell content with a single text node (no duplicates)
-        //     //         $td.empty().text(text);
-        //     //     });
-        //     // });
-
-        //     // // 5) Convert any remaining inputs/selects/textarea anywhere in the clone (e.g., totals/freight)
-        //     // $clone.find('input, select, textarea').each(function () {
-        //     //     const $el = $(this);
-        //     //     const val = $el.val() != null ? String($el.val()).trim() : '';
-        //     //     $el.replaceWith($('<span>').text(val));
-        //     // });
-
-        //     // // 6) Remove any leftover hidden inputs or form attributes to avoid leaking names
-        //     // $clone.find('input[type="hidden"]').remove();
-        //     // $clone.find('[name]').removeAttr('name');
-
-        //     // // 7) Prepare print markup (replace body with cleaned clone)
-        //     // const printContents = `<div class="container my-4">${$clone.prop('outerHTML')}</div>`;
-        //     // const originalContents = document.body.innerHTML;
-
-        //     // // Replace body with the clean printable content
-        //     // document.body.innerHTML = printContents;
-        //     // window.print();
-
-        //     // // restore original page and reload to re-bind events / state
-        //     // document.body.innerHTML = originalContents;
-        //     // // Give browser a moment to render, then print and restore
-        //     let printContents = document.querySelector('.bond-paper').innerHTML;
-        //     let originalContents = document.body.innerHTML;
-
-        //     document.body.innerHTML = `
-        //       <div class="container my-4">
-        //         ${printContents}
-        //       </div>
-        //     `;
-
-        //     window.print();
-
-        //     document.body.innerHTML = originalContents;
-        //     setTimeout(() => {
-
-        //         location.reload(); // keep this so your UI gets back to interactive state
-        //     }, 250);
-        // }
 
         function printOnlyBondPaper() {
-    // Clone the bond-paper (work on a copy so original stays intact)
-    const $clone = $('.bond-paper').first().clone();
+            // Clone the bond-paper (work on a copy so original stays intact)
+            const $clone = $('.bond-paper').first().clone();
 
-    // Show freight as text instead of input
-    const freightVal = $('#freight_input').val(); 
-    $clone.find('#freight_input').remove(); 
-    $clone.find('#freight_display')
-        .text(parseFloat(freightVal).toFixed(2)) // format as 0.00
-        .show(); 
+            // Show freight as text instead of input
+            const freightVal = $('#freight_input').val(); 
+            $clone.find('#freight_input').remove(); 
+            $clone.find('#freight_display')
+                .text(parseFloat(freightVal).toFixed(2)) // format as 0.00
+                .show(); 
 
-    // Remove hidden value (not needed in print)
-    $clone.find('#freight_value').remove();
+            // Remove hidden value (not needed in print)
+            $clone.find('#freight_value').remove();
 
-    // Clean up unnecessary buttons, modals, etc. (if needed)
-    $clone.find('#openModalBtn, #savePrintBtn, .modal, .modal-backdrop, .action-btn, .btn').remove();
-    $clone.find('#quotation_table th:last-child').remove();
-    $clone.find('#quotation_table tbody tr').each(function () {
-        $(this).find('td:last-child').remove();
-    });
+            // Clean up unnecessary buttons, modals, etc. (if needed)
+            $clone.find('#openModalBtn, #savePrintBtn, .modal, .modal-backdrop, .action-btn, .btn').remove();
+            $clone.find('#quotation_table th:last-child').remove();
+            $clone.find('#quotation_table tbody tr').each(function () {
+                $(this).find('td:last-child').remove();
+            });
 
-    // Prepare print contents
-    const printContents = `<div class="container my-4">${$clone.prop('outerHTML')}</div>`;
-    const originalContents = document.body.innerHTML;
+            // Handle date inputs: remove mm/dd/yyyy on print
+            $clone.find('input[type="date"]').each(function () {
+                const val = $(this).val();
 
-    document.body.innerHTML = printContents;
-    window.print();
-    document.body.innerHTML = originalContents;
+                if (!val) {
+                    // Replace empty date input with blank text
+                    $(this).replaceWith('<span></span>');
+                } else {
+                    // Replace filled date input with formatted text
+                    const formatted = new Date(val).toLocaleDateString('en-US');
+                    $(this).replaceWith(`<span>${formatted}</span>`);
+                }
+            });
 
-    setTimeout(() => {
-        location.reload();
-    }, 250);
-}
+            // Prepare print contents
+            const printContents = `<div class="container my-4">${$clone.prop('outerHTML')}</div>`;
+            const originalContents = document.body.innerHTML;
+
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+
+            setTimeout(() => {
+                location.reload();
+            }, 250);
+        }
 
 
         $('#savePrintBtn').off('click').on('click', saveQuotationAndPrint);

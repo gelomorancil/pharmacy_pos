@@ -5,7 +5,8 @@
     <table id="example1" class="table table-bordered table-striped table-hover">
         <thead>
             <tr>
-                <th>Date</th>
+                <th>Transaction Date</th>
+                <th>Encoded Date</th>
                 <th>Client</th>
                 <!-- <th>Sub-total</th> -->
                 <th>Discount</th>
@@ -49,8 +50,14 @@
                     >
                         <?php
                         $date = DateTime::createFromFormat('Y-m-d H:i:s', $value['date_created']);
+                        $date_e = DateTime::createFromFormat('Y-m-d H:i:s', $value['date_encoded']);
                         ?>
-                        <td><b><?= $date ? $date->format('M d, Y') : 'Invalid Date' ?></b></td>
+                        <td><b><?= $date ? $date->format('M d, Y h:i a') : 'Invalid Date' ?></b></td>
+                        <td>
+                            <?= ($date_e && $value['date_encoded'] !== '0000-00-00 00:00:00')
+                                ? $date_e->format('M d, Y h:i a')
+                                : '-' ?>
+                        </td>
                         <td><?= $value['buyer_name'] ?></td>
                         <!-- <td><?= 'Php ' . number_format($value['sub_total'], 2) ?></td> -->
                         <td><?= 'Php ' . number_format($value['discount_amount'], 2) ?></td>

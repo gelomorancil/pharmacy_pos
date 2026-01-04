@@ -1,9 +1,10 @@
 <table id="example1" class="table table-bordered table-striped">
     <thead>
         <tr>
-            <th style="width:20%;">Item Code</th>
-            <th style="width:30%;">Item Name</th>
-            <th style="width:20%;">Current Stocks</th>
+            <th>Brand</th>
+            <th>Generic</th>
+            <th>Dosage</th>
+            <th>Current Stocks</th>
         </tr>
     </thead>
     <tbody>
@@ -13,8 +14,9 @@
             ?>
             <tr>
 
-                <td><?= $value->item_code ?></td>
                 <td><?= $value->item_name ?></td>
+                <td><?= $value->short_name ?></td>
+                <td><?= $value->strenght ?></td>
                 <td>
                     <b style="color: 
                         <?php

@@ -157,7 +157,8 @@ class Cashiering_service_model extends CI_Model
                 'remarks' => $remarks,
                 'recieved_by' => $this->session->ID,
                 'Buyer_id' => $buyer,
-                'date_created' => $transaction_date
+                'date_created' => $transaction_date,
+                'date_encoded' => date('Y-m-d H:i:s'),
                 // 'item_id' => $this->item_id,
             );
 
