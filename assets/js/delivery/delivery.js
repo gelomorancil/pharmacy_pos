@@ -113,7 +113,7 @@ var approve_delivery = (btn) => {
                         let tr = `
                             <tr data-pcs-box="${row.pcs_box}">
                                 <td class="qty">${formatNumber(row.qty)}</td>
-                                <td data-item-id="${row.po_item_id}">${row.item_name ?? ''}</td>
+                                <td data-item-id="${row.po_item_id}" data-i-id="${row.item_ID}">${row.item_name ?? ''}</td>
                                 <td>${row.strenght ?? ''}</td>
                                 <td class="supplier-price">${row.supplier_price ?? ''}</td>
                                  <td>
@@ -135,12 +135,39 @@ var approve_delivery = (btn) => {
                                         </small>
                                     </div>
                                 </td>
-
+                                <td> <input type="number" disabled class="form-control form-control-sm srp-percent" 
+                                       value="0" min="0">
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control form-control-sm rp-price" 
+                                       value="0" min="0">
+                                </td>
+                                 <td>
+                                    <input type="number" class="form-control form-control-sm rs-price" 
+                                       value="0" min="0">
+                                </td>
+                                 <td>
+                                    <input type="number" class="form-control form-control-sm rb-price" 
+                                       value="0" min="0">
+                                </td>
+                                 <td>
+                                    <input type="number" class="form-control form-control-sm wp-price" 
+                                       value="0" min="0">
+                                </td>
+                                 <td>
+                                    <input type="number" class="form-control form-control-sm ws-price" 
+                                       value="0" min="0">
+                                </td>
+                                 <td>
+                                    <input type="number" class="form-control form-control-sm wb-price" 
+                                       value="0" min="0">
+                                </td>
+                               
                                 <td>
                                     <input type="number" class="form-control form-control-sm damaged-pcs" 
                                        value="0" min="0">
                                 </td>
-                                <td>
+                                <td>    
                                     <input type="text" class="form-control form-control-sm batch-number" 
                                         value="">
                                 </td>
@@ -282,6 +309,7 @@ function approveDelivery(){
         let data = {
             qty: $tr.find('td').eq(1).text().trim(),
             item_id: $tr.find('td[data-item-id]').data('item-id') || null,
+            i_id: $tr.find('td[data-i-id]').data('i-id') || null,
             item_name: $tr.find('td[data-item-id]').text().trim(),
             // unit_price: $tr.find('td').eq(4).text().trim(),
             unit_price: $tr.find('.unit-price').val() || 0,
@@ -291,6 +319,12 @@ function approveDelivery(){
             pcs_value: Number($tr.find('.pcs-value').text().replace(/,/g, '')) || 0,
             // received_pcs: $tr.find('.received-pcs').val() || 0,
             damaged_pcs: $tr.find('.damaged-pcs').val() || 0,
+            rp_price: $tr.find('.rp-price').val() || 0,
+            rs_price: $tr.find('.rs-price').val() || 0,
+            rb_price: $tr.find('.rb-price').val() || 0,
+            wp_price: $tr.find('.wp-price').val() || 0,
+            ws_price: $tr.find('.ws-price').val() || 0,
+            wb_price: $tr.find('.wb-price').val() || 0,
             batch_number: $tr.find('.batch-number').val().trim() || ''
         };
         orderData.push(data);
@@ -307,7 +341,7 @@ function approveDelivery(){
     };
 
     console.log(payload);
-
+    
     $.ajax({
         url: base_url + 'delivery/approve_delivery',
         method: 'POST',

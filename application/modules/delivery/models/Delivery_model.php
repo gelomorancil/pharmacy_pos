@@ -49,6 +49,11 @@ class Delivery_model extends CI_Model
         return true;
     }
 
+    public function update_pricelist($data) {
+        $this->db->insert($this->Table->item_profile, $data);
+        return true;
+    }
+
     public function authenticate_user($uname, $pw)
     {
         try {

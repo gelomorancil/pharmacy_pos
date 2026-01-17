@@ -84,14 +84,22 @@ class Delivery extends MY_Controller
 				  'batch_no'  => $item['batch_number'],
 				  'unit_price'  => $item['unit_price'],
 			  ];
+
+			  $item_data_price = [
+				  'po_ID'   => $po_ID,
+				  'item_id'   => $item['i_id'],
+				  'unit_price'  => $item['rp_price'],
+				  'regular_stub'  => $item['rs_price'],
+				  'regular_box'  => $item['rb_price'],
+				  'Walkin_price'  => $item['wp_price'],
+				  'walkin_stub'  => $item['ws_price'],
+				  'walkin_box'  => $item['wb_price'],
+			  ];
   
-			  $this->dModel->update_po_item($item_data, $item['item_id']);
+			$this->dModel->update_po_item($item_data, $item['item_id']);
+			$this->dModel->update_pricelist($item_data_price);
 		  }
 
-
-		//   add to inventory stock
-
-  
 		  $this->db->trans_complete(); // Commit or rollback
   
 		  if ($this->db->trans_status() === FALSE) {
