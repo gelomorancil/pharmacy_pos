@@ -12,6 +12,7 @@
             <th>Item Price</th>
             <th>Quantity</th>
             <th>Sub-total</th>
+            <th></th>
             <!-- <th>Discount</th> -->
             <!-- <th>Total Amount</th> -->
         </tr>
@@ -42,31 +43,46 @@
                     <td><?= $value["packaging"] ?></td>
                     <td><?= "Php " . number_format($value["unit_price"], 2) ?></td>
                     <!-- <td><?= $value["quantity"] ?></td> -->
-                   <td>
+                    <td>
                         <?php
                         $qty = (int) $value["quantity"];
                         $pcs_box = (int) $value["pcs_box"];
                         $pcs_stub = (int) $value["pcs_stub"];
+                        $display = array();
 
                         if ($pcs_box > 0 && $qty >= $pcs_box) {
                             $boxes = floor($qty / $pcs_box);
-                            echo $boxes . " box(es)";
+                            $display[] = $boxes . " box(es)";
+                            $qty = $qty % $pcs_box;
                         }
-                        elseif ($pcs_stub > 0 && $qty >= $pcs_stub) {
+                        
+                        if ($pcs_stub > 0 && $qty >= $pcs_stub) {
                             $stubs = floor($qty / $pcs_stub);
-                            echo $stubs . " stub(s)";
+                            $display[] = $stubs . " stub(s)";
+                            $qty = $qty % $pcs_stub;
                         }
-                        else {
-                            echo $qty . " pc(s)";
+                        
+                        if ($qty > 0) {
+                            $display[] = $qty . " pc(s)";
                         }
+                        
+                        echo !empty($display) ? implode(", ", $display) : "0 pc(s)";
                         ?>
-                    </td>
-
+                    </td>   
                     <!-- <td><?= "Php " . number_format($value["unit_price"] * $value["quantity"], 2) ?></td> -->
                     <td><?= "Php " . number_format($value["total_price"],2)?></td>
                     <!-- <td><?= "Php " . number_format($value["discount"], 2) ?></td> -->
                     <!-- <td><?= "Php " . number_format(($value["unit_price"] * $value["quantity"]) - $value["discount"], 2) ?></td> -->
                     <!-- <td><?= "Php " . number_format(($value["total_price"]) - $value["discount"], 2) ?></td> -->
+                    <td>
+                        <button 
+                            class="btn btn-danger btn-sm void-item"
+                            onclick="void_item(<?= (int)$value['id'] ?>, '<?= htmlspecialchars($value['item_name'], ENT_QUOTES) ?>')"
+                        >
+                            Void
+                        </button>
+                    </td>
+
                 </tr>
 
             <?php } ?>
@@ -83,6 +99,7 @@
             <td><b style="color: green;"><?= "Php " . number_format($total_sub_total, 2) ?></b></td>
             <!-- <td><b style="color: green;"><?= "Php " . number_format($total_discount, 2) ?></b></td> -->
             <!-- <td><b style="color: green;"><?= "Php " . number_format($total_amount, 2) ?></b></td> -->
+            <td>&nbsp;</td>
         </tr>
     </tbody>
 

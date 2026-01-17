@@ -70,6 +70,8 @@ class Cashiering extends MY_Controller
 		$this->data['discount_amount'] = $this->input->post('discount_amount');
 		$this->data['total_amount'] = $this->input->post('total_amount');
 		$this->data['discount_type'] = $this->input->post('discount_type');
+		$this->data['transaction_date'] = $this->input->post('transaction_date');
+		$this->data['buyer_name'] = $this->input->post('buyer_name');
 		$this->data['remarks'] = $this->input->post('remarks') ? $this->input->post('remarks') : '-';
 
 		$this->data['items'] = $this->input->post('data_array');

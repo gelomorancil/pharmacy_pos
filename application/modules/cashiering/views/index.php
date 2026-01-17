@@ -135,14 +135,14 @@ $session = (object) get_userdata(USER);
                              <div class="font-weight-bold d-flex gap-3">
                                 <button class="price-label btn-add" <?=($i->current_stock <= 0 ? 'disabled' : '')?>
                                     data-name="<?=$i->item_name?>"
-                                    data-name2="<?=$i->item_name." (RP)"?>"
+                                    data-name2="<?=$i->item_name." ".$i->strenght." (RP)"?>"
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
                                     data-price="<?=$i->RP?>" 
                                 >RP ₱<?=number_format($i->RP,2)?>
                                 </button><br>
                                 <button class="price-label btn-add" <?=($i->current_stock <= 0 ? 'disabled' : '')?>
                                     data-name="<?=$i->item_name?>"
-                                    data-name2="<?=$i->item_name." (RS)"?>"
+                                    data-name2="<?=$i->item_name." ".$i->strenght." (RS)"?>"
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
                                     data-price="<?=$i->RS?>" 
                                     data-to_pcs="<?=$i->pcs_stub?>" 
@@ -150,7 +150,7 @@ $session = (object) get_userdata(USER);
                                  </button>  <br>
                                 <button class="price-label btn-add" <?=($i->current_stock <= 0 ? 'disabled' : '')?>
                                     data-name="<?=$i->item_name?>"
-                                    data-name2="<?=$i->item_name." (RB)"?>"
+                                    data-name2="<?=$i->item_name." ".$i->strenght." (RB)"?>"
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
                                     data-price="<?=$i->RB?>" 
                                     data-to_pcs="<?=$i->pcs_box?>" 
@@ -160,14 +160,14 @@ $session = (object) get_userdata(USER);
                             <div class="font-weight-bold d-flex gap-3 mt-1">
                                 <button class="price-label btn-add" <?=($i->current_stock <= 0 ? 'disabled' : '')?>
                                     data-name="<?=$i->item_name?>"
-                                    data-name2="<?=$i->item_name." (WP)"?>"
+                                    data-name2="<?=$i->item_name." ".$i->strenght." (WP)"?>"
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
                                     data-price="<?=$i->WP?>" 
                                 >WP ₱<?=number_format($i->WP,2)?>
                                 </button>    <br>
                                 <button class="price-label btn-add" <?=($i->current_stock <= 0 ? 'disabled' : '')?>
                                     data-name="<?=$i->item_name?>"
-                                    data-name2="<?=$i->item_name." (WS)"?>"
+                                    data-name2="<?=$i->item_name." ".$i->strenght." (WS)"?>"
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
                                     data-price="<?=$i->WS?>" 
                                     data-to_pcs="<?=$i->pcs_stub?>"
@@ -175,7 +175,7 @@ $session = (object) get_userdata(USER);
                                  </button>  <br>
                                 <button class="price-label btn-add" <?=($i->current_stock <= 0 ? 'disabled' : '')?>
                                     data-name="<?=$i->item_name?>"
-                                    data-name2="<?=$i->item_name." (WB)"?>"
+                                    data-name2="<?=$i->item_name." ".$i->strenght." (WB)"?>"
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
                                     data-price="<?=$i->WB?>" 
                                     data-to_pcs="<?=$i->pcs_box?>"

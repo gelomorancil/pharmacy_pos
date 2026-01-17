@@ -48,15 +48,12 @@
     style="margin-left: 0rem; margin-top: 1rem; padding: 0; font-family: Verdana, Geneva, sans-serif; width: 65mm;">
     <div>
         <div style="text-align: center; font-size: 13px; margin-bottom: 10px;">
-            <h2><b>POS</b></h2>
-            <cont>Address Line 1</cont>
             <br>
-            <cont>Address Line 2</cont>
-            <br>
-            <cont>Date: <?= date('F d, Y') ?></cont>
+            <cont>Date: <?= date('F d, Y H:i:s', strtotime($date_created)) ?></cont>
             <br>
             <cont>Control #: <?= $control_number ?></cont>
             <br>
+            <cont><small>Sold to: <?= $buyer_name ?></small></cont>
             <br>
 
         </div>
@@ -67,7 +64,7 @@
                     <tr>
                         <th style="text-align: left; font-weight: 500;">ITEM/s:</th>
                         <th style="text-align: center; font-weight: 500;">QTY:</th>
-                        <th style="text-align: right; font-weight: 500;">PRICE/ITEM:</th>
+                        <th style="text-align: right; font-weight: 500;">PRICE:</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -75,13 +72,37 @@
                     <?php foreach ($items as $item) { ?>
                         <tr style="margin-top: 5px;">
                             <td style="text-align: left; padding: 5px;">
-                                <?= $item['item_name'] ?>
+                                <?= $item['item_name']." ".$item['strenght']?>
                             </td>
                             <td style="text-align: center; padding: 5px;">
-                                <?= $item['quantity'] ?>
+                                <?php
+                                    $qty = (int) $item["quantity"];
+                                    $pcs_box = (int) $item["pcs_box"];
+                                    $pcs_stub = (int) $item["pcs_stub"];
+                                    $display = array();
+
+                                    if ($pcs_box > 0 && $qty >= $pcs_box) {
+                                        $boxes = floor($qty / $pcs_box);
+                                        $display[] = $boxes . " box(es)";
+                                        $qty = $qty % $pcs_box;
+                                    }
+                                    
+                                    if ($pcs_stub > 0 && $qty >= $pcs_stub) {
+                                        $stubs = floor($qty / $pcs_stub);
+                                        $display[] = $stubs . " stub(s)";
+                                        $qty = $qty % $pcs_stub;
+                                    }
+                                    
+                                    if ($qty > 0) {
+                                        $display[] = $qty . " pc(s)";
+                                    }
+                                    
+                                    echo !empty($display) ? implode(", ", $display) : "0 pc(s)";
+                                    ?>
                             </td>
                             <td style="text-align: right; padding: 5px;">
-                                Php <?= $item['unit_price'] ?>
+                                <!-- Php <?= number_format($item['quantity'] * $item['unit_price'], 2) ?> -->
+                                Php <?= number_format($item['total_price'], 2) ?>
                             </td>
                         </tr>
                     <?php } ?>
@@ -97,7 +118,7 @@
                     <span style="font-size: 100%;">Sub Total:</span>
                 </div>
                 <div class="col-6" style="flex: 1; text-align: right;">
-                    Php <span style="font-size: 100%;"><?= $sub_total ?></span>
+                    Php <span style="font-size: 100%;"><?= number_format($sub_total, 2) ?></span>
                 </div>
             </div>
             <div class="row" style="display: flex; margin-left: -5px; margin-right: -5px; margin-top: 5px">
@@ -105,7 +126,7 @@
                     <span style="font-size: 100%;">Discount:</span>
                 </div>
                 <div class="col-6" style="flex: 1; text-align: right;">
-                    Php <span style="font-size: 100%;"><?= $discount_amount ?></span>
+                    Php <span style="font-size: 100%;"><?= number_format($discount_amount, 2) ?></span>
                 </div>
             </div>
             <div class="row" style="display: flex; margin-left: -5px; margin-right: -5px; margin-top: 5px">
@@ -125,7 +146,7 @@
                     <span style="font-size: 100%;">Total:</span>
                 </div>
                 <div class="col-6" style="flex: 1; text-align: right;">
-                    Php <span style="font-size: 100%;" id="receipt_total_amount"><?= $total_amount ?></span>
+                    Php <span style="font-size: 100%;" id="receipt_total_amount"><?= number_format($total_amount, 2) ?></span>
                 </div>
             </div>
         </div>

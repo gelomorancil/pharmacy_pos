@@ -46,6 +46,7 @@
                         data-payment_type="<?=$value['payment_type']?>"
                         data-control_number="<?=$value['control_number']?>"
                         data-date_created="<?=$value['date_created']?>"
+                        data-buyer_name="<?=$value['buyer_name']?>"
 
                     >
                         <?php

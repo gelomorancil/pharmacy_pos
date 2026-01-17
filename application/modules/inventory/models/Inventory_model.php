@@ -169,6 +169,7 @@ class Inventory_model extends CI_Model
             poi.received_qty,
             poi.received_pcs,
             poi.batch_no,
+            poi.damaged_pcs,
 
             supplier.supplier_name
         ');

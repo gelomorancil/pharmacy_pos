@@ -271,6 +271,7 @@ function process_payment() {
     let reference_number = $('#reference_number').val();
     let remarks = $('#remarks').val();
     let buyer = $('#Buyer_id').val();
+    let buyer_name = $('#Buyer_id').find('option:selected').text();
     let other_buyer = $('#other_buyer').val();
     let transaction_date = $('#transaction_date').val();
 
@@ -281,7 +282,7 @@ function process_payment() {
     const tableBody = document.querySelector('#scanned_items');
 
     let itemsArray = [];
-
+    
     // const rows = tableBody.querySelectorAll('tr');
 
     // rows.forEach(row => {
@@ -372,6 +373,7 @@ function process_payment() {
     formData.append("reference_number", reference_number);
     formData.append("remarks", remarks);
     formData.append("buyer", buyer);
+    formData.append("buyer_name", buyer_name);
     formData.append("other_buyer", other_buyer);
     formData.append("transaction_date", transaction_date);
 
@@ -459,6 +461,8 @@ function process_payment() {
                         discount_amount: discount_amount,
                         total_amount: total_amount,
                         discount_type: discount_type,
+                        transaction_date: transaction_date,
+                        buyer_name: buyer_name,
                         data_array: itemsArray,
                     },
                     success: function (data) {

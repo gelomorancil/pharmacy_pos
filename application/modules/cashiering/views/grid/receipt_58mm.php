@@ -48,15 +48,12 @@
     style="margin-left: 0rem; margin-top: 1rem; padding: 0; font-family: Verdana, Geneva, sans-serif; width: 65mm;">
     <div>
         <div style="text-align: center; font-size: 13px; margin-bottom: 10px;">
-            <h2><b>POS</b></h2>
-            <cont>Address Line 1</cont>
             <br>
-            <cont>Address Line 2</cont>
-            <br>
-            <cont>Date: <?= date('F d, Y') ?></cont>
+            <cont>Date: <?= date('F d, Y H:i:s', strtotime($transaction_date)) ?></cont>
             <br>
             <cont>Control #: <?= $control_number ?></cont>
             <br>
+            <cont><small>Sold to: <?= $buyer_name ?></small></cont>
             <br>
 
         </div>
@@ -67,21 +64,42 @@
                     <tr>
                         <th style="text-align: left; font-weight: 500;">ITEM/s:</th>
                         <th style="text-align: center; font-weight: 500;">QTY:</th>
-                        <th style="text-align: right; font-weight: 500;">PRICE/ITEM:</th>
+                        <th style="text-align: right; font-weight: 500;">PRICE:</th>
                     </tr>
                 </thead>
                 <tbody>
                     <!-- Sample items, to be populated dynamically -->
-                    <?php foreach ($items as $item) { ?>
+                   <?php foreach ($items as $item) { ?>
+                        <?php
+                            // unit mapping
+                            $unitMap = [
+                                '(WP)' => 'piece/s',
+                                '(RP)' => 'piece/s',
+                                '(WS)' => 'stub/s',
+                                '(RS)' => 'stub/s',
+                                '(WB)' => 'box/es',
+                                '(RB)' => 'box/es',
+                            ];
+
+                            $unitLabel = '';
+
+                            foreach ($unitMap as $code => $label) {
+                                if (strpos($item['item_name'], $code) !== false) {
+                                    $unitLabel = $label;
+                                    break;
+                                }
+                            }
+                        ?>
+
                         <tr style="margin-top: 5px;">
                             <td style="text-align: left; padding: 5px;">
                                 <?= $item['item_name'] ?>
                             </td>
                             <td style="text-align: center; padding: 5px;">
-                                <?= $item['quantity'] ?>
+                                <?= $item['quantity'] ?> <small><?= $unitLabel ?></small>
                             </td>
                             <td style="text-align: right; padding: 5px;">
-                                Php <?= $item['unit_price'] ?>
+                                Php <?= number_format($item['quantity'] * $item['unit_price'], 2) ?>
                             </td>
                         </tr>
                     <?php } ?>
@@ -97,7 +115,7 @@
                     <span style="font-size: 100%;">Sub Total:</span>
                 </div>
                 <div class="col-6" style="flex: 1; text-align: right;">
-                    Php <span style="font-size: 100%;"><?= $sub_total ?></span>
+                    Php <span style="font-size: 100%;"><?= number_format($sub_total, 2) ?></span>
                 </div>
             </div>
             <div class="row" style="display: flex; margin-left: -5px; margin-right: -5px; margin-top: 5px">
@@ -105,7 +123,7 @@
                     <span style="font-size: 100%;">Discount:</span>
                 </div>
                 <div class="col-6" style="flex: 1; text-align: right;">
-                    Php <span style="font-size: 100%;"><?= $discount_amount ?></span>
+                    Php <span style="font-size: 100%;"><?= number_format($discount_amount, 2) ?></span>
                 </div>
             </div>
             <div class="row" style="display: flex; margin-left: -5px; margin-right: -5px; margin-top: 5px">
@@ -133,7 +151,7 @@
                     <span style="font-size: 100%;">Total:</span>
                 </div>
                 <div class="col-6" style="flex: 1; text-align: right;">
-                    Php <span style="font-size: 100%;" id="receipt_total_amount"><?= $total_amount ?></span>
+                    Php <span style="font-size: 100%;" id="receipt_total_amount"><?= number_format($total_amount, 2) ?></span>
                 </div>
             </div>
         </div>

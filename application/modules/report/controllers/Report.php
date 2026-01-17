@@ -16,6 +16,8 @@ class Report extends MY_Controller
 
 		$model_list = [
 			'report/Report_model' => 'rModel',
+			'inventory/Inventory_model' => 'iModel',
+
 		];
 		$this->load->model($model_list);
 	}
@@ -24,6 +26,7 @@ class Report extends MY_Controller
 
 	public function index()
 	{
+		$this->data['items_profiles'] = $this->iModel->get_item_profiles();
 		$this->data['content'] = 'index';
 		$this->load->view('layout', $this->data);
 	}
@@ -82,6 +85,8 @@ class Report extends MY_Controller
 		$this->data['discount_amount'] = $this->input->post('discount_amount');
 		$this->data['total_amount'] = $this->input->post('total_amount');
 		$this->data['discount_type'] = $this->input->post('discount_type');
+		$this->data['buyer_name'] = $this->input->post('buyer_name');
+		$this->data['date_created'] = $this->input->post('date_created');
 
 		$this->data['items'] = $this->input->post('data_array');
 		$this->data['content'] = 'grid/receipt_58mm';
@@ -110,7 +115,7 @@ class Report extends MY_Controller
 		// $this->rModel->load_type = $this->input->post('load_type');
 
 		$this->data['expenses'] = $this->rModel->get_expenses();
-		$this->data['total_sales'] = $this->rModel->total_sales();
+		$this->data['get_sales'] = $this->rModel->total_sales();
 		$this->data['get_purchases'] = $this->rModel->get_purchases();
 		$this->data['content'] = 'grid/load_profitloss_report';
 		$this->load->view('layout', $this->data);

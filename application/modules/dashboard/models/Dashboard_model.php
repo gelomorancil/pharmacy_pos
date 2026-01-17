@@ -94,7 +94,9 @@ class Dashboard_model extends CI_Model
         $this->db->where('po.approved', 1);
         $this->db->having('current_stock <= (1.2 * ip.threshold)');
         $this->db->order_by('current_stock', 'ASC');
-        $this->db->group_by('inv.item_ID, ip.threshold, unit.unit_of_measure, items.item_name, items.short_name, items.item_code, items.description');
+        // $this->db->group_by('inv.item_ID, ip.threshold, unit.unit_of_measure, items.item_name, items.short_name, items.item_code, items.description');
+        $this->db->group_by('items.id');
+
     
         return $this->db->get()->result();
     }

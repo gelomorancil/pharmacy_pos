@@ -100,10 +100,12 @@ let items_array = null;
 
 let date_created = null;
 let control_number = null;
+let strenght = null;
 let sub_total = null;
 let discount = null;
 let discount_type = null;
 let total_amount = null;
+let buyer_name = null;
 
 function show_individual_items(data) {
     let childrenData = data.getAttribute('data-children-array');
@@ -125,10 +127,12 @@ function show_individual_items(data) {
             items_array = children;
             date_created = data.getAttribute('data-date_created');
             control_number = data.getAttribute('data-control_number');
+            strenght = data.getAttribute('data-strenght');
             sub_total = data.getAttribute('data-sub_total');
             discount = data.getAttribute('data-discount');
             discount_type = data.getAttribute('data-discount_type');
             total_amount = data.getAttribute('data-total_amount');
+            buyer_name = data.getAttribute('data-buyer_name');
         },
         error: function (xhr, status, error) {
             console.error("Error loading sales:", error);
@@ -136,6 +140,12 @@ function show_individual_items(data) {
     });
 
     // console.log(children);
+}
+
+function void_item(id,name) {
+    $('#void_item_id').val(id);
+    $('#void_item_name').text(name);
+    $('#void-item').modal('show');
 }
 
 $('#void_sale').click(function () {
@@ -160,6 +170,61 @@ $('#void_sale').click(function () {
         },
     });
 });
+
+
+$('#void_replace_item').on('click', function () {
+
+    let voidItemId = $('#void_item_id').val();
+    let voidReason = $('#void_reason').val(); 
+
+    if (!voidReason) {
+        toastr.warning('Please provide a void reason');
+        return;
+    }
+
+    $.confirm({
+        title: 'Confirm Void Action',
+        icon: 'fa fa-exclamation',
+        content: 'Are you sure you want to void this item? Once confirmed, this action CANNOT be reverted.',
+        buttons: {
+            Confirm: {
+                text: 'Confirm',
+                btnClass: 'btn-danger',
+                action: function () {
+
+                    $.ajax({
+                        url: 'report/service/Report_service/void_replace_item',
+                        type: 'POST',
+                        data: {
+                            void_item_id: voidItemId,
+                            void_reason: voidReason
+                        },
+                        success: function (response) {
+                            toastr.success('Item Voided');
+                            $('#void-item').modal('hide');
+                            $('#view-individual-item').modal('hide');
+                            load_sales_report(
+                                $('.date_range').val(),
+                                $('#data_type_to_load').val()
+                            );
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(error);
+                            toastr.error('Failed to void item');
+                        }
+                    });
+
+                }
+            },
+            Cancel: {
+                text: 'Cancel',
+                btnClass: 'btn-secondary'
+            }
+        }
+    });
+});
+
+
 
 $('#verify_void').click(function () {
     const username = $('#void_username').val();
@@ -214,6 +279,9 @@ $('#reprint_receipt').click(function () {
         url: 'report/load_receipt',
         data: {
             control_number: control_number,
+            strenght: strenght,
+            buyer_name: buyer_name,
+            date_created: date_created,
             sub_total: sub_total,
             discount_amount: parseFloat(discount).toFixed(2),
             total_amount: total_amount,

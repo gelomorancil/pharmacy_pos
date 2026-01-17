@@ -25,6 +25,102 @@ $('#stock_in_purchase').click(function () {
     $('#modal-stock-in-purchase').modal('show');
 });
 
+$('#add_stock_po').click(function () {
+    $('#auth-username').val('');
+    $('#auth-password').val('');
+
+    $('#auth-modal').modal('show');
+    $('#auth-modal').on('show.bs.modal', function () {
+        // add a special class so we can style its backdrop on top
+        $('.modal-backdrop').addClass('auth-backdrop');
+    }); 
+});
+
+$('#update-po').click(function () {
+    $('#e-auth-username').val('');
+    $('#e-auth-password').val('');
+
+    $('#auth-modal-edit').modal('show');
+    $('#auth-modal-edit').on('show.bs.modal', function () {
+        // add a special class so we can style its backdrop on top
+        $('.modal-backdrop').addClass('auth-backdrop');
+    }); 
+});
+
+$('#approve-po').click(function () {
+    
+    let username = $('#auth-username').val().trim();
+    let password = $('#auth-password').val().trim();
+
+    if (username === '' || password === '') {
+        toastr.error('Please enter your username and password.');
+        return;
+    }
+
+    $.ajax({
+        url: base_url + 'delivery/validate_user',
+        type: 'POST',
+        data: { username: username, password: password },
+
+        success: function (res) {
+            var res = JSON.parse(res);
+            console.log(res);
+            if (res.status == 'success') {
+                toastr.success('Authentication successful.');
+                $('#auth-modal').modal('hide');
+                setTimeout(function () {
+                    approvePO();
+
+                }, 300);
+
+            } else {
+                toastr.error("Error: "+ res.message);
+            }
+        },
+
+        error: function () {
+            toastr.error('Server error.');
+        }
+    });
+});
+
+$('#e-approve-po').click(function () {
+    
+    let username = $('#e-auth-username').val().trim();
+    let password = $('#e-auth-password').val().trim();
+
+    if (username === '' || password === '') {
+        toastr.error('Please enter your username and password.');
+        return;
+    }
+
+    $.ajax({
+        url: base_url + 'delivery/validate_user',
+        type: 'POST',
+        data: { username: username, password: password },
+
+        success: function (res) {
+            var res = JSON.parse(res);
+            console.log(res);
+            if (res.status == 'success') {
+                toastr.success('Authentication successful.');
+                $('#auth-modal-edit').modal('hide');
+                setTimeout(function () {
+                    editPO();
+
+                }, 300);
+
+            } else {
+                toastr.error("Error: "+ res.message);
+            }
+        },
+
+        error: function () {
+            toastr.error('Server error.');
+        }
+    });
+});
+
 var approve_po = (btn) => {
     let po_number = btn.getAttribute('data-PO');
 
@@ -356,21 +452,79 @@ $(document).on("click", ".remove-item", function () {
 });
 
 
-$('#add_stock_po').click(function () {
+// $('#add_stock_po').click(function () {
+//     if (orderItems.length === 0) {
+//         toastr.error("Please add at least one item before confirming.");
+//         return;
+//     }
+
+//     $.confirm({
+//         title: 'Confirmation',
+//         icon: 'fa fa-question-circle',
+//         content: 'Confirm Stock-In? (Action Cannot Be Reversed)',
+//         buttons: {
+//             confirm: {
+//                 text: 'Confirm',
+//                 btnClass: 'btn-success',
+//                 action: function () {
+//                     $.post({
+//                         url: 'inventory/service/Inventory_service/save_stock_in_po',
+//                         data: {
+//                             po_number: $('#po_number').val(),
+//                             supplier: $('#supplier').val(),
+//                             date_in: $('#date_in').val(),
+//                             recieved_by: $('#recieved_by').val(),
+//                             items: orderItems // <-- send array
+//                         },
+//                         success: function (e) {
+//                             var e = JSON.parse(e);
+//                             if (!e.has_error) {
+//                                 toastr.success(e.message);
+
+//                                 $('#modal-stock-in-purchase').modal('hide');
+//                                 load_inventory();
+
+//                                 // reset everything
+//                                 orderItems = [];
+//                                 $("#order_table tbody").empty();
+//                                 $('#po_number').val("");
+//                                 $('#supplier').val("");
+//                                 $('#date_in').val("");
+//                             } else {
+//                                 toastr.error(e.message);
+//                             }
+//                         },
+//                         error: function () {
+//                             toastr.error("Something went wrong.");
+//                         }
+//                     });
+//                 }
+//             },
+//             cancel: {
+//                 text: 'Cancel',
+//                 btnClass: 'btn-danger',
+//                 action: function () { }
+//             }
+//         }
+//     });
+// });
+
+
+function approvePO(){
     if (orderItems.length === 0) {
         toastr.error("Please add at least one item before confirming.");
         return;
     }
 
-    $.confirm({
-        title: 'Confirmation',
-        icon: 'fa fa-question-circle',
-        content: 'Confirm Stock-In? (Action Cannot Be Reversed)',
-        buttons: {
-            confirm: {
-                text: 'Confirm',
-                btnClass: 'btn-success',
-                action: function () {
+    // $.confirm({
+    //     title: 'Confirmation',
+    //     icon: 'fa fa-question-circle',
+    //     content: 'Confirm Stock-In? (Action Cannot Be Reversed)',
+    //     buttons: {
+    //         confirm: {
+    //             text: 'Confirm',
+    //             btnClass: 'btn-success',
+    //             action: function () {
                     $.post({
                         url: 'inventory/service/Inventory_service/save_stock_in_po',
                         data: {
@@ -402,19 +556,86 @@ $('#add_stock_po').click(function () {
                             toastr.error("Something went wrong.");
                         }
                     });
-                }
-            },
-            cancel: {
-                text: 'Cancel',
-                btnClass: 'btn-danger',
-                action: function () { }
-            }
-        }
-    });
-});
+                // }
+    //         },
+    //         cancel: {
+    //             text: 'Cancel',
+    //             btnClass: 'btn-danger',
+    //             action: function () { }
+    //         }
+    //     }
+    // });
+}
+
+// $("#update-po").on("click", function () {
+//     let poData = {
+//         po_number_id: $("#e-po_number-id").val(),
+//         po_number: $("#e-po_number").val(),
+//         date_in: $("#e-date_in").val(),
+//         supplier_id: $("#e-supplier").val(),
+//         received_by: $("#e-recieved_by").val(),
+//         items: []
+//     };
 
 
-$("#update-po").on("click", function () {
+//     $("#e-order_table tbody tr").each(function () {
+//         let row = $(this).find("td");
+//         let tds = $(this).find("td");
+//         let unitID = tds.eq(0).data("unit-id");    
+//         let itemID = tds.eq(1).data("item-id");     
+//         let qty = tds.eq(0).find("input.qty").val(); 
+//         let supplier_price = tds.eq(3).find("input.supplier-price").val();
+//         poData.items.push({
+//             unit_id: unitID,
+//             qty: qty,
+//             supplier_price: supplier_price,
+//             // pcs: $(row[2]).text(),
+//             item_id: itemID,
+//             // unit_price: $(row[4]).text(),
+//             // desc: $(row[5]).text(),
+//             // date_expiry: $(row[6]).text(),
+//             // threshold: $(row[6]).text()
+//         });
+//     });
+
+//     console.log("Submitting edited PO:", poData);
+//     $.confirm({
+//         title: 'Confirm Update',
+//         content: 'Are you sure you want to update this purchase order?',
+//         type: 'blue',
+//         buttons: {
+//             confirm: {
+//                 text: 'Confirm',
+//                 btnClass: 'btn-success',
+//                 action: function () {
+//                     $.ajax({
+//                         url: base_url + "inventory/service/Inventory_service/update_po",
+//                         type: "POST",
+//                         data: JSON.stringify(poData),
+//                         contentType: "application/json",
+//                         success: function (resp) {
+//                             alert("Purchase Order updated successfully!");
+//                             $('#edit-po-modal').modal('hide');
+//                         },
+//                         error: function () {
+//                             alert("Error saving changes.");
+//                         }
+//                     });
+//                 }
+//             },
+//             cancel: {
+//                 text: 'Cancel',
+//                 btnClass: 'btn-danger',
+//                 action: function () {
+//                     // Do nothing on cancel
+//                 }
+//             }
+//         }
+//     });
+// });
+
+
+function editPO(){
     let poData = {
         po_number_id: $("#e-po_number-id").val(),
         po_number: $("#e-po_number").val(),
@@ -446,15 +667,15 @@ $("#update-po").on("click", function () {
     });
 
     console.log("Submitting edited PO:", poData);
-    $.confirm({
-        title: 'Confirm Update',
-        content: 'Are you sure you want to update this purchase order?',
-        type: 'blue',
-        buttons: {
-            confirm: {
-                text: 'Confirm',
-                btnClass: 'btn-success',
-                action: function () {
+    // $.confirm({
+        // title: 'Confirm Update',
+        // content: 'Are you sure you want to update this purchase order?',
+        // type: 'blue',
+        // buttons: {
+        //     confirm: {
+        //         text: 'Confirm',
+        //         btnClass: 'btn-success',
+        //         action: function () {
                     $.ajax({
                         url: base_url + "inventory/service/Inventory_service/update_po",
                         type: "POST",
@@ -468,18 +689,18 @@ $("#update-po").on("click", function () {
                             alert("Error saving changes.");
                         }
                     });
-                }
-            },
-            cancel: {
-                text: 'Cancel',
-                btnClass: 'btn-danger',
-                action: function () {
-                    // Do nothing on cancel
-                }
-            }
-        }
-    });
-});
+    //             }
+    //         },
+    //         cancel: {
+    //             text: 'Cancel',
+    //             btnClass: 'btn-danger',
+    //             action: function () {
+    //                 // Do nothing on cancel
+    //             }
+    //         }
+    //     }
+    // });
+}
 
 var fill_in_item = (data)  => {
     let selectedValue = data.value;

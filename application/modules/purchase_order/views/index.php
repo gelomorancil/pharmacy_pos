@@ -326,6 +326,79 @@ $session = (object) get_userdata(USER);
     </div>
 </div>
 
+<div class="modal fade" id="auth-modal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h3 class="modal-title">Authenticate PO</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label for="auth-username">Username</label>
+                    <input type="text" class="form-control" id="auth-username" placeholder="Enter your username">
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label for="auth-password">Password</label>
+                    <input type="password" class="form-control" id="auth-password" placeholder="Enter your password">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="d-flex justify-content-between w-100">
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-sm btn-success" id="approve-po">Authenticate</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="auth-modal-edit">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h3 class="modal-title">Authenticate Edit PO</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label for="e-auth-username">Username</label>
+                    <input type="text" class="form-control" id="e-auth-username" placeholder="Enter your username">
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label for="e-auth-password">Password</label>
+                    <input type="password" class="form-control" id="e-auth-password" placeholder="Enter your password">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="d-flex justify-content-between w-100">
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-sm btn-success" id="e-approve-po">Authenticate</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
 <?php
 main_footer();
 ?>

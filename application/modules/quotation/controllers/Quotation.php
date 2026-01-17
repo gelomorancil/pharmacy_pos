@@ -119,7 +119,7 @@ class Quotation extends MY_Controller
 
             $items_to_insert[] = [
                 'item_ID' => $item_id,
-                'unit_price' => $unit_price,
+                'supplier_price' => $unit_price,
                 'unit_ID' => $unit_ID,
                 'qo_ID' => intval($quotation_id), // store quotation id in qo_ID column
                 'qty' => $qty,

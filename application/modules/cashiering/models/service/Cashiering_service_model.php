@@ -173,7 +173,7 @@ class Cashiering_service_model extends CI_Model
 
             $ls_items = $this->check_low_items(json_decode($this->input->post('itemsArray'), true));
 
-            $this->add_to_purchase_order_item($ls_items);
+            // $this->add_to_purchase_order_item($ls_items);
 
             if ($payment_type == "ONLINE") {
                 $this->add_image($payment_id, $_FILES['image']);

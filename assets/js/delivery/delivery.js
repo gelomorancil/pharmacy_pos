@@ -102,7 +102,7 @@ var approve_delivery = (btn) => {
                 $("#e-po_number").val(header.po_num);
                 $("#e-date_in").val(header.date_ordered.split(" ")[0]);
                 $("#e-supplier").val(header.supplier_ID);
-                $("#e-recieved_by").val(header.received_by);
+                // $("#e-recieved_by").val(header.received_by);
 
                 // Clear current table
                 $("#e-order_table tbody").empty();
@@ -169,21 +169,21 @@ var view_delivery = (btn) => {
                 let header = data.header;
 
                 // Fill form fields
-                $("#e-po_number").val(header.po_num);
-                $("#e-date_in").val(header.date_ordered.split(" ")[0]);
-                $("#e-supplier").val(header.supplier_ID);
-                $("#e-recieved_by").val(header.received_by);
+                $("#s-po_number").val(header.po_num);
+                $("#s-date_in").val(header.date_ordered.split(" ")[0]);
+                $("#s-supplier").val(header.supplier_ID);
+                $("#s-recieved_by").val(header.received_by);
 
                 // Clear current table
-                $("#e-order_table tbody").empty();
+                $("#s-order_table tbody").empty();
 
                 // Loop through items | <td data-unit-id="${row.unit_ID}">${row.unit_of_measure ?? ''}
                 if (data.items && data.items.length > 0) {
                     data.items.forEach(function (row) {
                         let tr = `
-                            <tr data-pcs-box="${row.pcs_box}">
+                            <tr>
                                 <td>${formatNumber(row.qty)}</td>
-                                <td data-item-id="${row.po_item_id}">${row.item_name ?? ''}</td>
+                                <td>${row.item_name ?? ''}</td>
                                 <td>${row.strenght ?? ''}</td>
                                 <td>${row.supplier_price ?? ''}</td>
                                 <td>${row.unit_price ?? ''}</td>
@@ -193,7 +193,7 @@ var view_delivery = (btn) => {
                                     <div style="display: flex; flex-direction: column;">
                                             ${row.received_qty ?? ''}
 
-                                        <small class="text-muted unit-note">
+                                        <small class="text-muted ">
                                             In pcs: <span>${row.received_pcs ?? ''}</span>
                                         </small>
                                     </div>
@@ -203,7 +203,7 @@ var view_delivery = (btn) => {
                                 <td>${row.batch_no ?? ''}</td>
                             </tr>
                         `;
-                        $("#e-order_table tbody").append(tr);
+                        $("#s-order_table tbody").append(tr);
                     });
                 }
             }

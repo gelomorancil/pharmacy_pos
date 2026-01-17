@@ -238,11 +238,11 @@ $session = (object) get_userdata(USER);
                 <div class="row">
                     <div class="col-sm-4">
                         <label for="">PO number:</label>
-                        <input type="text" id="e-po_number" class="form-control inpt" value="<?= @$PO_num ?>" disabled>
+                        <input type="text" id="s-po_number" class="form-control inpt" value="<?= @$PO_num ?>" disabled>
                     </div>
                     <div class="col-sm-4">
                         <label for="">Date Purchased:</label>
-                        <input type="date" id="e-date_in" class="form-control inpt" disabled>
+                        <input type="date" id="s-date_in" class="form-control inpt" disabled>
                     </div>
                     <div class="col-sm-4">
                         <label for="">Supplier:</label>
@@ -258,23 +258,23 @@ $session = (object) get_userdata(USER);
                 <div class="row">
                     <div class="col-sm-4">
                         <label for="">Recieved By:</label>
-                        <input type="text" id="e-recieved_by" class="form-control inpt"
+                        <input type="text" id="s-recieved_by" class="form-control inpt"
                             placeholder="User Full Name Here" disabled
-                            value="<?= $session->LName . ", " . $session->FName ?>">
+                            value="">
                     </div>
                     <div class="col-sm-4">
                         <label for="">Date Recieved:</label>
-                        <input type="date" id="e-recieved_date" class="form-control inpt">
+                        <input type="date" id="s-recieved_date" class="form-control inpt">
                     </div>
                     <div class="col-sm-4">
                         <label for="">Freight Amount:</label>
-                        <input type="number" id="e-freight" class="form-control inpt">
+                        <input type="number" id="s-freight" class="form-control inpt">
                     </div>
                 </div>
 
                 <hr>
                 <h5>Order List</h5>
-                <table class="table table-bordered table-sm" id="e-order_table">
+                <table class="table table-bordered table-sm" id="s-order_table">
                     <thead>
                         <tr>
                             <th>Qty</th>

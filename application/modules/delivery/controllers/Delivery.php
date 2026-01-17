@@ -61,7 +61,7 @@ class Delivery extends MY_Controller
 		  // Example parent data — adjust column names to your DB structure
 		  $delivery_data = [
 			//   'po_number'      => $po_number,
-			  'date_approved'  => $date_in,
+			  'date_approved'  => date('Y-m-d H:i:s'),
 			  'received_by'    => $received_by,
 			  'freight'    => $freight,
 			  'approved' => 1

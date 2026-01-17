@@ -82,4 +82,32 @@ class Report_services_model extends CI_Model
             return (array('message'=>$msg->getMessage(), 'has_error'=>true));
         }
     }
+
+    public function void_replace_item(){
+        try{     
+            $data = array(
+                'voided' => 1,
+                'void_remarks' => $this->void_reason,
+                'date_voided' => date('Y-m-d H:i:s'),
+            );
+
+            $this->db->trans_start();
+                        
+            $this->db->where('id', $this->void_item_id);
+            $this->db->update($this->Table->payment_child,$data);
+
+            $this->db->trans_complete();
+            if ($this->db->trans_status() === FALSE)
+            {                
+                $this->db->trans_rollback();
+                throw new Exception(ERROR_PROCESSING, true);	
+            }else{
+                $this->db->trans_commit();
+                return array('message'=>VOID, 'has_error'=>false);
+            }
+        }
+        catch(Exception$msg){
+            return (array('message'=>$msg->getMessage(), 'has_error'=>true));
+        }
+   }
 }

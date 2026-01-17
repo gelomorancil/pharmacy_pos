@@ -38,4 +38,11 @@ class Report_service extends MY_Controller
 		$response = $this->rsModel->verify_void();
 		echo json_encode($response);
 	}
+
+	public function void_replace_item(){
+		$this->rsModel->void_item_id = $this->input->post("void_item_id");
+		$this->rsModel->void_reason = $this->input->post("void_reason");
+		$response = $this->rsModel->void_replace_item();
+		echo json_encode($response);
+	}
 }

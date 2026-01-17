@@ -39,8 +39,17 @@
             <div>Category: Meds, J&T, Refreshment</div> 
         </div>
         <div class="col-md-4 text-right">
-            <strong>Sales:</strong>
-            <h5><?= number_format($total_sales, 2) ?></h5>
+             <?php
+            $total_sales = 0;
+            foreach($get_sales as $sales){ 
+                $total_sales += $sales->total_sales;
+                ?>
+                <div class="row mt-2">
+                    <div class="col-8"><?php echo $sales->Category; ?></div>
+                    <div class="col-4 amount">₱<?php echo number_format($sales->total_sales, 2); ?></div>
+                </div>
+        <?php } ?>
+            <strong>Sales: ₱<?=number_format($total_sales, 2)?></strong>
         </div>
     </div>
 
