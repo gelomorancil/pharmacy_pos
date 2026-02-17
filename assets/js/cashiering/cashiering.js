@@ -334,6 +334,7 @@ function process_payment() {
 
         const quantity = parseInt(cartItem.querySelector(".qty").value, 10);
         const to_pcs = parseInt(cartItem.querySelector(".to_pcs").value, 10);
+        const supplier_price = parseFloat(cartItem.querySelector(".supplier_price").value);
 
         const item = {
             index: cartItem.dataset.index,  
@@ -345,6 +346,7 @@ function process_payment() {
             ),
             quantity: quantity,
             to_pcs: to_pcs,
+            supplier_price: supplier_price,
             total_pcs: quantity * to_pcs,  // ✅ works now
             discount: 0,
             total: parseFloat(

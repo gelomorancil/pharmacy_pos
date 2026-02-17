@@ -37,6 +37,7 @@ class Inventory_model extends CI_Model
         $this->db->join($this->Table->items . ' AS i', 'ip.item_id = i.id', 'left');
         $this->db->join($this->Table->unit . ' AS u', 'ip.unit_id = u.id', 'left');
         $this->db->where('i.active', 1);
+        $this->db->group_by('ip.item_id');
         $this->db->order_by('i.item_name', 'ASC');
         $query = $this->db->get()->result();
         return $query;
@@ -107,11 +108,56 @@ class Inventory_model extends CI_Model
     //     return $this->db->get()->result();
     // }
 
+    // public function get_inventory(){
+    //     $this->db->select('
+    //         inv.item_ID,
+    //         (SUM(inv.received_pcs) - COALESCE(MAX(sq.sold_quantity), 0)) AS current_stock,
+    //         ip.threshold,
+    //         unit.unit_of_measure,
+    //         items.item_name,
+    //         items.short_name,
+    //         items.item_code,
+    //         items.description,
+    //         items.strenght,
+    //         items.packaging
+    //     ');
+    //     $this->db->from($this->Table->purchase_order_items . ' AS inv');
+    //     $this->db->join($this->Table->purchase_order . ' AS po', 'inv.po_ID = po.ID', 'left');
+    //     $this->db->join($this->Table->item_profile . ' AS ip', 'inv.item_ID = ip.item_id', 'left');
+    //     $this->db->join($this->Table->items . ' AS items', 'inv.item_ID = items.id', 'left');
+    //     $this->db->join($this->Table->unit . ' AS unit', 'inv.unit_ID = unit.id', 'left');
+    
+    //     // Subquery: one row per item_id (sold total)
+    //         $this->db->join("
+    //             (SELECT 
+    //                 ipj.item_id, 
+    //                 SUM(pc.quantity) AS sold_quantity
+    //             FROM {$this->Table->payment_child} pc
+    //             JOIN {$this->Table->item_profile} ipj
+    //                 ON pc.item_profile_id = ipj.id
+    //             JOIN {$this->Table->payment_parent} py
+    //                 ON pc.payment_id = py.id
+    //             WHERE py.date_created >= '2025-12-01'
+    //             GROUP BY ipj.item_id
+    //             ) AS sq",
+    //             'sq.item_id = inv.item_ID',
+    //             'left'
+    //         );
+
+    
+    //     $this->db->where('po.approved', 1);
+    //     $this->db->group_by('items.id');
+    //     // $this->db->group_by('inv.item_ID, ip.threshold, unit.unit_of_measure, items.item_name, items.short_name, items.item_code, items.description');
+    
+    //     return $this->db->get()->result();
+    // }
+
+
     public function get_inventory(){
         $this->db->select('
             inv.item_ID,
-            (SUM(inv.received_pcs) - COALESCE(MAX(sq.sold_quantity), 0)) AS current_stock,
-            ip.threshold,
+            (SUM(inv.received_pcs) - COALESCE(sq.sold_quantity, 0)) AS current_stock,
+            ip_threshold.threshold,
             unit.unit_of_measure,
             items.item_name,
             items.short_name,
@@ -122,31 +168,40 @@ class Inventory_model extends CI_Model
         ');
         $this->db->from($this->Table->purchase_order_items . ' AS inv');
         $this->db->join($this->Table->purchase_order . ' AS po', 'inv.po_ID = po.ID', 'left');
-        $this->db->join($this->Table->item_profile . ' AS ip', 'inv.item_ID = ip.item_id', 'left');
         $this->db->join($this->Table->items . ' AS items', 'inv.item_ID = items.id', 'left');
         $this->db->join($this->Table->unit . ' AS unit', 'inv.unit_ID = unit.id', 'left');
     
-        // Subquery: one row per item_id (sold total)
-            $this->db->join("
-                (SELECT 
-                    ipj.item_id, 
-                    SUM(pc.quantity) AS sold_quantity
-                FROM {$this->Table->payment_child} pc
-                JOIN {$this->Table->item_profile} ipj
-                    ON pc.item_profile_id = ipj.id
-                JOIN {$this->Table->payment_parent} py
-                    ON pc.payment_id = py.id
-                WHERE py.date_created >= '2025-12-01'
-                GROUP BY ipj.item_id
-                ) AS sq",
-                'sq.item_id = inv.item_ID',
-                'left'
-            );
+        // Subquery: get threshold (one row per item_id)
+        $this->db->join("
+            (SELECT 
+                item_id, 
+                MAX(threshold) AS threshold
+            FROM {$this->Table->item_profile}
+            GROUP BY item_id
+            ) AS ip_threshold",
+            'ip_threshold.item_id = inv.item_ID',
+            'left'
+        );
 
-    
+        // Subquery: one row per item_id (sold total)
+        $this->db->join("
+            (SELECT 
+                ipj.item_id, 
+                SUM(pc.quantity) AS sold_quantity
+            FROM {$this->Table->payment_child} pc
+            JOIN {$this->Table->item_profile} ipj
+                ON pc.item_profile_id = ipj.id
+            JOIN {$this->Table->payment_parent} py
+                ON pc.payment_id = py.id
+            WHERE py.date_created >= '2025-12-01'
+            GROUP BY ipj.item_id
+            ) AS sq",
+            'sq.item_id = inv.item_ID',
+            'left'
+        );
+
         $this->db->where('po.approved', 1);
-        $this->db->group_by('items.id');
-        // $this->db->group_by('inv.item_ID, ip.threshold, unit.unit_of_measure, items.item_name, items.short_name, items.item_code, items.description');
+        $this->db->group_by('inv.item_ID');
     
         return $this->db->get()->result();
     }
@@ -171,7 +226,9 @@ class Inventory_model extends CI_Model
             poi.batch_no,
             poi.damaged_pcs,
 
-            supplier.supplier_name
+            supplier.supplier_name,
+
+            po.approved
         ');
 
         $this->db->from($this->Table->purchase_order . ' AS po');
@@ -181,7 +238,8 @@ class Inventory_model extends CI_Model
         $this->db->join($this->Table->supplier . ' AS supplier', 'po.supplier_ID = supplier.id', 'left');
 
         $this->db->where('poi.item_ID', $this->id);
-        $this->db->where('po.approved', 1);
+        // $this->db->where('po.approved', 1);
+        $this->db->order_by('po.approved', 'ASC');
         $this->db->order_by('po.date_approved', 'DESC');
         $this->db->limit(50);
 

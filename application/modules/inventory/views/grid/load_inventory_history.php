@@ -9,7 +9,7 @@
             <th style="width:10%;">Damaged</th>
             <th style="width:25%;">Recieved By</th>
             <th style="width:25%;">Date Expiry</th>
-            <th style="width:25%;">Date Encoded</th>
+            <th style="width:25%;">Date Approved</th>
         </tr>
     </thead>
     <tbody>
@@ -19,7 +19,11 @@
             ?>
             <tr>
 
-                <td><?= $value->po_num ?></td>
+                <td>
+                    <?= $value->po_num ?>
+                    <br>
+                    <?=$value->approved != 1 ? '<small class="text-danger"><b>Incoming PO</b></small>' : ''?>
+                </td>
                 <td><?= $value->batch_no ?></td>
                 <td><?= $value->item_name ?></td>
                 <td><?= $value->supplier_name ?></td>

@@ -74,7 +74,9 @@ $(document).on("keyup", "#e-freight", function () {
         let freightPerUnit = freightPerItem / qty;
         let computed = supplierPrice + freightPerUnit;
 
+        let srp = computed * 1.2; // Example: 20% markup for SRP
         $(this).find(".unit-price").val(computed.toFixed(2));
+        $(this).find(".srp-percent").val(srp.toFixed(2));
     });
 
 });

@@ -208,7 +208,8 @@ class Cashiering_service_model extends CI_Model
                 'unit_price' => $item['unit_price'],
                 'quantity' => $final_quantity,
                 'discount' => $item['discount'],
-                'total_price' => $item['total']
+                'total_price' => $item['total'],
+                'supplier_price' => $item['supplier_price'],
             ];
         }
 

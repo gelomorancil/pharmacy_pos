@@ -98,6 +98,6 @@
     <div class="row mt-3">
         <div class="col-6"></div>
         <div class="col-6 profit">
-            ₱<?= number_format($total_sales - $total_expenses, 2) ?>
+            ₱<?= number_format($total_sales - $total_purchases - $total_expenses, 2) ?>
         </div>
     </div>

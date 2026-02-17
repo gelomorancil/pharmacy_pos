@@ -138,6 +138,7 @@ $session = (object) get_userdata(USER);
                                     data-name2="<?=$i->item_name." ".$i->strenght." (RP)"?>"
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
                                     data-price="<?=$i->RP?>" 
+                                    data-supplier_price="<?=$i->supplier_price?>" 
                                 >RP ₱<?=number_format($i->RP,2)?>
                                 </button><br>
                                 <button class="price-label btn-add" <?=($i->current_stock <= 0 ? 'disabled' : '')?>
@@ -146,6 +147,7 @@ $session = (object) get_userdata(USER);
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
                                     data-price="<?=$i->RS?>" 
                                     data-to_pcs="<?=$i->pcs_stub?>" 
+                                    data-supplier_price="<?=$i->supplier_price?>" 
                                 >RS ₱<?=number_format($i->RS,2)?>
                                  </button>  <br>
                                 <button class="price-label btn-add" <?=($i->current_stock <= 0 ? 'disabled' : '')?>
@@ -154,6 +156,7 @@ $session = (object) get_userdata(USER);
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
                                     data-price="<?=$i->RB?>" 
                                     data-to_pcs="<?=$i->pcs_box?>" 
+                                    data-supplier_price="<?=$i->supplier_price?>" 
                                 >RB ₱<?=number_format($i->RB,2)?>
                                 </button> 
                             </div>
@@ -163,6 +166,7 @@ $session = (object) get_userdata(USER);
                                     data-name2="<?=$i->item_name." ".$i->strenght." (WP)"?>"
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
                                     data-price="<?=$i->WP?>" 
+                                    data-supplier_price="<?=$i->supplier_price?>" 
                                 >WP ₱<?=number_format($i->WP,2)?>
                                 </button>    <br>
                                 <button class="price-label btn-add" <?=($i->current_stock <= 0 ? 'disabled' : '')?>
@@ -171,6 +175,7 @@ $session = (object) get_userdata(USER);
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
                                     data-price="<?=$i->WS?>" 
                                     data-to_pcs="<?=$i->pcs_stub?>"
+                                    data-supplier_price="<?=$i->supplier_price?>" 
                                 >WS ₱<?=number_format($i->WS,2)?>
                                  </button>  <br>
                                 <button class="price-label btn-add" <?=($i->current_stock <= 0 ? 'disabled' : '')?>
@@ -179,28 +184,10 @@ $session = (object) get_userdata(USER);
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
                                     data-price="<?=$i->WB?>" 
                                     data-to_pcs="<?=$i->pcs_box?>"
+                                    data-supplier_price="<?=$i->supplier_price?>" 
                                 >WB ₱<?=number_format($i->WB,2)?>
                                 </button> 
                             </div>
-                            <!-- <div class="font-weight-bold d-flex gap-3">
-                                <span class="price-label">RP</span> ₱<?=number_format($i->RP,2)?>   <br>
-                                <span class="price-label">RS </span> ₱<?=number_format($i->RS,2)?> <br>
-                                <span class="price-label">RB</span> ₱<?=number_format($i->RB,2)?>
-                            </div>
-                            <div class="font-weight-bold d-flex gap-3 mt-1">
-                                <span class="price-label">WP</span> ₱<?=number_format($i->WP,2)?>   <br>
-                                <span class="price-label">WS </span> ₱<?=number_format($i->WS,2)?> <br>
-                                <span class="price-label">WB</span> ₱<?=number_format($i->WB,2)?>
-                            </div> -->
-                            <!-- <button class="btn btn-add" 
-                                    data-name="<?=$i->item_name?>" 
-                                    data-price="<?=$i->RP?>"
-                                    data-walkin="<?=$i->WP?>"
-                                    data-wholesaler="<?=$i->Wholesale_price?>"
-                                    data-item_profile_id="<?=$i->item_profile_id?>" 
-                                    <?=$i->current_stock == 0 ? 'disabled' : ''?>>
-                                <span class="fas fa-plus"></span>
-                            </button> -->
                         </div>
                     </div>
                     <?php } ?>
@@ -529,6 +516,7 @@ function renderCart() {
         <div><strong>${item.name2}</strong></div>
         <input type="text" hidden value="${item.item_profile_id}">
         <input type="text" hidden class="to_pcs" value="${item.to_pcs}">
+        <input type="text" hidden class="supplier_price" value="${item.supplier_price}">
         <div class="d-flex justify-content-between align-items-center">
           <div>
             ₱${item.price.toLocaleString("en-PH", { minimumFractionDigits: 2 })} each
@@ -620,6 +608,7 @@ document.querySelectorAll(".btn-add").forEach(btn => {
     let regular = parseFloat(btn.dataset.price);
     let wholesaler = parseFloat(btn.dataset.wholesaler);
     let to_pcs = parseFloat(btn.dataset.to_pcs);
+    let supplier_price = parseFloat(btn.dataset.supplier_price);
 
     // decide active price based on buyer_type
     //let b_type = $('#buyer_type').val();
@@ -643,7 +632,8 @@ document.querySelectorAll(".btn-add").forEach(btn => {
         wholesaler, 
         price, 
         qty: 1,
-        to_pcs
+        to_pcs,
+        supplier_price
       });
     }
     renderCart();

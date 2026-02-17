@@ -13,149 +13,83 @@ class Cashiering_model extends CI_Model
         $this->Table = json_decode(TABLE);
     }
 
-       public function get_items()
+    public function get_items()
     {
         $this->db->select('
-            i.*,
-            ip.unit_price        AS RP,
-            ip.regular_stub      AS RS,
-            ip.regular_box       AS RB,
-            ip.Walkin_price      AS WP,
-            ip.walkin_stub       AS WS,
-            ip.walkin_box        AS WB,
+            i.*, 
+            ip.unit_price AS RP, 
+            ip.regular_stub AS RS, 
+            ip.regular_box AS RB, 
+            ip.Walkin_price AS WP,
+            ip.walkin_stub AS WS,
+            ip.walkin_box AS WB,
             ip.Wholesale_price,
-            ip.supplier_price,       
-            ip.id                AS item_profile_id,
+            ip.id AS item_profile_id,
             u.unit_of_measure
         ');
-
-        // 🔑 Items are the driving table
-        $this->db->from($this->Table->items . ' i');
-
-        // ✅ item_profile + supplier_price
-        // ✅ BOTH depend on ACTIVE PO
-        // ✅ supplier_price isolated per ITEM (1 to many like pricing)
-        $this->db->join(
-            "(
-                SELECT 
-                    ip.*,
-                    poi.supplier_price
-                FROM {$this->Table->item_profile} ip
-                JOIN {$this->Table->purchase_order_items} poi
-                    ON poi.po_ID = ip.po_ID
-                JOIN (
-                    SELECT
-                        item_ID,
-                        MIN(item_profile_id) AS item_profile_id
-                    FROM (
-                        SELECT 
-                            ip2.ID AS item_profile_id,
-                            ip2.item_ID,
-                            (poi2.received_pcs - IFNULL(SUM(pc.quantity), 0)) AS remaining_qty
-                        FROM {$this->Table->item_profile} ip2
-                        JOIN {$this->Table->purchase_order_items} poi2
-                            ON poi2.po_ID = ip2.po_ID
-                        LEFT JOIN {$this->Table->payment_child} pc
-                            ON pc.item_profile_id = ip2.ID
-                        AND pc.voided = 0
-                        GROUP BY ip2.ID
-                        HAVING remaining_qty > 0
-                    ) x
-                    GROUP BY item_ID
-                ) next_price
-                    ON next_price.item_profile_id = ip.ID
-                AND next_price.item_ID = ip.item_ID
-            ) ip",
-            'ip.item_ID = i.id',
-            'left'
-        );
-
-        // unit still optional
-        $this->db->join(
-            $this->Table->unit . ' u',
-            'ip.unit_id = u.id',
-            'left'
-        );
-
-        $this->db->where('i.active', 1);
-
-        // ✅ one row per item
-        $this->db->group_by('i.id');
-
+        $this->db->from($this->Table->item_profile . ' ip');
+        $this->db->join($this->Table->items . ' i', 'i.id = ip.item_id', 'left');
+        $this->db->join($this->Table->unit . ' u', 'ip.unit_id = u.id', 'left');
+        $this->db->where('i.active', '1');
         $this->db->order_by('i.item_name', 'asc');
-
+        $this->db->order_by('ip.item_ID', 'asc');
         $query = $this->db->get()->result();
 
-        // attach current stock (0 if none)
         foreach ($query as $row) {
+            // attach stock result directly into each row object
             $row->current_stock = $this->get_current_stock($row->id);
-            // attach list of PO entries (price + remaining qty) for this item
-            $row->pos = $this->get_item_pos($row->id);
+            // Get active PO price based on remaining stock
+            $po_pricing = $this->get_active_po_price($row->id);
+            if ($po_pricing) {
+                $row->po_price = $po_pricing->unit_price;
+                $row->po_remaining_stock = $po_pricing->remaining_stock;
+                $row->po_id = $po_pricing->po_ID;
+            }
         }
 
         return $query;
     }
 
-//    public function get_items()
-//     {
-//         $this->db->select('
-//             i.*,
-//             ip.unit_price        AS RP,
-//             ip.regular_stub      AS RS,
-//             ip.regular_box       AS RB,
-//             ip.Walkin_price      AS WP,
-//             ip.walkin_stub       AS WS,
-//             ip.walkin_box        AS WB,
-//             ip.Wholesale_price,
-//             ip.supplier_price,       
-//             ip.id                AS item_profile_id,
-//             u.unit_of_measure
-//         ');
-
-//         // 🔑 Items are the driving table
-//         $this->db->from($this->Table->items . ' i');
-
-//         // ✅ item_profile + supplier_price
-//         // ✅ BOTH depend on ACTIVE PO
-//         // ✅ supplier_price isolated per ITEM
-//         $this->db->join(
-//             "(SELECT 
-//                 ip1.*,
-//                 po1.supplier_price
-//             FROM {$this->Table->item_profile} ip1
-//             JOIN {$this->Table->purchase_order_items} po1
-//                 ON po1.po_ID = ip1.po_ID
-//             AND po1.item_ID = ip1.item_id
-//             AND po1.active = 1
-//             ) ip",
-//             'ip.item_id = i.id',
-//             'left'
-//         );
-
-//         // unit still optional
-//         $this->db->join(
-//             $this->Table->unit . ' u',
-//             'ip.unit_id = u.id',
-//             'left'
-//         );
-
-//         $this->db->where('i.active', 1);
-
-//         // ✅ one row per item
-//         $this->db->group_by('i.id');
-
-//         $this->db->order_by('i.item_name', 'asc');
-
-//         $query = $this->db->get()->result();
-
-//         // attach current stock (0 if none)
-//         foreach ($query as $row) {
-//             $row->current_stock = $this->get_current_stock($row->id);
-//         }
-
-//         return $query;
-//     }
-
+    public function get_active_po_price($item_id)
+    {
+        // Get the first active PO for this item with remaining stock
+        // Only returns one item grouped by item_id
+        $this->db->select('
+            po.ID AS po_ID,
+            ip.item_id,
+            poi.unit_price,
+            poi.received_pcs,
+            (poi.received_pcs - COALESCE(SUM(sq.sold_quantity), 0)) AS remaining_stock
+        ');
+        $this->db->from($this->Table->purchase_order_items . ' AS poi');
+        $this->db->join($this->Table->purchase_order . ' AS po', 'poi.po_ID = po.ID', 'left');
+        $this->db->join($this->Table->item_profile . ' AS ip', 'poi.item_ID = ip.id', 'left');
+        $this->db->join($this->Table->items . ' AS items', 'ip.item_id = items.id', 'left');
+        
+        // Subquery: get sold quantities per PO item from payment_child
+        $this->db->join("
+            (SELECT 
+                pc.item_profile_id, 
+                SUM(pc.quantity) AS sold_quantity
+            FROM {$this->Table->payment_child} pc
+            JOIN {$this->Table->payment_parent} py
+                ON pc.payment_id = py.id
+            WHERE py.date_created >= '2025-12-01'
+            GROUP BY pc.item_profile_id
+            ) AS sq",
+            'sq.item_profile_id = poi.item_ID',
+            'left'
+        );
+        
+        $this->db->where('po.approved', 1);
+        $this->db->where('items.id', $item_id);
+        $this->db->group_by('ip.item_id, po.ID, poi.unit_price, poi.received_pcs');
+        $this->db->order_by('po.date_approved', 'ASC');
+        $this->db->limit(1);
+        $query = $this->db->get()->row();
+        
+        return $query;
+    }
 
     public function get_buyers()
     {
@@ -166,52 +100,6 @@ class Cashiering_model extends CI_Model
         $query = $this->db->get()->result();
 
         return $query;
-    }
-
-    /**
-     * Return list of PO entries for a given item (price and remaining qty)
-     * Each entry: { po_item_id, po_id, price, received_pcs, remaining_pcs }
-     */
-    public function get_item_pos($item_id)
-    {
-        $this->db->select('
-            poi.ID AS po_item_id,
-            poi.po_ID AS po_id,
-            poi.unit_price AS price,
-            poi.received_pcs,
-            (poi.received_pcs - COALESCE(sold.sold_qty, 0)) AS remaining_pcs,
-            po.date_approved
-        ');
-        $this->db->from($this->Table->purchase_order_items . ' AS poi');
-        $this->db->join($this->Table->purchase_order . ' AS po', 'poi.po_ID = po.ID', 'left');
-
-        // sold quantities per purchase_order_items (via item_profile.po_ID linking)
-        $this->db->join("(
-            SELECT ip.po_ID AS poi_id, SUM(pc.quantity) AS sold_qty
-            FROM {$this->Table->payment_child} pc
-            JOIN {$this->Table->item_profile} ip ON pc.item_profile_id = ip.ID
-            JOIN {$this->Table->payment_parent} py ON pc.payment_id = py.id
-            WHERE py.voided = 0
-            GROUP BY ip.po_ID
-        ) AS sold", 'sold.poi_id = poi.ID', 'left');
-
-        $this->db->where('poi.item_ID', $item_id);
-        $this->db->where('po.approved', 1);
-        $this->db->order_by('po.date_approved', 'ASC');
-
-        $rows = $this->db->get()->result();
-
-        // map to simple arrays and ensure numeric types
-        $pos = [];
-        foreach ($rows as $r) {
-            $pos[] = [
-                'po_item_id' => $r->po_item_id,
-                'po_id' => $r->po_id,
-                'price' => floatval($r->price),
-                'qty' => intval($r->remaining_pcs > 0 ? $r->remaining_pcs : 0),
-            ];
-        }
-        return $pos;
     }
 
     // public function get_current_stock($item_id)
@@ -246,42 +134,43 @@ class Cashiering_model extends CI_Model
     //     return $query ? $query->current_stock : 0; // return 0 if no stock found
     // }
 
-   public function get_current_stock($item_id)
-    {
+     public function get_current_stock($item_id){
         $this->db->select('
             inv.item_ID,
-            (SUM(inv.received_pcs) - COALESCE(sq.sold_quantity, 0)) AS current_stock
+            (SUM(inv.received_pcs) - COALESCE(MAX(sq.sold_quantity), 0)) AS current_stock,
         ');
-
         $this->db->from($this->Table->purchase_order_items . ' AS inv');
         $this->db->join($this->Table->purchase_order . ' AS po', 'inv.po_ID = po.ID', 'left');
+        $this->db->join($this->Table->item_profile . ' AS ip', 'inv.item_ID = ip.item_id', 'left');
         $this->db->join($this->Table->items . ' AS items', 'inv.item_ID = items.id', 'left');
         $this->db->join($this->Table->unit . ' AS unit', 'inv.unit_ID = unit.id', 'left');
+    
+        // Subquery: one row per item_id (sold total)
+            $this->db->join("
+                (SELECT 
+                    ipj.item_id, 
+                    SUM(pc.quantity) AS sold_quantity
+                FROM {$this->Table->payment_child} pc
+                JOIN {$this->Table->item_profile} ipj
+                    ON pc.item_profile_id = ipj.id
+                JOIN {$this->Table->payment_parent} py
+                    ON pc.payment_id = py.id
+                WHERE py.date_created >= '2025-12-01'
+                GROUP BY ipj.item_id
+                ) AS sq",
+                'sq.item_id = inv.item_ID',
+                'left'
+            );
 
-        // ✅ Proper subquery (1 row per item_id)
-        $this->db->join("
-            (SELECT 
-                ipj.item_id, 
-                SUM(pc.quantity) AS sold_quantity
-            FROM {$this->Table->payment_child} pc
-            JOIN {$this->Table->item_profile} ipj
-                ON pc.item_profile_id = ipj.id
-            JOIN {$this->Table->payment_parent} py
-                ON pc.payment_id = py.id
-            WHERE py.date_created >= '2025-12-01'
-            GROUP BY ipj.item_id
-            ) AS sq",
-            'sq.item_id = inv.item_ID',
-            'left'
-        );
-
+    
         $this->db->where('po.approved', 1);
-        $this->db->where('items.id', $item_id);
-        $this->db->group_by('inv.item_ID');
+         $this->db->where('items.id', $item_id);
+        $this->db->group_by('items.id');
+        // $this->db->group_by('inv.item_ID, ip.threshold, unit.unit_of_measure, items.item_name, items.short_name, items.item_code, items.description');
+    
+       $query = $this->db->get()->row();
 
-        $query = $this->db->get()->row();
-
-        return $query ? $query->current_stock : 0;
+        return $query ? $query->current_stock : 0; // return 0 if no stock found
     }
 
 
