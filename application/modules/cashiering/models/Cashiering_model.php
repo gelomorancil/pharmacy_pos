@@ -428,4 +428,110 @@ class Cashiering_model extends CI_Model
     }
 
 
+    // FJ NEW FUNCTIONS
+    public function get_price_tiers($item_id)
+    {
+        $this->db->select('
+            ip.id AS profile_id,
+            ip.unit_price AS price,
+            ip.po_ID,
+            COALESCE(poi.received_pcs, 0) AS received_pcs,
+            po.date_approved
+        ');
+        $this->db->from($this->Table->item_profile . ' ip');
+        $this->db->join($this->Table->purchase_order . ' po', 'ip.po_ID = po.ID', 'left');
+        $this->db->join($this->Table->purchase_order_items . ' poi', 'po.ID = poi.po_ID AND poi.item_ID = ip.item_ID', 'left');
+        
+        $this->db->where('ip.item_ID', $item_id);
+        $this->db->order_by('po.date_approved', 'ASC');
+
+        $query = $this->db->get();
+        if ($query === FALSE) {
+            return array();
+        }
+        
+        $rows = $query->result();
+
+        // Map to simple array
+        $tiers = [];
+        foreach ($rows as $r) {
+            $tiers[] = [
+                'profile_id' => intval($r->profile_id),
+                'price' => floatval($r->price),
+                'qty' => intval($r->received_pcs > 0 ? $r->received_pcs : 0),
+            ];
+        }
+        return $tiers;
+    }
+
+    public function calculate_effective_price($item_id, $quantity, $base_price, $cart_qty = 0)
+    {
+        // Get total qty used in previous orders (non-voided)
+        $this->db->select('SUM(pc.quantity) AS total_used');
+        $this->db->from($this->Table->payment_child . ' pc');
+        $this->db->join($this->Table->item_profile . ' ip', 'pc.item_profile_id = ip.id', 'left');
+        $this->db->join($this->Table->payment_parent . ' pp', 'pc.payment_id = pp.id', 'left');
+        $this->db->where('ip.item_ID', $item_id);
+        $this->db->where('pp.voided', 0);
+        $used_result = $this->db->get()->row();
+        $total_used = $used_result ? (int)$used_result->total_used : 0;
+
+        // Get price tiers (PO qty + item_profile prices)
+        $tiers = $this->get_price_tiers($item_id);
+        
+        if (empty($tiers)) {
+            return $base_price;
+        }
+
+        // Track cumulative quantity across all tiers
+        $tier_start = 0;
+        $applicable_price = $base_price;
+
+        // Calculate what the total quantity will be after adding the new items
+        $total_after_add = $total_used + $cart_qty + $quantity;
+
+        // Find which tier the last item falls into
+        foreach ($tiers as $tier) {
+            $tier_qty = $tier['qty'];       // received_pcs for this PO
+            $tier_price = $tier['price'];   // price for this tier
+            $tier_end = $tier_start + $tier_qty;
+
+            // Check if our new total quantity intersects with this tier
+            if ($total_after_add > $tier_start && $total_after_add <= $tier_end) {
+                // The new item(s) fall within or end in this tier
+                $applicable_price = $tier_price;
+                break;
+            }
+
+            $tier_start = $tier_end;
+        }
+
+        return floatval($applicable_price);
+    }
+
+    public function get_available_stock($item_id, $cart_qty = 0)
+    {
+        $this->db->select('SUM(poi.received_pcs) AS total_received');
+        $this->db->from($this->Table->purchase_order_items . ' poi');
+        $this->db->join($this->Table->purchase_order . ' po', 'poi.po_ID = po.ID', 'left');
+        $this->db->where('poi.item_ID', $item_id);
+        $this->db->where('po.approved', 1);
+        $received = $this->db->get()->row();
+        $total_received = $received ? (int)$received->total_received : 0;
+
+        // Get total qty used in non-voided orders
+        $this->db->select('SUM(pc.quantity) AS total_used');
+        $this->db->from($this->Table->payment_child . ' pc');
+        $this->db->join($this->Table->item_profile . ' ip', 'pc.item_profile_id = ip.id', 'left');
+        $this->db->join($this->Table->payment_parent . ' pp', 'pc.payment_id = pp.id', 'left');
+        $this->db->where('ip.item_ID', $item_id);
+        $this->db->where('pp.voided', 0);
+        $used = $this->db->get()->row();
+        $total_used = $used ? (int)$used->total_used : 0;
+
+        // Available = received - used - current_cart_qty
+        $available = $total_received - $total_used - $cart_qty;
+        return max(0, $available); // Never return negative
+    }
+
 }

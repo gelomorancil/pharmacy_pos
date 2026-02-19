@@ -87,4 +87,71 @@ class Cashiering extends MY_Controller
 		echo json_encode($response);
 	}
 
+	// ADDED FJ NEW FUNCTIONS
+	// GETTING THE EFFECTIVE PRICE BASE SA PO QUANTITY 
+	public function get_dynamic_price()
+	{
+		try {
+			$item_id = $this->input->post('item_id');
+			$quantity = (int)$this->input->post('quantity');
+			$base_price = (float)$this->input->post('base_price');
+			$cart_qty = (int)$this->input->post('cart_qty') ?? 0; // Current qty in cart
+
+			if (!$item_id || !$quantity) {
+				echo json_encode(['success' => false, 'price' => $base_price, 'error' => 'Missing parameters']);
+				return;
+			}
+
+			// Get raw prices for debugging
+			$tiers = $this->cModel->get_price_tiers($item_id);
+			$effective_price = $this->cModel->calculate_effective_price($item_id, $quantity, $base_price, $cart_qty);
+			
+			echo json_encode([
+				'success' => true,
+				'price' => $effective_price,
+				'base_price' => $base_price,
+				'quantity' => $quantity,
+				'cart_qty' => $cart_qty,
+				'item_id' => $item_id,
+				'tiers' => $tiers
+			]);
+		} catch (Exception $e) {
+			echo json_encode([
+				'success' => false,
+				'error' => $e->getMessage(),
+				'trace' => $e->getTraceAsString()
+			]);
+		}
+	}
+
+	// ADDED FJ
+	// CALCULATING RECEIVED_PCS(purchase_order_items) - QUANTITY(tbl_payment_child)
+	public function get_available_stock()
+	{
+		try {
+			$item_id = (int)$this->input->post('item_id');
+			$cart_qty = (int)$this->input->post('cart_qty') ?? 0; // Current qty in cart
+			
+			if (!$item_id) {
+				echo json_encode(['success' => false, 'available' => 0, 'error' => 'Item ID missing']);
+				return;
+			}
+
+			$available = $this->cModel->get_available_stock($item_id, $cart_qty);
+			
+			echo json_encode([
+				'success' => true,
+				'available' => $available,
+				'item_id' => $item_id,
+				'cart_qty' => $cart_qty
+			]);
+		} catch (Exception $e) {
+			echo json_encode([
+				'success' => false,
+				'available' => 0,
+				'error' => $e->getMessage()
+			]);
+		}
+	}
+
 }

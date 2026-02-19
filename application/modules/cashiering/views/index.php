@@ -134,6 +134,7 @@ $session = (object) get_userdata(USER);
                             <small class="card-text text-muted"><?=$i->classification?></small>
                              <div class="font-weight-bold d-flex gap-3">
                                 <button class="price-label btn-add" <?=($i->current_stock <= 0 ? 'disabled' : '')?>
+                                    data-item_id="<?=$i->id?>"
                                     data-name="<?=$i->item_name?>"
                                     data-name2="<?=$i->item_name." ".$i->strenght." (RP)"?>"
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
@@ -142,6 +143,7 @@ $session = (object) get_userdata(USER);
                                 >RP ₱<?=number_format($i->RP,2)?>
                                 </button><br>
                                 <button class="price-label btn-add" <?=($i->current_stock <= 0 ? 'disabled' : '')?>
+                                    data-item_id="<?=$i->id?>"
                                     data-name="<?=$i->item_name?>"
                                     data-name2="<?=$i->item_name." ".$i->strenght." (RS)"?>"
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
@@ -151,6 +153,7 @@ $session = (object) get_userdata(USER);
                                 >RS ₱<?=number_format($i->RS,2)?>
                                  </button>  <br>
                                 <button class="price-label btn-add" <?=($i->current_stock <= 0 ? 'disabled' : '')?>
+                                    data-item_id="<?=$i->id?>"
                                     data-name="<?=$i->item_name?>"
                                     data-name2="<?=$i->item_name." ".$i->strenght." (RB)"?>"
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
@@ -162,6 +165,7 @@ $session = (object) get_userdata(USER);
                             </div>
                             <div class="font-weight-bold d-flex gap-3 mt-1">
                                 <button class="price-label btn-add" <?=($i->current_stock <= 0 ? 'disabled' : '')?>
+                                    data-item_id="<?=$i->id?>"
                                     data-name="<?=$i->item_name?>"
                                     data-name2="<?=$i->item_name." ".$i->strenght." (WP)"?>"
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
@@ -170,6 +174,7 @@ $session = (object) get_userdata(USER);
                                 >WP ₱<?=number_format($i->WP,2)?>
                                 </button>    <br>
                                 <button class="price-label btn-add" <?=($i->current_stock <= 0 ? 'disabled' : '')?>
+                                    data-item_id="<?=$i->id?>"
                                     data-name="<?=$i->item_name?>"
                                     data-name2="<?=$i->item_name." ".$i->strenght." (WS)"?>"
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
@@ -179,6 +184,7 @@ $session = (object) get_userdata(USER);
                                 >WS ₱<?=number_format($i->WS,2)?>
                                  </button>  <br>
                                 <button class="price-label btn-add" <?=($i->current_stock <= 0 ? 'disabled' : '')?>
+                                    data-item_id="<?=$i->id?>"
                                     data-name="<?=$i->item_name?>"
                                     data-name2="<?=$i->item_name." ".$i->strenght." (WB)"?>"
                                     data-item_profile_id="<?=$i->item_profile_id?>" 
@@ -548,22 +554,78 @@ function renderCart() {
 }
 
 // Handle plus/minus buttons
+// COMMENTED OUT BY FJ
+// document.getElementById("cart-items").addEventListener("click", e => {
+//   let parent = e.target.closest(".cart-item");
+//   if (!parent) return;
+//   let index = parent.dataset.index;
+
+//   if (e.target.classList.contains("plus")) cart[index].qty = (parseInt(cart[index].qty) || 0) + 1;
+//   if (e.target.classList.contains("minus")) {
+//     let current = parseInt(cart[index].qty) || 1;
+//     if (current > 1) {
+//       cart[index].qty = current - 1;
+//     } else {
+//       cart.splice(index, 1);
+//     }
+//   }
+//   renderCart();
+// });
+
+// NEW CART-ITEMS
 document.getElementById("cart-items").addEventListener("click", e => {
   let parent = e.target.closest(".cart-item");
   if (!parent) return;
   let index = parent.dataset.index;
 
-  if (e.target.classList.contains("plus")) cart[index].qty = (parseInt(cart[index].qty) || 0) + 1;
+  if (e.target.classList.contains("plus")) {
+    cart[index].qty = (parseInt(cart[index].qty) || 0) + 1;
+    updateItemPrice(index);
+  }
   if (e.target.classList.contains("minus")) {
     let current = parseInt(cart[index].qty) || 1;
     if (current > 1) {
       cart[index].qty = current - 1;
+      updateItemPrice(index);
     } else {
       cart.splice(index, 1);
     }
   }
   renderCart();
 });
+
+function updateItemPrice(cartIndex) {
+  let item = cart[cartIndex];
+  let item_id = item.item_id;
+  let base_price = item.regular;
+
+  // Calculate TOTAL quantity for this item (all variants combined)
+  let total_quantity = cart.reduce((sum, cartItem) => {
+    return cartItem.item_id === item_id ? sum + parseInt(cartItem.qty || 0) : sum;
+  }, 0);
+
+  fetch("<?php echo base_url('cashiering/get_dynamic_price'); ?>", {
+    method: "POST",
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: 'item_id=' + item_id + '&quantity=' + total_quantity + '&base_price=' + base_price
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // Update ALL items with same item_id to new tier price
+      cart.forEach(cartItem => {
+        if (cartItem.item_id === item_id) {
+          cartItem.price = data.price;
+          cartItem.regular = data.price;
+          cartItem.walkin = data.price;
+          cartItem.wholesaler = data.price;
+        }
+      });
+      renderCart();
+    }
+  })
+  .catch(error => console.error('Error updating price:', error));
+}
 
 // Handle qty input on keyup
 document.getElementById("cart-items").addEventListener("keyup", e => {
@@ -582,61 +644,168 @@ document.getElementById("cart-items").addEventListener("keyup", e => {
   renderCart();
 });
 
+// COMMENTED OUT BY FJ
 // Validate when leaving input (blur)
-document.getElementById("cart-items").addEventListener("blur", e => {
-  if (!e.target.classList.contains("qty")) return;
-  let index = e.target.closest(".cart-item").dataset.index;
-  let value = e.target.value.trim();
+// document.getElementById("cart-items").addEventListener("blur", e => {
+//   if (!e.target.classList.contains("qty")) return;
+//   let index = e.target.closest(".cart-item").dataset.index;
+//   let value = e.target.value.trim();
 
-  if (value === "" || isNaN(value) || parseInt(value) < 1) {
-    cart[index].qty = 1; // fallback
-  } else {
-    cart[index].qty = parseInt(value, 10);
-  }
-  renderCart();
-}, true);
+//   if (value === "" || isNaN(value) || parseInt(value) < 1) {
+//     cart[index].qty = 1; // fallback
+//   } else {
+//     cart[index].qty = parseInt(value, 10);
+//   }
+//   renderCart();
+// }, true);
+
+// // Example: add item
+// document.querySelectorAll(".btn-add").forEach(btn => {
+//   btn.addEventListener("click", () => {
+//     let name = btn.dataset.name;
+//     let item_profile_id = btn.dataset.item_profile_id;
+//     let name2 = btn.dataset.name2;
+
+//     // store all prices in the cart item
+//     let walkin = parseFloat(btn.dataset.walkin);
+//     let regular = parseFloat(btn.dataset.price);
+//     let wholesaler = parseFloat(btn.dataset.wholesaler);
+//     let to_pcs = parseFloat(btn.dataset.to_pcs);
+//     let supplier_price = parseFloat(btn.dataset.supplier_price);
+
+//     // decide active price based on buyer_type
+//     //let b_type = $('#buyer_type').val();
+//     //let price = (b_type === "WALKIN") ? walkin 
+//       //        : (b_type === "REGULAR") ? regular 
+//         //      : wholesaler;
+//     let price = regular;
+
+//     // let existing = cart.find(i => i.item_profile_id === item_profile_id);
+//     let existing = cart.find(i => i.name2 === name2);
+//     if (existing) {
+//       existing.qty++;
+//     } else {
+//       cart.unshift({ 
+//     //   cart.push({ 
+//         item_profile_id, 
+//         name, 
+//         name2,
+//         walkin, 
+//         regular, 
+//         wholesaler, 
+//         price, 
+//         qty: 1,
+//         to_pcs,
+//         supplier_price
+//       });
+//     }
+//     renderCart();
+//   });
+// });
+
+// NEW ADD ITEM AND VALIDATE BLUR
 
 // Example: add item
 document.querySelectorAll(".btn-add").forEach(btn => {
   btn.addEventListener("click", () => {
     let name = btn.dataset.name;
+    let item_id = btn.dataset.item_id;
     let item_profile_id = btn.dataset.item_profile_id;
     let name2 = btn.dataset.name2;
-
-    // store all prices in the cart item
-    let walkin = parseFloat(btn.dataset.walkin);
-    let regular = parseFloat(btn.dataset.price);
-    let wholesaler = parseFloat(btn.dataset.wholesaler);
+    let base_price = parseFloat(btn.dataset.price);
     let to_pcs = parseFloat(btn.dataset.to_pcs);
     let supplier_price = parseFloat(btn.dataset.supplier_price);
 
-    // decide active price based on buyer_type
-    //let b_type = $('#buyer_type').val();
-    //let price = (b_type === "WALKIN") ? walkin 
-      //        : (b_type === "REGULAR") ? regular 
-        //      : wholesaler;
-    let price = regular;
+    // Get total quantity for this item (all variants combined) currently in cart
+    let current_cart_qty = cart.reduce((sum, item) => {
+      return item.item_id === item_id ? sum + parseInt(item.qty || 0) : sum;
+    }, 0);
+    let new_qty = current_cart_qty + 1;
 
-    // let existing = cart.find(i => i.item_profile_id === item_profile_id);
-    let existing = cart.find(i => i.name2 === name2);
-    if (existing) {
-      existing.qty++;
-    } else {
-      cart.unshift({ 
-    //   cart.push({ 
-        item_profile_id, 
-        name, 
-        name2,
-        walkin, 
-        regular, 
-        wholesaler, 
-        price, 
-        qty: 1,
-        to_pcs,
-        supplier_price
+    // First, check available stock (accounting for items already in cart)
+    fetch("<?php echo base_url('cashiering/get_available_stock'); ?>", {
+      method: "POST",
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'item_id=' + item_id + '&cart_qty=' + current_cart_qty
+    })
+    .then(response => response.json())
+    .then(stockData => {
+      // Check if available stock is sufficient for 1 more item
+      if (!stockData.success || stockData.available < 1) {
+        alert('Insufficient stock! Available: ' + (stockData.available || 0) + ' pcs');
+        return;
+      }
+
+      // Stock is available, proceed with price calculation (pass cart_qty for tier calculation)
+      fetch("<?php echo base_url('cashiering/get_dynamic_price'); ?>", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'item_id=' + item_id + '&quantity=1&base_price=' + base_price + '&cart_qty=' + current_cart_qty
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Price Response:', data);
+        console.log('Tiers data:', data.tiers);
+        let price = data.success ? data.price : base_price;
+        
+        // Update ALL items with same item_id to new tier price
+        cart.forEach(item => {
+          if (item.item_id === item_id) {
+            item.price = price;
+            item.regular = price;
+            item.walkin = price;
+            item.wholesaler = price;
+          }
+        });
+        
+        // Now add or increment the clicked variant
+        let existing = cart.find(i => i.name2 === name2);
+        if (existing) {
+          existing.qty++;
+        } else {
+          cart.unshift({ 
+            item_id, 
+            item_profile_id, 
+            name, 
+            name2,
+            walkin: price, 
+            regular: price, 
+            wholesaler: price, 
+            price, 
+            qty: 1,
+            to_pcs,
+            supplier_price
+          });
+        }
+        renderCart();
+      })
+      .catch(error => {
+        console.error('Price Error:', error);
+        let existing = cart.find(i => i.name2 === name2);
+        if (existing) {
+          existing.qty++;
+        } else {
+          cart.unshift({ 
+            item_id, 
+            item_profile_id, 
+            name, 
+            name2,
+            walkin: base_price, 
+            regular: base_price, 
+            wholesaler: base_price, 
+            price: base_price, 
+            qty: 1,
+            to_pcs,
+            supplier_price
+          });
+        }
+        renderCart();
       });
-    }
-    renderCart();
+    })
+    .catch(error => {
+      console.error('Stock Check Error:', error);
+      alert('Error checking stock availability');
+    });
   });
 });
 
