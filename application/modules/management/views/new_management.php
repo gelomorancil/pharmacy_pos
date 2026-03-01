@@ -464,6 +464,64 @@ main_header(['list_management']);
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <!-- Refreshment Section -->
+                                        <div id="refreshment" style="display: none;">
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    <div class="form-group w-100">
+                                                        <label for="">Item description:</label>
+                                                        <input type="text" id="refreshment_item_name" class="form-control inpt"
+                                                            placeholder="Item description">
+                                                    </div>
+                                                </div>
+                                                <div class="col-3">
+                                                    <div class="form-group w-100">
+                                                        <label for="">UOM:</label>
+                                                        <select class="form-control" style="width: 100%;" id="refreshment_uom">
+                                                            <option value="" selected disabled>-- Select UOM --</option>
+                                                             <?php foreach ($units as $value) { ?>
+                                                                <option value="<?= $value->unit_of_measure ?>"><?= $value->unit_of_measure ?></option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-3">
+                                                    <div class="form-group w-100">
+                                                        <label for="">Net wt. / vol:</label>
+                                                        <input type="text" id="refreshment_packaging" class="form-control inpt"
+                                                            placeholder="Net wt. / vol">
+                                                    </div>
+                                                </div>
+                                                <div class="col-3">
+                                                    <div class="form-group w-100">
+                                                        <label for="">Flavor/Variant:</label>
+                                                        <input type="text" id="refreshment_generic_name" class="form-control inpt"
+                                                            placeholder="Flavor/Variant">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <div class="form-group w-100">
+                                                        <label for="">Dept/Category:</label>
+                                                        <select class="form-control" style="width: 100%;" id="refreshment_classification">
+                                                            <option value="" disabled selected>-- Select Dept/Category --</option>
+                                                            <option value="Beverage">Beverage</option>
+                                                            <option value="Confectionary">Confectionary</option>
+                                                            <option value="Snacks">Snacks</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <label for="">Status:</label>
+                                                    <select class="form-control" style="width: 100%;" id="refreshment_item_status">
+                                                        <option value="1" selected>Active</option>
+                                                        <option value="0">In-active</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="card-footer">
                                         <button type="button" class="btn btn-primary" id="save_item"  style="display: none">Submit</button>
@@ -1159,8 +1217,26 @@ main_footer();
       
         if (item_type == 'Generic' || item_type == 'Branded') {
             $('#medicine').show();
+            $('#refreshment').hide();
             $('#medicine input').attr('required', true);
             $('#medicine select').attr('required', true);
+            $('#refreshment input').attr('required', false);
+            $('#refreshment select').attr('required', false);
+            // $('.card-footer').show();
+            $('#update_item_2').hide();
+            $('#save_item').show();
+            $('#cancel').show();
+            $('#update_item').hide();
+            $('#delete_item').hide();
+            $('#new').hide();
+
+        } else if (item_type == 'Refreshment') {
+            $('#medicine').hide();
+            $('#refreshment').show();
+            $('#medicine input').attr('required', false);
+            $('#medicine select').attr('required', false);
+            $('#refreshment input').attr('required', true);
+            $('#refreshment select').attr('required', true);
             // $('.card-footer').show();
             $('#update_item_2').hide();
             $('#save_item').show();
@@ -1171,8 +1247,11 @@ main_footer();
 
         } else {
             $('#medicine').hide();
+            $('#refreshment').hide();
             $('#medicine input').attr('required', false);
             $('#medicine select').attr('required', false);
+            $('#refreshment input').attr('required', false);
+            $('#refreshment select').attr('required', false);
             // $('.card-footer').hide();
             $('#update_item_2').hide();
             $('#new').hide();
@@ -1190,6 +1269,7 @@ main_footer();
 
     $(document).on('click', '#cancel', function() {
         $('#medicine').hide();
+        $('#refreshment').hide();
         // $('.card-footer').hide();
         $('#update_item_2').show();
         $('#new').show();

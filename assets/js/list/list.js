@@ -103,26 +103,54 @@ $('#save_item').click(function () {
         text: 'Confirm',
         btnClass: 'btn-success',
         action: function () {
+          // Determine if this is a refreshment or medicine item based on category
+          var category = $('#Category').val();
+          var formData = {
+            category: category,
+          };
+
+          if (category === 'Refreshment') {
+            // Map refreshment fields to database columns
+            // Brand Name (Item description label) → item_name column
+            formData.item_name = $('#refreshment_item_name').val();
+            // UOM → uom column
+            formData.uom = $('#refreshment_uom').val();
+            // Packaging (Net wt. / vol label) → packaging column
+            formData.packaging = $('#refreshment_packaging').val();
+            // Generic Name (Flavor/Variant label) → short_name column
+            formData.short_name = $('#refreshment_generic_name').val();
+            // Classification (Dept/Category label) → classification column
+            formData.classification = $('#refreshment_classification').val();
+            // Status
+            formData.status = $('#refreshment_item_status').val();
+            // Fields not used for refreshment
+            formData.item_code = '';
+            formData.description = '';
+            formData.strenght = '';
+            formData.storage_condition = '';
+            formData.distributor = '';
+            formData.pcs_stub = '';
+            formData.pcs_box = '';
+          } else {
+            // Use medicine-specific fields
+            formData.item_name = $('#item_name').val();
+            formData.item_code = $('#code').val();
+            formData.short_name = $('#short_name').val();
+            formData.description = $('#item_description').val();
+            formData.status = $('#item_status').val();
+            formData.strenght = $('#strenght').val();
+            formData.packaging = $('#packaging').val();
+            formData.uom = $('#uom').val();
+            formData.classification = $('#classification').val();
+            formData.storage_condition = $('#storage_condition').val();
+            formData.distributor = $('#distributor').val();
+            formData.pcs_stub = $('#pcs_stub').val();
+            formData.pcs_box = $('#pcs_box').val();
+          }
+
           $.post({
             url: 'management/service/Management_service/save_list',
-            data: {
-              item_name: $('#item_name').val(),
-              item_code: $('#code').val(),
-              short_name: $('#short_name').val(),
-              description: $('#item_description').val(),
-              category: $('#Category').val(),
-              status: $('#item_status').val(),
-              strenght: $('#strenght').val(),
-              packaging: $('#packaging').val(),
-              uom: $('#uom').val(),
-              classification: $('#classification').val(),
-              storage_condition: $('#storage_condition').val(),
-              distributor: $('#distributor').val(),
-              pcs_stub: $('#pcs_stub').val(),
-              pcs_box: $('#pcs_box').val(),
-              // batch_no: $('#batch_no').val(),
-              // item_expiry_date: $('#item_expiry_date').val(),
-            },
+            data: formData,
             success: function (e) {
               var e = JSON.parse(e);
               if (!e.has_error) {
@@ -130,13 +158,14 @@ $('#save_item').click(function () {
                 load_items();
                 load_items_drop_down();
 
+                // Clear all fields
                 $('#item_name').val("");
                 $('#code').val("");
                 $('#short_name').val("");
                 $('#item_status').val("1");
                 $('#item_description').val("");
                 $('#Category').val("");
-                $('#strenght').val();
+                $('#strenght').val("");
                 $('#packaging').val("");
                 $('#uom').val("");
                 $('#classification').val("");
@@ -144,11 +173,22 @@ $('#save_item').click(function () {
                 $('#distributor').val("");
                 $('#pcs_stub').val("");
                 $('#pcs_box').val("");
-                // $('#item_expiry_date').val("");
-                // $('#batch_no').val("");
-                // setTimeout(function () {
-                //   window.location.reload();
-                // }, 2000);
+                
+                // Clear refreshment fields
+                $('#refreshment_item_name').val("");
+                $('#refreshment_generic_name').val("");
+                $('#refreshment_packaging').val("");
+                $('#refreshment_uom').val("");
+                $('#refreshment_classification').val("");
+                $('#refreshment_item_status').val("1");
+                
+                // Hide form sections
+                $('#medicine').hide();
+                $('#refreshment').hide();
+                $('#update_item_2').show();
+                $('#new').show();
+                $('#save_item').hide();
+                $('#cancel').hide();
               } else {
                 $('#List').attr('class', 'form-control inpt is-invalid');
                 toastr.error(e.message);
@@ -177,28 +217,55 @@ $('#update_item').click(function () {
         text: 'Confirm',
         btnClass: 'btn-success',
         action: function () {
+          // Determine if this is a refreshment or medicine item based on category
+          var category = $('#Category').val();
+          var formData = {
+            id: $('#select_item').val(),
+            category: category,
+          };
+
+          if (category === 'Refreshment') {
+            // Map refreshment fields to database columns
+            // Brand Name (Item description label) → item_name column
+            formData.item_name = $('#refreshment_item_name').val();
+            // UOM → uom column
+            formData.uom = $('#refreshment_uom').val();
+            // Packaging (Net wt. / vol label) → packaging column
+            formData.packaging = $('#refreshment_packaging').val();
+            // Generic Name (Flavor/Variant label) → short_name column
+            formData.short_name = $('#refreshment_generic_name').val();
+            // Classification (Dept/Category label) → classification column
+            formData.classification = $('#refreshment_classification').val();
+            // Status
+            formData.status = $('#refreshment_item_status').val();
+            // Fields not used for refreshment
+            formData.item_code = '';
+            formData.description = '';
+            formData.strenght = '';
+            formData.storage_condition = '';
+            formData.distributor = '';
+            formData.pcs_stub = '';
+            formData.pcs_box = '';
+          } else {
+            // Use medicine-specific fields
+            formData.item_name = $('#item_name').val();
+            formData.item_code = $('#code').val();
+            formData.short_name = $('#short_name').val();
+            formData.description = $('#item_description').val();
+            formData.status = $('#item_status').val();
+            formData.strenght = $('#strenght').val();
+            formData.packaging = $('#packaging').val();
+            formData.uom = $('#uom').val();
+            formData.classification = $('#classification').val();
+            formData.storage_condition = $('#storage_condition').val();
+            formData.distributor = $('#distributor').val();
+            formData.pcs_stub = $('#pcs_stub').val();
+            formData.pcs_box = $('#pcs_box').val();
+          }
+
           $.post({
             url: 'management/service/Management_service/update_item',
-            // selector: '.form-control',
-            data: {
-              id: $('#select_item').val(),
-              item_name: $('#item_name').val(),
-              item_code: $('#code').val(),
-              short_name: $('#short_name').val(),
-              description: $('#item_description').val(),
-              status: $('#item_status').val(),
-              category: $('#Category').val(),
-              strenght: $('#strenght').val(),
-              packaging: $('#packaging').val(),
-              uom: $('#uom').val(),
-              classification: $('#classification').val(),
-              storage_condition: $('#storage_condition').val(),
-              distributor: $('#distributor').val(),
-              pcs_stub: $('#pcs_stub').val(),
-              pcs_box: $('#pcs_box').val(),
-              // item_expiry_date: $('#item_expiry_date').val(),
-              // batch_no: $('#batch_no').val(),
-            },
+            data: formData,
             success: function (e) {
               var e = JSON.parse(e);
               if (e.has_error == false) {
@@ -220,8 +287,24 @@ $('#update_item').click(function () {
                 $('#distributor').val("");
                 $('#pcs_stub').val("");
                 $('#pcs_box').val("");
-                // $('#item_expiry_date').val("");
-                // $('#batch_no').val("");
+                
+                // Clear refreshment fields
+                $('#refreshment_item_name').val("");
+                $('#refreshment_generic_name').val("");
+                $('#refreshment_packaging').val("");
+                $('#refreshment_uom').val("");
+                $('#refreshment_classification').val("");
+                $('#refreshment_item_status').val("1");
+                
+                // Hide form sections
+                $('#medicine').hide();
+                $('#refreshment').hide();
+                $('#update_item_2').show();
+                $('#new').show();
+                $('#update_item').hide();
+                $('#cancel').hide();
+                $('#delete_item').hide();
+                
                 setTimeout(function () {
                   window.location.reload();
                 }, 500);
@@ -310,31 +393,76 @@ var editItem = (data) => {
 
 
 $('#select_item').change(function () {
+  var selectedOption = $(this).find('option:selected');
+  var category = selectedOption.data('category');
 
-  $('#medicine').show();
-  $('#medicine input').attr('required', true);
-  $('#medicine select').attr('required', true);
+  // Get common data attributes
+  var itemId = selectedOption.data('id');
+  var itemName = selectedOption.data('item_name');
+  var itemCode = selectedOption.data('item_code');
+  var shortName = selectedOption.data('short_name');
+  var status = selectedOption.data('status');
+  var itemDescription = selectedOption.data('description');
+  var strenght = selectedOption.data('strenght');
+  var packaging = selectedOption.data('packaging');
+  var uom = selectedOption.data('uom');
+  var classification = selectedOption.data('classification');
+  var storageCondition = selectedOption.data('storage_condition');
+  var distributor = selectedOption.data('distributor');
+
+  $('#item_id').val(itemId);
+
+  if (category === 'Refreshment') {
+    // Show refreshment section, hide medicine section
+    $('#medicine').hide();
+    $('#refreshment').show();
+    $('#medicine input').attr('required', false);
+    $('#medicine select').attr('required', false);
+    $('#refreshment input').attr('required', true);
+    $('#refreshment select').attr('required', true);
+
+    // Populate refreshment fields
+    // item_name → refreshment_item_name
+    $('#refreshment_item_name').val(itemName);
+    // short_name → refreshment_generic_name
+    $('#refreshment_generic_name').val(shortName);
+    // packaging → refreshment_packaging
+    $('#refreshment_packaging').val(packaging);
+    // uom → refreshment_uom
+    $('#refreshment_uom').val(uom);
+    // classification → refreshment_classification
+    $('#refreshment_classification').val(classification);
+    // status → refreshment_item_status
+    $('#refreshment_item_status').val(status);
+  } else {
+    // Show medicine section, hide refreshment section
+    $('#medicine').show();
+    $('#refreshment').hide();
+    $('#medicine input').attr('required', true);
+    $('#medicine select').attr('required', true);
+    $('#refreshment input').attr('required', false);
+    $('#refreshment select').attr('required', false);
+
+    // Populate medicine fields
+    $('#item_name').val(itemName);
+    $('#code').val(itemCode);
+    $('#short_name').val(shortName);
+    $('#item_status').val(status);
+    $('#item_description').val(itemDescription);
+    $('#strenght').val(strenght);
+    $('#packaging').val(packaging);
+    $('#uom').val(uom);
+    $('#classification').val(classification);
+    $('#storage_condition').val(storageCondition);
+    $('#distributor').val(distributor);
+  }
+
+  $('#Category').val(category);
+
   $('#save_item').hide();
   $('#cancel').show();
   $('#update_item').show();
   $('#delete_item').show();
-
-  var selectedOption = $(this).find('option:selected');
-
-  var dataId = selectedOption.data('id'); 
-  $('#item_id').val(selectedOption.data('id'));
-  $('#item_name').val(selectedOption.data('item_name'));
-  $('#code').val(selectedOption.data('item_code'));
-  $('#short_name').val(selectedOption.data('short_name'));
-  $('#item_status').val(selectedOption.data('status'));
-  $('#item_description').val(selectedOption.data('description'));
-  $('#Category').val(selectedOption.data('category'));
-  $('#strenght').val(selectedOption.data('strenght'));
-  $('#packaging').val(selectedOption.data('packaging'));
-  $('#uom').val(selectedOption.data('uom'));
-  $('#classification').val(selectedOption.data('classification'));
-  $('#storage_condition').val(selectedOption.data('storage_condition'));
-  $('#distributor').val(selectedOption.data('distributor'));
   $('#pcs_stub').val(selectedOption.data('pcs_stub'));
   $('#pcs_box').val(selectedOption.data('pcs_box'));
 
