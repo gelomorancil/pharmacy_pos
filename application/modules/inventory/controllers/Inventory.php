@@ -101,4 +101,12 @@ class Inventory extends MY_Controller
 		echo json_encode($response);
 	}
 
+	public function load_price_history(){
+		$this->iModel->id = $this->input->post("id");
+
+		$this->data['history'] = $this->iModel->load_price_history();
+		$this->data['content'] = 'grid/load_price_history';
+		$this->load->view('layout', $this->data);
+	}
+
 }

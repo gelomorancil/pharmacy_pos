@@ -164,6 +164,19 @@ var view_history = (value) => {
     });
 }
 
+var view_price_history = (value) => {
+    $.post({
+        url: 'inventory/Inventory/load_price_history',
+        data: {
+            id: value
+        },
+        success: function (data) {
+            $('#load_price_history_data').html(data);
+            $('#modal-price-history').modal('show');
+        },
+    });
+}
+
 var view_po = (btn) => {
     let po_num = $(btn).data("po");
     console.log("Viewing PO:", po_num);

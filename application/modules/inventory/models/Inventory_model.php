@@ -425,4 +425,20 @@ class Inventory_model extends CI_Model
         return $query;
     }
 
+    public function load_price_history()
+    {
+        $this->db->select('
+            ip.*,
+            po.po_num,
+            po.approved
+        ');
+
+        $this->db->from($this->Table->item_profile . ' AS ip');
+        $this->db->join($this->Table->purchase_order . ' AS po', 'ip.po_ID = po.ID', 'left');
+        $this->db->where('ip.item_id', $this->id);
+
+        $query = $this->db->get()->result();
+        return $query;
+    }
+
 }

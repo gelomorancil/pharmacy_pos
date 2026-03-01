@@ -58,8 +58,13 @@
 
 
                 <td>
-                    <button type="button" class="btn btn-sm btn-primary" data-itemID="<?= $value->item_ID ?>"
-                        onclick="view_history(this)">View Stock History</button>
+                    <!-- group buttons so they render inline and have consistent spacing -->
+                    <div class="btn-group" role="group" aria-label="inventory actions">
+                        <button type="button" class="btn btn-sm btn-primary" data-itemID="<?= $value->item_ID ?>" 
+                            onclick="view_history(this)">Stock History</button>
+                        <button type="button" class="btn btn-sm btn-warning ml-2" 
+                            onclick="view_price_history(<?= $value->item_ID ?>)">Price History</button>
+                    </div>
                 </td>
 
             </tr>

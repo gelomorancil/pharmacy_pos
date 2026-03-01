@@ -84,11 +84,11 @@ main_header(['list_management']);
         
             <!-- Sub Tabs -->
             <ul class="nav nav-tabs mb-3" id="itemSubTabs" role="tablist">
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link active" id="profile-sub-tab" data-toggle="tab" href="#profile-sub" role="tab">Pricing</a>
-                </li>
+                </li> -->
                 <li class="nav-item">
-                    <a class="nav-link" id="items-sub-tab" data-toggle="tab" href="#items-sub" role="tab">Item Profile</a>
+                    <a class="nav-link active" id="items-sub-tab" data-toggle="tab" href="#items-sub" role="tab">Item Profile</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="deleted-sub-tab" data-toggle="tab" href="#deleted-sub" role="tab">Deleted Items</a>
@@ -98,7 +98,7 @@ main_header(['list_management']);
             <!-- Sub Tab Content -->
             <div class="tab-content" id="itemSubTabsContent">
                 <!-- Pricing tab -->
-                 <div class="tab-pane fade show active" id="profile-sub" role="tabpanel">
+                 <div class="tab-pane fade" id="profile-sub" role="tabpanel">
                     <div class="row">
                         <!-- <div class="col-lg-4 col-md-6 col-sm-12">
                             <div class="card">
@@ -310,7 +310,7 @@ main_header(['list_management']);
                     </div>
                 </div>
                 <!-- Item profile Tab -->
-                <div class="tab-pane fade" id="items-sub" role="tabpanel">
+                <div class="tab-pane fade show active" id="items-sub" role="tabpanel">
                     <div class="row">
                         <div class="col-lg-12 col-md-6 col-sm-12">
                             <div class="card">

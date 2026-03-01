@@ -93,6 +93,34 @@ class Report extends MY_Controller
 		$this->load->view('layout', $this->data);
 	}
 
+	/**
+	 * execute the batch file that opens cash drawer (windows environment)
+	 * The file is stored under assets/uploaded/open_cashdrawer_usb.bat
+	 * and will be invoked with exec().
+	 * The client javascript calls this via AJAX after printing a receipt.
+	 */
+	public function open_drawer()
+	{
+		// path to the bat file relative to the document root
+		$batPath = FCPATH . 'assets/uploaded/open_cashdrawer_usb.bat';
+
+		if (!file_exists($batPath)) {
+			// respond with error JSON so caller can log/notify if needed
+			echo json_encode(['success' => false, 'error' => 'batch file not found']);
+			return;
+		}
+
+		// run the batch file. return code 0 usually means success.
+		// suppress output to avoid leaking data to response.
+		exec(escapeshellarg($batPath) . ' 2>&1', $output, $returnVar);
+
+		if ($returnVar === 0) {
+			echo json_encode(['success' => true]);
+		} else {
+			echo json_encode(['success' => false, 'output' => $output, 'code' => $returnVar]);
+		}
+	}
+
 	public function profitloss()
 	{
 		$this->data['content'] = 'profitloss';

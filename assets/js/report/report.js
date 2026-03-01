@@ -275,6 +275,7 @@ void_sale = function () {
 }
 
 $('#reprint_receipt').click(function () {
+    // first load and print the receipt as before
     $.post({
         url: 'report/load_receipt',
         data: {
@@ -306,6 +307,12 @@ $('#reprint_receipt').click(function () {
                 beforePrintEvent: null,     // function for printEvent in iframe
                 beforePrint: null,          // function called before iframe is filled
                 afterPrint: function () {
+                    // after the receipt has been sent to printer we also trigger
+                    // the server-side batch file that opens the cash drawer.
+                    $.ajax({
+                        url: 'report/open_drawer',
+                        type: 'POST'
+                    });
                 }
             });
         }
